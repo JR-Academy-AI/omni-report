@@ -233,14 +233,13 @@ competitor-reports/YYYY-MM-DD.md
 │  │  Claude Sonnet 4.6                           │  │
 │  │  + Web Search                                │  │
 │  │  + Bash / Read / Write / Edit / Glob / Grep  │  │
-│  │  + Notion MCP (optional, write summary)      │  │
+│  │  + Notion MCP (write summary page only)      │  │
 │  │                                              │  │
-│  │  1. Pull omni-report repo                    │  │
-│  │  2. Read prev report (avoid duplicates)      │  │
-│  │  3. Web search 23 competitors × 5 dims       │  │
-│  │  4. Write competitor-reports/YYYY-MM-DD.md   │  │
-│  │  5. Commit + push                            │  │
-│  │  6. (optional) Write Notion summary          │  │
+│  │  Phase 0: Read PRD + history                 │  │
+│  │  Phase 1: Write skeleton MD → commit         │  │
+│  │  Phase 2: 5 batches WebSearch + Edit + commit│  │
+│  │  Phase 3: Finalize TL;DR + 建议 → commit     │  │
+│  │  Phase 4: Notion 极简摘要页 (≤1k tokens)     │  │
 │  └──────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────┘
 ```
@@ -254,18 +253,35 @@ competitor-reports/YYYY-MM-DD.md
 | Repo | `https://github.com/JR-Academy-AI/omni-report` |
 | Model | `claude-sonnet-4-6` |
 | Tools | Bash / Read / Write / Edit / Glob / Grep / WebSearch |
-| MCP | Notion（v1 启用，hub page `34ddd76b576d8068abbed825956db0c6`） |
+| MCP | Notion（v1 启用，hub page `34ddd76b576d8068abbed825956db0c6`，**只写极简摘要 + GitHub 全文链接**，避免 stream idle timeout） |
 | Environment | Default (env_016YZGciCpxXVeLRinN31W4D) |
 
 ### 6.3 Prompt 设计原则
 
 - 自包含 — Agent 不知道之前对话，prompt 必须把所有 context 给齐
 - 列出全部 23 个竞品名 + URL（Agent 不要自己搜竞品名单）
-- 强调 commit message 格式（`docs(R&D): 竞品周报 YYYY-MM-DD`）
+- 强调 commit message 格式（`feat(competitor): {phase} {date}`）
 - 强调反 AI 味规则（直接 inline，不依赖 CLAUDE.md）
 - 输出失败时（如某竞品搜不到），明确说"X 本周无更新"，不要瞎编
 
 完整 prompt 见 `附录 A`。
+
+### 6.4 防 stream idle timeout 设计（重要）
+
+CCR 远程 agent 有 streaming idle 限制（约 ~60s 没输出 token 就被 kill）。**v1 首次跑就在 Phase 4 被 kill**——单次往 Notion 塞整篇 200 行 markdown，input 超长导致 idle 超时。
+
+修复后的设计原则：
+
+| 反模式 ❌ | 正确模式 ✅ |
+|---|---|
+| 跑完 5 个 batch 最后一次性 push | 每个 batch 立即 commit + push（断了下次能续） |
+| 一次输出 1500-3000 字长文 | 先写 `_TBD_` 骨架，每个 batch 用 Edit 填 ≤300 字段 |
+| 一次 MCP call 塞整篇 MD | Notion 只塞 ≤1k tokens 摘要 + GitHub 全文链接 |
+| 23 个 source 一次 search | 拆 5 个 batch，每 batch ≤3 次 WebSearch |
+
+**核心心法**：每个 turn 输出 ≤1k tokens，每个 tool call input/output ≤3k tokens。
+
+这套 pattern 也适用于 omni-report 里其他 routine（SEO healthcheck 已经天然按"一次 healthcheck 一次 commit"做了，无需改）。
 
 ---
 
@@ -303,88 +319,102 @@ competitor-reports/YYYY-MM-DD.md
 
 | 版本 | 范围 | 时间 |
 |---|---|---|
-| **v1（本期）** | 23 竞品 × 5 维度，commit 到 repo + Notion 双写（hub page `34ddd76b576d8068abbed825956db0c6`） | 2026-05-03（周日）第一份 |
+| **v1（本期）** | 23 竞品 × 5 维度，5 batch 渐进 commit 到 repo + Notion 极简摘要页（hub `34ddd76b...`） | 2026-04-25 已跑通首份 |
 | **v2** | 月度汇总周报为月报，自动生成给 CEO 的战略建议 | 2026-Q3 |
 | **v3** | Admin 后台加 Tab 整合趋势分析 | 2026-Q4 |
 | **v4** | 触发式告警（"Competitor X 降价 30%" 立即推送） | 待定 |
 
 ---
 
-## 附录 A：Remote Agent Prompt（v1）
+## 附录 A：Remote Agent Prompt（v1.1 — 防 stream idle timeout）
+
+> Routine `trig_013pfieJXDDCa9rQktNxFoKx` 实际运行的 prompt。如修改本附录，**必须同步 update routine**（否则 routine 上跑的还是旧 prompt）。
 
 ```
-你是 JR Academy 的竞品研究 Agent。今天是周日（Brisbane 时间晚上 8 点），请生成本周（覆盖周一到周日，今天为止整周内容）的竞品周报。
+你是 JR Academy 的竞品研究 Agent。今天周日，生成本周（覆盖周一到周日）竞品周报。
 
-【背景】
-JR Academy 是中文 AI 学习 + 澳洲 IT Bootcamp 平台。我们需要持续监测 23 个竞品 + 3 个 Newsletter，输出可执行的市场情报，不要 AI 味。
+⚠️ 关键策略：「骨架 + 渐进填充 + 每段就 commit」，避免单次输出过长导致 stream idle timeout。
 
-【任务】
-1. 读 competitor-reports/ 最近 1-2 份历史报告，避免重复信息
-2. 用 WebSearch 调研下方 26 个 source × 5 个维度
-3. 写一份新报告到 competitor-reports/YYYY-MM-DD.md（YYYY-MM-DD = 今天）
-4. git add + commit + push（commit message: "docs(R&D): 竞品周报 YYYY-MM-DD"）
-5. 用 Notion MCP (notion-create-pages) 在 parent page `34ddd76b576d8068abbed825956db0c6`（标题 "竞品周报"）下创建一个子页面：
-   - 标题: `竞品周报 YYYY-MM-DD`
-   - 内容: 同 MD 内容（直接复制 Markdown，Notion 会自动渲染）
-   - parent 用 `{"type": "page_id", "page_id": "34ddd76b576d8068abbed825956db0c6"}`
+━━━━━━━━━━━━━━
+【Phase 0：准备】
+━━━━━━━━━━━━━━
+1. 读 PRD_COMPETITOR_WEEKLY.md（了解格式与硬规则）
+2. `ls competitor-reports/`（确认历史）
+3. 算今天日期：`TZ='Australia/Brisbane' date +%Y-%m-%d` → 设为 `$DATE`
 
-【调研范围】
+━━━━━━━━━━━━━━
+【Phase 1：写骨架 + 立刻 commit】
+━━━━━━━━━━━━━━
+Write `competitor-reports/$DATE.md` 骨架（每个 section 用 _TBD_ 占位）。
+commit + push：`feat(competitor): scaffold $DATE`
 
-A. 全球 AI 学习平台 (10):
-- DeepLearning.AI (https://deeplearning.ai)
-- Coursera AI 专项 (https://coursera.org)
-- Hugging Face Learn (https://huggingface.co/learn)
-- fast.ai (https://fast.ai)
-- Anthropic Cookbook (https://github.com/anthropics/anthropic-cookbook) + Claude Skills (https://docs.claude.com)
-- OpenAI Academy + Cookbook (https://academy.openai.com, https://cookbook.openai.com)
-- LangChain Academy (https://academy.langchain.com)
-- Maven (https://maven.com)
-- Scrimba (https://scrimba.com)
-- AI Engineer (https://ai.engineer) + Latent Space (https://latent.space)
+━━━━━━━━━━━━━━
+【Phase 2：5 批 search + Edit + commit】
+━━━━━━━━━━━━━━
+每批最多 3 次 WebSearch、3 次 Edit，做完立即 commit + push（防丢）。
 
-B. 中文 AI 学习平台 (6):
-- 通往 AGI 之路 (https://waytoagi.com)
-- 极客时间 (https://time.geekbang.org)
-- 量子位 (https://qbitai.com) + 机器之心 (https://jiqizhixin.com)
-- 得到 App (https://www.dedao.cn)
-- AI 产品榜 (https://aicpb.com)
-- 中文 AI KOL: 赛博禅心、卡兹克、宝玉、林粒粒、AI 进化论 (公众号 + B站 + 小红书搜本周内容)
+- Batch A — 全球平台 (10): DeepLearning.AI, Coursera, Hugging Face Learn, fast.ai, Anthropic, OpenAI, LangChain, Maven, Scrimba, AI Engineer
+- Batch B — 中文平台 (6): 通往 AGI 之路, 极客时间, 量子位, 机器之心, 得到, AI 产品榜, 中文 KOL
+- Batch C — 澳洲 (4): Coder Academy, Academy Xi, General Assembly Sydney, Le Wagon Australia
+- Batch D — Newsletter + 行业动态: The Rundown AI, TLDR AI, Ben's Bites
+- Batch E — 求职: LinkedIn / Seek / Indeed 全球 + 澳洲 AI 岗位
 
-C. 澳洲 Bootcamp (4):
-- Coder Academy (https://coderacademy.edu.au)
-- Academy Xi (https://academyxi.com)
-- General Assembly Sydney (https://generalassemb.ly/locations/sydney)
-- Le Wagon Australia (https://lewagon.com/sydney)
+每批 Edit 对应骨架 section，commit message 格式：`feat(competitor): {batch} batch`。
 
-D. AI Newsletter (3, 趋势风向):
-- The Rundown AI (https://therundown.ai)
-- TLDR AI (https://tldr.tech/ai)
-- Ben's Bites (https://bensbites.com)
+━━━━━━━━━━━━━━
+【Phase 3：收尾】
+━━━━━━━━━━━━━━
+Edit「TL;DR」(5 条) 和「§6 建议」(3 条，可执行)。
+commit "feat(competitor): finalize $DATE" + push
 
-E. 兜底 — 用以下关键词搜本周新冒出的玩家:
-- "AI bootcamp" launch 2026
-- "AI 训练营" 开班 2026
-- cohort-based AI course
+━━━━━━━━━━━━━━
+【Phase 4：Notion 极简摘要（≤1k tokens 防 timeout）】
+━━━━━━━━━━━━━━
+⚠️ 不要把整篇 MD 丢进 Notion——之前这里被 stream idle timeout 杀过。
 
-【5 个维度】
-1. 新课 / Bootcamp 上线（最强信号）
-2. 定价 & 营销活动
-3. 内容出圈（小红书/B站/X/LinkedIn/YouTube 10k+ 互动的内容）
-4. AI 行业动态（影响课程方向的新模型/工具/框架）
-5. 求职信号（LinkedIn / Seek / Indeed 全球 + 澳洲 AI 岗位趋势）
+调用 `notion-create-pages`：
+- parent: `{"type": "page_id", "page_id": "34ddd76b576d8068abbed825956db0c6"}`
+- 标题: `竞品周报 $DATE`
+- icon: `📊`
+- content: 模板（只填变量，不要贴全文）
 
-【输出格式】
-严格按 docs/prd/COMPETITOR_RESEARCH_WEEKLY_PRD.md §5.2 的模板。
+```markdown
+**覆盖周期**：$DATE-6 ~ $DATE
+**🔗 完整报告**：https://github.com/JR-Academy-AI/omni-report/blob/main/competitor-reports/$DATE.md
 
+---
+
+## TL;DR
+[复制 5 条]
+
+## 关键动态（3 条）
+[挑本周最重要的 3 件事]
+
+## 对 JR 的建议
+[复制 3 条]
+
+---
+_详细 23 个 source / 定价 / 内容 / 求职 → 看 GitHub 全文_
+```
+
+━━━━━━━━━━━━━━
 【硬规则 — 反 AI 味】
+━━━━━━━━━━━━━━
 - 禁止 "在当今...""综合性""深入探讨""值得关注""快速发展" 等空话
-- 每条信息必须有: 公司名 + 具体内容 + 真实链接 + 日期/数字
-- 没东西可写就跳过该维度，禁止为了凑字数硬编
-- 给 JR Academy 的建议必须可执行（"启动 X 章节"），不是泛泛"密切关注"
-- 报告整体 1500-3000 字，信息密度高
+- 每条信息必须有：公司名 + 具体内容 + 真实链接 + 日期/数字
+- 没东西就跳过，禁止硬编
+- §6 建议必须可执行（启动 X 章节）
+- MD 整体 1200-2000 字
 
-完成后 push 到 main。
+━━━━━━━━━━━━━━
+【完成确认】
+━━━━━━━━━━━━━━
+- [ ] competitor-reports/$DATE.md 已 push（约 6-7 个 commit）
+- [ ] Notion 摘要页已创建
+- [ ] 0 条 AI 味开场
 ```
+
+完整 23 source URL 列表见 §3。Routine 内 prompt 包含完整 URL（自包含），本附录省略以方便阅读。
 
 ---
 
