@@ -8,9 +8,11 @@ JR Academy 运营报告归档仓库。各类站点健康度 / SEO / 数据完整
 seo-reports/{YYYY-MM-DD}.md          每日 jiangren.com.au sitemap 健康度报告
 competitor-reports/{YYYY-MM-DD}.md   每周日 23 家竞品 × 5 维度情报简报
 marketing-topics/{YYYY-MM-DD}.md     每周一基于热点 + 竞品周报的内容/活动选题包
+ai-visibility/{YYYY-MM-DD}.md        每周三 GEO 可见度（20 query 测 AI 是否推荐 JR）
 scripts/                              生成报告的脚本
 PRD_COMPETITOR_WEEKLY.md             竞品周报 PRD
 PRD_MARKETING_TOPICS.md              内容选题包 PRD
+PRD_AI_VISIBILITY.md                 AI 可见度 PRD
 ```
 
 ## SEO Healthcheck
@@ -56,6 +58,20 @@ Routine: https://claude.ai/code/routines/trig_013pfieJXDDCa9rQktNxFoKx
 6. Notion MCP 写极简摘要页
 
 完整规范见 [`PRD_MARKETING_TOPICS.md`](./PRD_MARKETING_TOPICS.md)。
+
+## AI Visibility Weekly (GEO)
+
+每周三 09:00 AEST (Brisbane) 由远程 routine 自动跑：
+
+1. 用 20 个真实学员 query（学习入门 5 + 求职 5 + 工具 5 + 平台 5）测 AI 引擎是否推荐 JR
+2. **双层测试**：Web Search（模拟 Google）+ Claude LLM 自答（代理 AI 助手视角）
+3. 输出仪表盘：JR 被提及次数 / 空白 query / 竞品提及频率 / 周环比
+4. 给 SEO + 内容团队具体行动清单（"补这 3 篇深度文 / 修这 2 个 meta"）
+5. 写 `ai-visibility/{YYYY-MM-DD}.md` + Notion 全文同步
+
+完整规范见 [`PRD_AI_VISIBILITY.md`](./PRD_AI_VISIBILITY.md)。
+
+**为什么重要**：~50% 学员第一次接触 JR 不是通过 Google，而是通过 AI 助手。GEO（Generative Engine Optimization）是 2026-2027 SEO 战场。
 
 ## 加新报告类型
 
