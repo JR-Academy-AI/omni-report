@@ -15,12 +15,33 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, '..');
 const REPORT_DIR = join(REPO_ROOT, 'seo-reports');
+const CURSOR_PATH = join(REPORT_DIR, '.cursor.json');
 
 // ─── 配置 ─────────────────────────────────────────────────────────────
 const SITEMAP_INDEX = 'https://jiangren.com.au/sitemap.xml';
-const CONCURRENCY = parseInt(process.env.SEO_CONCURRENCY || '60', 10);
-const TIMEOUT_MS = parseInt(process.env.SEO_TIMEOUT_MS || '8000', 10);
+const CONCURRENCY = parseInt(process.env.SEO_CONCURRENCY || '5', 10); // 保护站点：默认 5 个并发
+const TIMEOUT_MS = parseInt(process.env.SEO_TIMEOUT_MS || '10000', 10);
 const USER_AGENT = 'omni-report-seo-healthcheck/0.1 (+https://github.com/JR-Academy-AI/omni-report)';
+
+// 只扫高价值 sitemap（user 2026-04-25 决议）
+// 低价值 sitemap (university/company/job/job-interview/workshop/video/events/mentors/instructors)
+// 暂时不进 SEO 健康检查 —— 这些内容质量起来后再加进来。
+const HIGH_VALUE_SITEMAPS = new Set([
+	'sitemap-0.xml',
+	'career-coaching-sitemap.xml',
+	'blog-sitemap.xml',
+	'program-course-sitemap.xml',
+	'wiki-sitemap.xml',
+	'learn-sitemap.xml',
+	'certification-sitemap.xml',
+	'roadmap-sitemap.xml',
+	'free-resources-sitemap.xml',
+	'cheat-sheets-sitemap.xml',
+	'interview-question-sitemap.xml',
+	'career-impact-map-sitemap.xml',
+	'handbook-sitemap.xml',
+	'tools-sitemap.xml',
+]);
 
 // ─── 类型 ─────────────────────────────────────────────────────────────
 type Category = '2xx' | '3xx' | '404' | '410' | '4xx-other' | '5xx' | 'timeout' | 'network-error';
@@ -86,11 +107,17 @@ async function collectAllUrls(): Promise<{ urls: { url: string; sitemap: string 
 	console.log(`▶ Fetching sitemap index: ${SITEMAP_INDEX}`);
 	const indexXml = await fetchText(SITEMAP_INDEX);
 	const childSitemaps = extractLocs(indexXml);
-	console.log(`  Found ${childSitemaps.length} child sitemaps`);
+	console.log(`  Found ${childSitemaps.length} child sitemaps in index`);
 
 	const urls: { url: string; sitemap: string }[] = [];
+	let skippedSitemaps = 0;
 	for (const sm of childSitemaps) {
 		const smName = sm.split('/').pop() || sm;
+		if (!HIGH_VALUE_SITEMAPS.has(smName)) {
+			skippedSitemaps++;
+			console.log(`  ⏭  ${smName} — skipped (low SEO value)`);
+			continue;
+		}
 		try {
 			const xml = await fetchText(sm);
 			const locs = extractLocs(xml);
@@ -100,7 +127,7 @@ async function collectAllUrls(): Promise<{ urls: { url: string; sitemap: string 
 			console.error(`  ✗ ${smName} — ${(e as Error).message}`);
 		}
 	}
-	console.log(`▶ Collected ${urls.length} URLs total`);
+	console.log(`▶ Collected ${urls.length} URLs from ${HIGH_VALUE_SITEMAPS.size} high-value sitemaps (skipped ${skippedSitemaps} low-value)`);
 	return { urls, childSitemaps };
 }
 
@@ -292,7 +319,7 @@ function pct(n: number, total: number): string {
 	return ((n / total) * 100).toFixed(2) + '%';
 }
 
-function renderMarkdown(report: Report, prior: { date: string; brokenUrls: Set<string> } | null): string {
+function renderMarkdown(report: Report, prior: { date: string; brokenUrls: Set<string> } | null, sliceInfo = ''): string {
 	const { date, generatedAtUtc, totals, totalCount, perSitemap, results } = report;
 	const brokenResults = results.filter(r => isBrokenCategory(r.category));
 	const brokenUrlsSet = new Set(brokenResults.map(r => r.url));
@@ -308,13 +335,14 @@ function renderMarkdown(report: Report, prior: { date: string; brokenUrls: Set<s
 		: [];
 
 	const lines: string[] = [];
-	lines.push(`# SEO Healthcheck — ${date}`);
+	lines.push(`# SEO Healthcheck — ${date}${sliceInfo}`);
 	lines.push('');
-	lines.push(`> 来源：\`${SITEMAP_INDEX}\` (递归展开)`);
-	lines.push(`> 总 URL 数：**${totalCount}**`);
-	lines.push(`> 并发：${CONCURRENCY} · 超时：${TIMEOUT_MS / 1000}s · 跟随 3xx：手动统计`);
+	lines.push(`> 来源：\`${SITEMAP_INDEX}\` (高价值 sitemap，14 个)`);
+	lines.push(`> 本次扫 URL 数：**${totalCount}**${sliceInfo}`);
+	lines.push(`> 并发：${CONCURRENCY} · 超时：${TIMEOUT_MS / 1000}s`);
 	lines.push(`> 生成时间 (UTC)：${generatedAtUtc}`);
 	if (prior) lines.push(`> 上次报告：${prior.date}（**${prior.brokenUrls.size}** 条坏 URL）`);
+	if (sliceInfo) lines.push(`> ⚠️ 本次为轮换扫描的部分切片，diff 仅在切片范围内有意义`);
 	lines.push('');
 
 	lines.push('## 📊 状态码总览');
@@ -420,20 +448,95 @@ function renderMarkdown(report: Report, prior: { date: string; brokenUrls: Set<s
 	return lines.join('\n');
 }
 
+// ─── Cursor: 轮换扫描状态 ─────────────────────────────────────────────
+interface Cursor {
+	cycleId: string;          // YYYY-MM-DD when this cycle started
+	totalUrls: number;        // total URLs in this cycle
+	nextOffset: number;       // next slice to scan
+	urlOrder: string[];       // frozen URL order for this cycle
+}
+
+function loadCursor(): Cursor | null {
+	if (!existsSync(CURSOR_PATH)) return null;
+	try {
+		return JSON.parse(readFileSync(CURSOR_PATH, 'utf8')) as Cursor;
+	} catch {
+		return null;
+	}
+}
+
+function saveCursor(c: Cursor | null) {
+	if (!existsSync(REPORT_DIR)) mkdirSync(REPORT_DIR, { recursive: true });
+	if (c === null) {
+		// 一轮跑完，删掉 cursor，下次自动开新一轮
+		if (existsSync(CURSOR_PATH)) {
+			writeFileSync(CURSOR_PATH, '');
+			// 但其实保留也无妨 —— 写入 nextOffset 等于 totalUrls 表示完成
+		}
+		return;
+	}
+	writeFileSync(CURSOR_PATH, JSON.stringify(c, null, 2), 'utf8');
+}
+
+function parseLimitArg(): number | null {
+	for (const a of process.argv.slice(2)) {
+		const m = a.match(/^--limit[=:](\d+)$/);
+		if (m) return parseInt(m[1], 10);
+	}
+	const env = process.env.SEO_LIMIT;
+	if (env) return parseInt(env, 10);
+	return null; // 不传 limit = 扫全部
+}
+
 // ─── 主流程 ───────────────────────────────────────────────────────────
 async function main() {
-	const date = process.argv[2] || todayAEST();
-	if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-		console.error(`❌ Bad date arg: ${date}. Use YYYY-MM-DD.`);
-		process.exit(1);
-	}
+	const dateArg = process.argv.slice(2).find(a => /^\d{4}-\d{2}-\d{2}$/.test(a));
+	const date = dateArg || todayAEST();
+	const limit = parseLimitArg();
 
 	console.log(`▶ SEO Healthcheck for ${date} (AEST)`);
+	if (limit) console.log(`▶ Limit: ${limit} URLs per run (rotation mode)`);
 	console.log('');
 
-	const { urls } = await collectAllUrls();
+	let urls: { url: string; sitemap: string }[];
+	let sliceInfo = '';
+	let cursor: Cursor | null = null;
+
+	if (limit) {
+		// 轮换模式：从 cursor 取这次要扫的 slice
+		cursor = loadCursor();
+		const allCollected = (await collectAllUrls()).urls;
+
+		// 检查 cursor 是否还有效（URL 数变化太多就重置）
+		const needRebuild = !cursor
+			|| cursor.nextOffset >= cursor.totalUrls
+			|| Math.abs(cursor.totalUrls - allCollected.length) > allCollected.length * 0.1; // URL 总数变化 > 10% 重置
+
+		if (needRebuild) {
+			cursor = {
+				cycleId: date,
+				totalUrls: allCollected.length,
+				nextOffset: 0,
+				urlOrder: allCollected.map(u => u.url),
+			};
+			console.log(`▶ Starting new cycle (${cursor.totalUrls} URLs total, ${Math.ceil(cursor.totalUrls / limit)} runs to complete)`);
+		} else {
+			console.log(`▶ Resuming cycle ${cursor.cycleId} — offset ${cursor.nextOffset} / ${cursor.totalUrls}`);
+		}
+
+		const start = cursor.nextOffset;
+		const end = Math.min(start + limit, cursor.urlOrder.length);
+		const sliceUrlSet = new Set(cursor.urlOrder.slice(start, end));
+		// 把 slice URL 映射回 sitemap
+		const urlToSitemap = new Map(allCollected.map(u => [u.url, u.sitemap]));
+		urls = [...sliceUrlSet].map(u => ({ url: u, sitemap: urlToSitemap.get(u) || 'unknown' }));
+		sliceInfo = ` (slice ${start + 1}-${end} of ${cursor.totalUrls})`;
+	} else {
+		// 全量模式
+		urls = (await collectAllUrls()).urls;
+	}
 	console.log('');
-	console.log(`▶ Checking ${urls.length} URLs (concurrency=${CONCURRENCY})...`);
+	console.log(`▶ Checking ${urls.length} URLs${sliceInfo} (concurrency=${CONCURRENCY})...`);
 	const t0 = Date.now();
 	const results = await checkAll(urls);
 	const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
@@ -450,11 +553,25 @@ async function main() {
 	}
 	console.log('');
 
-	const md = renderMarkdown(report, prior);
+	const md = renderMarkdown(report, prior, sliceInfo);
 	if (!existsSync(REPORT_DIR)) mkdirSync(REPORT_DIR, { recursive: true });
 	const outPath = join(REPORT_DIR, `${date}.md`);
 	writeFileSync(outPath, md, 'utf8');
 	console.log(`✅ Wrote ${outPath} (${(md.length / 1024).toFixed(1)} KB)`);
+
+	// 更新 cursor
+	if (cursor && limit) {
+		cursor.nextOffset = Math.min(cursor.nextOffset + limit, cursor.urlOrder.length);
+		saveCursor(cursor);
+		const remaining = cursor.urlOrder.length - cursor.nextOffset;
+		if (remaining === 0) {
+			console.log(`✅ Cycle ${cursor.cycleId} complete. Next run will start a new cycle.`);
+		} else {
+			const runsLeft = Math.ceil(remaining / limit);
+			console.log(`▶ Cursor → offset ${cursor.nextOffset} / ${cursor.totalUrls} (${runsLeft} runs left in this cycle)`);
+		}
+	}
+
 	if (prior) {
 		const newCount = results.filter(r => isBrokenCategory(r.category) && !prior.brokenUrls.has(r.url)).length;
 		const fixedCount = [...prior.brokenUrls].filter(u => !results.find(r => r.url === u && isBrokenCategory(r.category))).length;
