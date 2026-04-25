@@ -7,12 +7,14 @@ JR Academy 运营报告归档仓库。各类站点健康度 / SEO / 数据完整
 ```
 seo-reports/{YYYY-MM-DD}.md          每日 jiangren.com.au sitemap 健康度报告
 competitor-reports/{YYYY-MM-DD}.md   每周日 23 家竞品 × 5 维度情报简报
-marketing-topics/{YYYY-MM-DD}.md     每周一基于热点 + 竞品周报的内容/活动选题包
+marketing-topics/{YYYY-MM-DD}.md     每周一+三 基于热点 + 竞品周报的内容/活动选题包
 ai-visibility/{YYYY-MM-DD}.md        每周三 GEO 可见度（20 query 测 AI 是否推荐 JR）
+growth-playbook/{YYYY-MM-DD}.md      每周二 5 个增长玩法 idea（裂变 / 游戏 / 限时 / 联名）
 scripts/                              生成报告的脚本
 PRD_COMPETITOR_WEEKLY.md             竞品周报 PRD
 PRD_MARKETING_TOPICS.md              内容选题包 PRD
 PRD_AI_VISIBILITY.md                 AI 可见度 PRD
+PRD_GROWTH_PLAYBOOK.md               增长玩法 PRD
 ```
 
 ## SEO Healthcheck
@@ -72,6 +74,18 @@ Routine: https://claude.ai/code/routines/trig_013pfieJXDDCa9rQktNxFoKx
 完整规范见 [`PRD_AI_VISIBILITY.md`](./PRD_AI_VISIBILITY.md)。
 
 **为什么重要**：~50% 学员第一次接触 JR 不是通过 Google，而是通过 AI 助手。GEO（Generative Engine Optimization）是 2026-2027 SEO 战场。
+
+## Growth Playbook Weekly
+
+每周二 07:00 AEST (Brisbane) 由远程 routine 自动跑：
+
+1. 读上游：竞品周报（看竞品玩法）+ 选题包（看本周热点）+ 节日 calendar
+2. 锚定 JR 业务清单（Bootcamp / Lab / 求职 / 社群）+ 经典 growth hack 灵感池
+3. 输出 **5 个为 JR 量身设计的增长玩法**（每个含落地步骤 + 预估指标）
+4. 加 1-2 个"本周不推荐"玩法（说明为什么）
+5. 写 `growth-playbook/{YYYY-MM-DD}.md` + Notion 全文同步
+
+完整规范见 [`PRD_GROWTH_PLAYBOOK.md`](./PRD_GROWTH_PLAYBOOK.md)。
 
 ## 加新报告类型
 
