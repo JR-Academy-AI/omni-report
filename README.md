@@ -10,11 +10,14 @@ competitor-reports/{YYYY-MM-DD}.md   每周日 23 家竞品 × 5 维度情报简
 marketing-topics/{YYYY-MM-DD}.md     每周一+三 基于热点 + 竞品周报的内容/活动选题包
 ai-visibility/{YYYY-MM-DD}.md        每周三 GEO 可见度（20 query 测 AI 是否推荐 JR）
 growth-playbook/{YYYY-MM-DD}.md      每周二 5 个增长玩法 idea（裂变 / 游戏 / 限时 / 联名）
+daily-assignments/{YYYY-MM-DD}.md    每工作日 10:30 CST 把上面 4 份报告切成 10 人 todo（消费层）
 scripts/                              生成报告的脚本
+TEAM.md                              团队路由表（10 人 + 4 TBD，daily-assignments 必读）
 PRD_COMPETITOR_WEEKLY.md             竞品周报 PRD
 PRD_MARKETING_TOPICS.md              内容选题包 PRD
 PRD_AI_VISIBILITY.md                 AI 可见度 PRD
 PRD_GROWTH_PLAYBOOK.md               增长玩法 PRD
+PRD_DAILY_ASSIGNMENTS.md             每日工作分配 PRD（消费层）
 ```
 
 ## SEO Healthcheck
@@ -86,6 +89,18 @@ Routine: https://claude.ai/code/routines/trig_013pfieJXDDCa9rQktNxFoKx
 5. 写 `growth-playbook/{YYYY-MM-DD}.md` + Notion 全文同步
 
 完整规范见 [`PRD_GROWTH_PLAYBOOK.md`](./PRD_GROWTH_PLAYBOOK.md)。
+
+## Daily Assignments（消费层 — 把上游报告切成人头 todo）
+
+每工作日 10:30 CST (= 12:30 AEST winter / 13:30 AEDT summer) 由远程 routine 自动跑：
+
+1. 读 `TEAM.md` 拿到当前 10 人 + 4 TBD 路由规则
+2. 读最近 7 天的 4 份上游报告（competitor / marketing-topics / growth-playbook / ai-visibility）→ 提取所有 actionable items
+3. 按 TEAM.md §2 路由规则把 actionable items 切成 10 人 + 4 TBD
+4. 时区感知：成都 / 墨尔本 / 布里斯班 各自处理，Seren 周四+周五才主动派、海外实习生工作日待标注则进待办池
+5. 写 `daily-assignments/{YYYY-MM-DD}.md`（成都日期）+ Notion 极简摘要
+
+完整规范见 [`PRD_DAILY_ASSIGNMENTS.md`](./PRD_DAILY_ASSIGNMENTS.md)。团队路由见 [`TEAM.md`](./TEAM.md)。
 
 ## 加新报告类型
 
