@@ -1,0 +1,30 @@
+{
+  "topic_id": "001",
+  "topic_slug": "ai-qiuzhi-5-cuo",
+  "account": "Rain姐说求职",
+  "account_slug": "rain-jie",
+  "owner": "Summer",
+  "owner_email": "summer@jiangren.com.au",
+  "date": "2026-05-05",
+  "selected_angle": "C-干货版",
+  "status": "scored",
+  "pipeline": {
+    "topic_at": "2026-05-05T10:00:00+10:00",
+    "draft_at": "2026-05-05T10:30:00+10:00",
+    "final_at": "2026-05-05T10:45:00+10:00",
+    "review_at": "2026-05-05T11:00:00+10:00",
+    "poster_at": "2026-05-05T11:15:00+10:00",
+    "score_at": "2026-05-05T11:30:00+10:00",
+    "task_card_at": "2026-05-05T11:30:00+10:00"
+  },
+  "files": {
+    "topic": "01-topic.json",
+    "draft": "02-draft.md",
+    "final": "03-final.md",
+    "review": "04-review.md",
+    "score": "05-score.md",
+    "poster_prompts": "posters/prompts.md"
+  },
+  "marketing_task_card": "omni-report/marketing-tasks/active/xhs-2026-05-05-ai-qiuzhi-5-cuo-rain-jie.md",
+  "score_total": 81
+}

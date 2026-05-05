@@ -1,0 +1,24 @@
+{
+  "id": "001",
+  "type": "cross-account",
+  "title": "AI 求职我犯过 5 个错 第三个最伤",
+  "hook": "去年我用 AI 写简历投了 80 家，1 个面试都没拿到，问题出在第三步",
+  "angle": "盘点 AI 辅助求职的常见误区，用真实踩坑数据反向输出方法论",
+  "selected_account": "Rain姐说求职",
+  "selected_direction": "硬核求职 IP — 第一人称踩坑 + 5 步纠正方法 + 数据对比",
+  "images": [
+    "首图 文字钩子：5 个错 + 第三个最伤 + 红字标注",
+    "5 个错对照表（错误 → 修正）",
+    "投递数据 before / after 对比柱状图",
+    "ChatGPT 改写 prompt 模板截图",
+    "评论区 CTA：你踩过哪个？"
+  ],
+  "risk": "不报具体公司名 / 不承诺 offer / 不出'AI 帮你拿 offer'承诺",
+  "viral_potential": {
+    "hit_score": 7.6,
+    "predicted_tier": "1w-5w 阅读",
+    "why_hit_summary": "海外华人 AI 求职痛点共鸣 + checklist 收藏型 + '第三个最伤'悬念钩子",
+    "why_flop_summary": "赛道已饱和（100+ 同类）；数据真实性必须扛住评论区 audit"
+  },
+  "source_topics_file": "omni-report/xhs-content-factory/topics/2026-05-05.json"
+}

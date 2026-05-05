@@ -1,0 +1,69 @@
+{
+  "date": "2026-05-05",
+  "generated_at": "2026-05-05T10:00:00+10:00",
+  "generator": "manual-demo (xhs-topic-picker not run; constructed for pipeline demo)",
+  "hotpool_size": null,
+  "matched_count": null,
+  "candidates": [
+    {
+      "id": "001",
+      "type": "cross-account",
+      "score": {
+        "hotness": 7,
+        "business_fit": 9,
+        "total": 16
+      },
+      "title": "AI 求职我犯过 5 个错 第三个最伤",
+      "hook": "去年我用 AI 写简历投了 80 家，1 个面试都没拿到，问题出在第三步",
+      "angle": "盘点 AI 辅助求职的常见误区，用真实踩坑数据反向输出方法论",
+      "suitable_accounts": [
+        {
+          "account": "Rain姐说求职",
+          "direction": "硬核求职 IP — 第一人称踩坑 + 5 步纠正方法 + 数据对比"
+        },
+        {
+          "account": "澳洲匠人学院",
+          "direction": "品牌官号 — 拆 5 个错配套培训点位 + Bootcamp 软引"
+        },
+        {
+          "account": "澳洲实习猿",
+          "direction": "实习角度 — 同样 5 个错对实习投递更致命"
+        }
+      ],
+      "images": [
+        "首图 文字钩子：5 个错 + 第三个最伤 + 红字标注",
+        "5 个错对照表（错误 → 修正）",
+        "投递数据 before / after 对比柱状图",
+        "ChatGPT 改写 prompt 模板截图",
+        "评论区 CTA：你踩过哪个？"
+      ],
+      "risk": "不报具体公司名 / 不承诺 offer / 不出'AI 帮你拿 offer'承诺",
+      "related_hotspot": "无具体热点（常青选题，求职季每月可重复发）",
+      "viral_potential": {
+        "hit_score": 7.6,
+        "dimension_scores": {
+          "resonance": 8,
+          "emotion": 8,
+          "info_gap": 7,
+          "save_value": 8,
+          "title_hook": 7
+        },
+        "why_hit": [
+          "[共鸣面 8] 海外华人求职 + AI 辅助是百万级痛点，覆盖留学生 + work visa holder",
+          "[情绪 8] '第三个最伤'制造悬念，'80 投 0 面'激发挫败共情",
+          "[收藏价值 8] 5 个错 + 修正法是 checklist 型，会被反复保存",
+          "[标题 7] 数字（5/3）+ 痛点（'最伤'）+ 第一人称（'我犯过'）三钩齐发，但缺反常识"
+        ],
+        "why_flop": [
+          "AI 求职类已饱和（搜小红书近 30 天 100+ 篇）→ 不差异化必淹没",
+          "'80 投 0 面'数字必须真实 + 具体（哪个时间段 / 投的什么岗），否则评论区会揪",
+          "'5 个错'容易写成万能模板，第三个'最伤'必须真有反差点（不是凑数）"
+        ],
+        "competitor_count": null,
+        "competitor_count_note": "未跑 WebSearch（demo pipeline 跳过）；正式跑时必查",
+        "competitor_diff": "差异化点：用 Rain姐 IP 真实故事场景（第一周 / 凌晨 / 简历改 7 版那种细节），不出'AI 求职 5 大误区'通用文案",
+        "predicted_tier": "1w-5w 阅读"
+      }
+    }
+  ]
+}
