@@ -1,0 +1,129 @@
+{
+  "$schema": "./routing-table.schema.json",
+  "description": "Module → 默认 assignee email 路由表。后端 RoutingService 启动时读取，每次任务创建时按 module 查表。员工 isActive=false 时 fallback 到对应 TBD-* 占位。",
+  "lastUpdatedAt": "2026-05-04",
+  "lastUpdatedBy": "lightman@jiangren.com.au",
+
+  "moduleToAssignee": {
+    "geo-landing-page": "hello@jiangren.com.au",
+    "geo-github-repo": "hello@jiangren.com.au",
+    "geo-auto-publish": "hello@jiangren.com.au",
+
+    "geo-csdn": "serena@jiangren.com.au",
+    "geo-zhihu-column": "serena@jiangren.com.au",
+    "geo-sohu-netease-baijia": "serena@jiangren.com.au",
+    "geo-juejin": "serena@jiangren.com.au",
+    "geo-weixin-public": "serena@jiangren.com.au",
+    "geo-student-answer-coordination": "serena@jiangren.com.au",
+    "geo-csdn-rescue": "serena@jiangren.com.au",
+
+    "geo-xiaohongshu": "bella@jiangren.com.au",
+    "geo-weixin-video": "bella@jiangren.com.au",
+    "geo-cross-platform-transfer": "bella@jiangren.com.au",
+    "geo-canva-design": "bella@jiangren.com.au",
+
+    "geo-founder-ip": "lightman@jiangren.com.au",
+    "geo-student-story": "TBD-student",
+    "geo-timely-news": "TBD-content",
+
+    "redbook-daily": "TBD-redbook-account",
+    "redbook-hot-topic": "TBD-redbook-account",
+    "redbook-account-maintenance": "TBD-redbook-account",
+
+    "video-daily": "bella@jiangren.com.au",
+    "video-live": "bella@jiangren.com.au",
+
+    "weixin-daily": "serena@jiangren.com.au",
+    "weixin-longform": "serena@jiangren.com.au",
+
+    "seo-meta-fix": "hello@jiangren.com.au",
+    "seo-cwv-fix": "hello@jiangren.com.au",
+    "seo-sitemap": "hello@jiangren.com.au",
+    "seo-internal-link": "serena@jiangren.com.au",
+    "seo-404-fix": "hello@jiangren.com.au",
+
+    "event-planning": "TBD-event-by-city",
+    "event-execution": "TBD-event-by-city",
+    "event-retrospective": "TBD-event-by-city",
+
+    "campaign-plan": "ada@jiangren.com.au",
+    "partnership-negotiate": "ada@jiangren.com.au",
+    "kol-outreach": "ada@jiangren.com.au",
+    "growth-hack-launch": "ada@jiangren.com.au",
+
+    "taobao-listing": "neomi@jiangren.com.au",
+    "taobao-promotion": "neomi@jiangren.com.au",
+    "taobao-customer-service": "neomi@jiangren.com.au",
+
+    "cross-team-support": "TBD-crossteam",
+    "ad-hoc-task": "TBD-adhoc"
+  },
+
+  "redbookAccountRouting": {
+    "description": "小红书任务 targetAccount → owner（账号级路由，不走 module）",
+    "accounts": {
+      "澳洲匠人学院": "summer@jiangren.com.au",
+      "Rain姐说求职": "summer@jiangren.com.au",
+      "澳洲实习猿": "summer@jiangren.com.au",
+      "Kiki的分享日记": "summer@jiangren.com.au",
+      "Amelia在悉尼": "lily@jiangren.com.au",
+      "momo在澳洲": "lily@jiangren.com.au",
+      "JR匠人学院": "lily@jiangren.com.au",
+      "UQ课代表": "kiki-cd@jiangren.com.au",
+      "UNSW课代表": "kiki-cd@jiangren.com.au",
+      "墨大课代表": "kiki-cd@jiangren.com.au",
+      "素人号": "kiki-cd@jiangren.com.au"
+    }
+  },
+
+  "eventCityRouting": {
+    "description": "线下活动 targetCity → owner",
+    "cities": {
+      "Sydney": "seren@jiangren.com.au",
+      "Melbourne": "seren@jiangren.com.au",
+      "Brisbane": "kiki-bne@jiangren.com.au",
+      "Chengdu": "ada@jiangren.com.au",
+      "online": "ada@jiangren.com.au"
+    },
+    "secondaryAssignees": {
+      "Melbourne": "han@jiangren.com.au"
+    }
+  },
+
+  "fallbackRules": {
+    "description": "员工 isActive=false / 暂停 / casual 不可用时的 fallback 策略",
+    "rules": [
+      {
+        "if": "primaryAssignee.isActive === false",
+        "fallbackTo": "TBD-content",
+        "note": "员工离职 → 转人工分配"
+      },
+      {
+        "if": "primaryAssignee === aurora",
+        "note": "Aurora 已暂停 routine 派活，EVENT_* 类任务自动 fallback 到 seren / han"
+      },
+      {
+        "if": "primaryAssignee === seren",
+        "constraint": "dueDate 必须包含周四或周五（casual 节奏）"
+      },
+      {
+        "if": "primaryAssignee === bella",
+        "constraint": "派活节奏减半（实习生 3 天/周）"
+      },
+      {
+        "if": "primaryAssignee === han || primaryAssignee === kiki-bne",
+        "constraint": "工作日待标注，未标注前进待办池"
+      }
+    ],
+    "blockedAssignees": {
+      "description": "这些员工不接 marketing 任务",
+      "list": [
+        "melody@jiangren.com.au",
+        "amelia@jiangren.com.au",
+        "rain@jiangren.com.au",
+        "angela@jiangren.com.au",
+        "aurora@jiangren.com.au"
+      ]
+    }
+  }
+}

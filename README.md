@@ -6,19 +6,85 @@ JR Academy 运营报告归档仓库。各类站点健康度 / SEO / 数据完整
 
 ```
 seo-reports/{YYYY-MM-DD}.md          每日 jiangren.com.au sitemap 健康度报告
+seo-performance/{YYYY-MM-DD}.md      每周一 GSC + DataForSEO + PSI 排名/流量/CWV 周报
 competitor-reports/{YYYY-MM-DD}.md   每周日 23 家竞品 × 5 维度情报简报
 marketing-topics/{YYYY-MM-DD}.md     每周一+三 基于热点 + 竞品周报的内容/活动选题包
 ai-visibility/{YYYY-MM-DD}.md        每周三 GEO 可见度（20 query 测 AI 是否推荐 JR）
 growth-playbook/{YYYY-MM-DD}.md      每周二 5 个增长玩法 idea（裂变 / 游戏 / 限时 / 联名）
 daily-assignments/{YYYY-MM-DD}.md    每工作日 10:30 CST 把上面 4 份报告切成 10 人 todo（消费层）
+marketing-tasks/                      🆕 Marketing 任务 .md 文件（Markdown-First / git audit 单一权威源）
+  active/                              进行中（status != archived）
+  archive/{YYYY-MM}/                   归档（done + archived）
+  _config/routing-table.json           Module → 默认 assignee 路由（36 module + 11 小红书账号 + 5 城市）
 scripts/                              生成报告的脚本
 TEAM.md                              团队路由表（10 人 + 4 TBD，daily-assignments 必读）
 PRD_COMPETITOR_WEEKLY.md             竞品周报 PRD
 PRD_MARKETING_TOPICS.md              内容选题包 PRD
-PRD_AI_VISIBILITY.md                 AI 可见度 PRD
+PRD_AI_VISIBILITY.md                 AI 可见度 PRD（诊断层 — 识别 LLM 提及率空白）
+PRD_SEO_PERFORMANCE.md               SEO 表现周报 PRD（关键词排名 + GSC + Web Vitals）
 PRD_GROWTH_PLAYBOOK.md               增长玩法 PRD
 PRD_DAILY_ASSIGNMENTS.md             每日工作分配 PRD（消费层）
+PRD_GEO_CONTENT_FACTORY.md           🆕 GEO 内容工厂 PRD（74 话题静态库 + 9 类形态 + 22 渠道）
+PRD_MARKETING_TASKS_ADMIN.md         🆕 Marketing 任务管理 admin module PRD（Markdown-First 架构 / v0.2 通用）
+BELLA_GEO_TASKS.md                   🆕 Bella 任务清单（视频/视觉/跨平台搬运 — 3 天/周）
+SERENA_GEO_TASKS.md                  🆕 Serena 任务清单（公众号 owner / 长文主力 — 5 天/周）
 ```
+
+## Marketing Tasks Admin Module（jr-academy-admin）
+
+Marketing 任务的统一管理系统，**Markdown-First** 架构：
+
+```
+.md 文件（git tracked，唯一权威源）
+   ↓ FilesystemWatcher（chokidar）
+MongoDB MarketingTask collection（衍生查询索引）
+   ↓
+Admin UI（jr-academy-admin /marketing-tasks）
+   ↑ 拖拽 / 改 status / 加发布记录
+   └→ 写 .md + 同步 MongoDB + git auto-commit
+```
+
+3 条写入入口都先写 `.md`：
+1. PRD 一键 import（`PRD_GEO_CONTENT_FACTORY.md` 的 74 话题）
+2. 5 条 omni-report routine 的 actionable items
+3. Admin UI 操作
+
+启动后端：
+```bash
+cd jr-academy && bun run start              # 标准启动（推荐）
+ENABLE_WATCHER=true bun run start            # 启用 .md filesystem watcher
+bun run scripts/marketing-task-reindex.ts    # 一键从 .md 重建 MongoDB（disaster recovery）
+```
+
+完整规范见 [`PRD_MARKETING_TASKS_ADMIN.md`](./PRD_MARKETING_TASKS_ADMIN.md)（含 Markdown 主权层 / 12 个 service / 4 个 admin 页面 / 7 列状态流 / 路由表设计）。配套 [`PRD_GEO_CONTENT_FACTORY.md`](./PRD_GEO_CONTENT_FACTORY.md)（74 话题静态库）+ [`BELLA_GEO_TASKS.md`](./BELLA_GEO_TASKS.md) + [`SERENA_GEO_TASKS.md`](./SERENA_GEO_TASKS.md)。
+
+## SEO Performance Weekly
+
+每周一 09:00 AEST (Brisbane) 由远程 routine 自动跑（cron `0 23 * * 0` UTC）：
+
+1. **Phase 1**: GSC API 拉本周 search analytics（query / page / country / device 4 维度）
+2. **Phase 2A-D**: DataForSEO SERP 抓 100 关键词 × 3 location（AU-EN / AU-ZH / CN-ZH）排名，4 batch 渐进 commit
+3. **Phase 3**: PageSpeed Insights 抓 GSC top 50 流量页面的 Core Web Vitals
+4. **Phase 4**: diff 上周 → 找排名跌幅 / 涨幅 / 内容机会 / 流量异常 / CWV 差页面 → ROI 排序
+5. **Phase 5**: 渲染 markdown 周报（含 mermaid 历史折线，最近 12 周）
+
+数据落 `seo-performance/{YYYY-MM-DD}.json` (结构化) + `.md` (人读)。每 phase 结束立即 git push（防 stream idle timeout）。
+
+本地手跑：
+
+```bash
+bun run seo-perf                    # 全流程
+bun run seo-perf:gsc                # 只跑 Phase 1
+bun run seo-perf:serp -- --batch=A  # SERP batch A 只跑品牌词
+bun run seo-perf:cwv -- --top=20    # 只跑 top 20 页面 CWV
+bun run seo-perf:analyze            # 重新分析（不重新拉数据）
+bun run seo-perf:render             # 重新渲染 markdown
+```
+
+完整规范见 [`PRD_SEO_PERFORMANCE.md`](./PRD_SEO_PERFORMANCE.md)。
+Setup（GSC service account / DataForSEO / PSI key）见 [`scripts/seo-performance/SETUP.md`](./scripts/seo-performance/SETUP.md)。
+
+**为什么重要**：替代 Semrush Pro（$140/月）的核心功能 — 关键词排名追踪 + GSC 表现 + CWV 监控。月成本 $0.72。
 
 ## SEO Healthcheck
 
