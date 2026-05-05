@@ -13,7 +13,21 @@
  * 用法：
  *   bun run scripts/marketing-topics-to-tasks.ts
  *   bun run scripts/marketing-topics-to-tasks.ts marketing-topics/2026-05-04.md
+ *
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * ⛔ 已禁用（2026-05-05 by user request）
+ *
+ * 原因：当前阶段不希望 marketing-topics routine 自动产任务，topic 选定方式
+ * 走人工评审 / 其他 pipeline（xhs-content-factory / 未来的 geo-content-factory）。
+ * 报告本身仍由 routine 周一+周三跑（marketing-topics/{date}.md 还在产生），
+ * 但不再自动转任务卡。
+ *
+ * 重新启用：把下面的 process.exit(0) 删除即可。
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  */
+
+console.error('[disabled] marketing-topics-to-tasks 已禁用 — 见文件顶部注释');
+process.exit(0);
 
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';

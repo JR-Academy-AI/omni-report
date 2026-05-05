@@ -8,7 +8,20 @@
  * 用法：
  *   bun run scripts/growth-playbook-to-tasks.ts
  *   bun run scripts/growth-playbook-to-tasks.ts growth-playbook/2026-05-04.md
+ *
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * ⛔ 已禁用（2026-05-05 by user request）
+ *
+ * 原因：当前阶段不希望 growth-playbook routine 自动产任务。报告本身可继续由
+ * routine 跑（growth-playbook/{date}.md），但不再自动转任务卡 — 5 个增长玩法
+ * 走人工筛选后再决定要不要做成具体任务。
+ *
+ * 重新启用：把下面的 process.exit(0) 删除即可。
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  */
+
+console.error('[disabled] growth-playbook-to-tasks 已禁用 — 见文件顶部注释');
+process.exit(0);
 
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
