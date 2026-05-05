@@ -96,6 +96,71 @@ updatedAt: 2026-05-04T12:00:00+08:00
 （暂无）
 ```
 
+## 字段枚举值（schema 强约束 — 写错 markdown-sync 会拒收）
+
+> 这是**所有产任务卡的 skill / routine** 必须共同遵守的 schema 约束。
+> 后端 mongoose `runValidators: true` 会拒收任何不在枚举里的值。
+> 已有 dogfood 翻车记录（xhs pipeline 一次踩 3 个），新增 routine 时优先来这里查值。
+
+### TaskStatus（必须严格 verbatim）
+
+| 允许值 | 含义 | 不允许的写法 |
+|---|---|---|
+| `draft` | 默认初始状态 | new / pending / created |
+| `ready` | 内容就绪可发布 | ready-to-publish / publishable / queued |
+| `in_progress` | 员工正在做 | doing / wip / working |
+| `review` | 待审 | reviewing / pending-review |
+| `done` | 已完成 / 已发布 | completed / finished / published |
+| `blocked` | 卡住 | stuck / waiting |
+| `archived` | 归档 | archive / closed |
+
+### TaskPriority
+
+| 允许值 | 何时用 |
+|---|---|
+| `p0` | 紧急（评分 ≥85 或运营定的 P0 任务） |
+| `p1` | 重要（评分 75-84 或运营定的 P1 任务） |
+| `p2` | 一般（评分 < 75 或运营定的 P2 任务，**默认值**） |
+
+⚠️ **没有 p3 / p4** — 翻车过；分级只到 p2。
+
+### TaskCategory
+
+`geo-content` / `social-redbook` / `social-video` / `weixin-public` / `seo-optimization` / `ai-visibility-fix` / `content-topic` / `competitor-action` / `growth-hack` / `event-offline` / `campaign` / `partnership` / `kol-collaboration` / `taobao-ops` / `cross-team` / `ad-hoc`
+
+⚠️ 中文写不行（`小红书` / `公众号` 都会被拒）。小红书必写 `social-redbook`。
+
+### TaskModule（按 category 分组，节选高频）
+
+| 子类 | 允许值 |
+|---|---|
+| GEO 工厂 | `geo-landing-page` / `geo-github-repo` / `geo-csdn` / `geo-zhihu-column` / `geo-juejin` / `geo-xiaohongshu` / `geo-founder-ip` / `geo-student-story` / 等 16 个 geo-* |
+| 日常社媒 | `redbook-daily` / `redbook-hot-topic` / `redbook-account-maintenance` / `video-daily` / `weixin-daily` / 等 |
+| SEO | `seo-meta-fix` / `seo-cwv-fix` / `seo-sitemap` / `seo-internal-link` / `seo-404-fix` |
+| 活动 | `event-planning` / `event-execution` / `event-retrospective` |
+
+⚠️ 完整列表：`jr-academy/src/models/marketingTask.schema.ts` 的 `TaskModule` enum
+
+### TaskSource
+
+`prd-geo-content-factory` / `prd-course-marketing` / `prd-event-planning` / `routine-competitor` / `routine-marketing-topics` / `routine-growth-playbook` / `routine-ai-visibility` / `routine-seo-performance` / `routine-daily-assignments` / `manual-create` / `task-derived`
+
+⚠️ **不能自创新源** — 即使你的内容来自新 pipeline（如 xhs-content-factory），也要选最贴切的现有 source（小红书 pipeline 用 `routine-marketing-topics`），并把 pipeline 详情塞进 `sourceMeta`。
+
+### 各 skill / pipeline 的 frontmatter 写死值速查
+
+避免每个 skill 重新查 schema，下表列各 pipeline 写死的 frontmatter 值：
+
+| Pipeline | category | module | source |
+|---|---|---|---|
+| **xhs-content-factory** (小红书 5 件套) | `social-redbook` | `redbook-daily` | `routine-marketing-topics` |
+| **geo-content-factory** (74 话题工厂) | `geo-content` | 视具体渠道（geo-csdn / geo-zhihu-column / 等）| `prd-geo-content-factory` |
+| **routine-marketing-topics** (周一周三选题) | 视渠道 | 视渠道 | `routine-marketing-topics` |
+| **routine-ai-visibility** (周三 AI 可见度) | `ai-visibility-fix` | 视具体修复类型 | `routine-ai-visibility` |
+| **routine-competitor** (周二竞品周报) | `competitor-action` | 视行动类型 | `routine-competitor` |
+
+新增 pipeline 时**先**在本表加一行，**再**写 skill 内部的 frontmatter 模板。
+
 ## 写入路径（3 条）
 
 1. **PRD import** — Admin "导入 PRD" 按钮 → 解析 `PRD_GEO_CONTENT_FACTORY.md` 9 个 pipe table → 写 N 个 .md
