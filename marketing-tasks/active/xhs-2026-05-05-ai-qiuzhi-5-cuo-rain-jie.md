@@ -1,5 +1,5 @@
 ---
-id: 1746406200000
+id: 0
 title: 【小红书 · Rain姐说求职】AI 求职我犯过 5 个错 第三个最伤
 category: social-redbook
 module: redbook-daily
@@ -13,7 +13,7 @@ sourceMeta:
   topicSlug: ai-qiuzhi-5-cuo
   scoreFile: 05-score.md
   scoreTotal: 81
-assignee: TBD-redbook-account
+assignee: 1134583264@qq.com
 reviewer: TBD-founder
 status: ready
 priority: p1

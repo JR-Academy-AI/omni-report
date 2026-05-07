@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 外部热点
   reportItemHash: xhs-opensource-llm-uq-kedaibiao
-assignee: TBD-redbook-account
+assignee: 2838684082@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p1

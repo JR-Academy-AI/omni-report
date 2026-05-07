@@ -1,8 +1,6 @@
 ---
 id: 0
-title: >-
-  2026 Q2 开源模型五选一：Gemma 4 / Kimi K2.6 / Mistral 128B / Muse Spark / DeepSeek
-  V4——同一个任务跑五遍
+title: '2026 Q2 开源模型五选一：Gemma 4 / Kimi K2.6 / Mistral 128B / Muse Spark / DeepSeek V4——同一个任务跑五遍'
 category: campaign
 module: ad-hoc-task
 source: routine-marketing-topics
@@ -10,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 推荐线上讲座
   reportItemHash: 854431471d23
-assignee: TBD-adhoc
+assignee: 1134583264@qq.com
 reviewer: null
 status: draft
 priority: p0
@@ -23,9 +21,9 @@ tags:
   - imported-from-routine
   - marketing-topics
   - webinar
-createdBy: TBD-system
-createdAt: 2026-05-05T02:08:43.464Z
-updatedAt: 2026-05-05T02:08:43.464Z
+createdBy: hello@jiangren.com.au
+createdAt: '2026-05-05T03:25:18.900Z'
+updatedAt: '2026-05-07T04:55:05.869Z'
 derivedFrom: null
 ---
 ## 描述
@@ -60,5 +58,4 @@ derivedFrom: null
 
 ## Comments
 
-- @system 2026-05-05T02:08:43.464Z
-  > 由 `omni-report/scripts/marketing-topics-to-tasks.ts` 自动从内容选题包「推荐线上讲座 #2」生成。
+（暂无）

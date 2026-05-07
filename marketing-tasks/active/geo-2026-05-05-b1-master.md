@@ -1,5 +1,5 @@
 ---
-id: 1746410000000
+id: 0
 title: '[B1 master] MCP 完整入门：从协议到实战 5 个 Server'
 category: geo-content
 module: geo-landing-page
@@ -26,7 +26,7 @@ sourceMeta:
     - devto-en
   variantsCount: 6
   variantsCardIds: []
-assignee: TBD-mkt-content
+assignee: 18634772744@163.com
 reviewer: TBD-founder
 status: draft
 priority: p0

@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 联名机会
   reportItemHash: 7ddbee42a674
-assignee: 1982723658@qq.com
+assignee: 2363843954@qq.com
 reviewer: null
 status: draft
 priority: p2

@@ -1,5 +1,5 @@
 ---
-id: 1746410100001
+id: 0
 title: '[B1 jr-blog] MCP 完整入门：5 步从协议到实战'
 category: geo-content
 module: geo-landing-page
@@ -16,7 +16,7 @@ sourceMeta:
     openingFirst50: 5 分钟读懂 + 学完能做什么
     internalLinkAnchor: AI Engineer Bootcamp Phase 2 + 求职服务
     targetWordCount: 4000
-assignee: TBD-mkt-content
+assignee: 18634772744@163.com
 reviewer: TBD-founder
 status: draft
 priority: p1

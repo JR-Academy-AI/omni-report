@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 长尾常青
   reportItemHash: xhs-12month-bill-amelia
-assignee: TBD-redbook-account
+assignee: 2363843954@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p0

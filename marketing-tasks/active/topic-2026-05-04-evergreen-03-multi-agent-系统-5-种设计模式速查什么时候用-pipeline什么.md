@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 长尾常青话题
   reportItemHash: 46d3bb5775c3
-assignee: TBD-adhoc
+assignee: 18634772744@163.com
 reviewer: null
 status: draft
 priority: p2

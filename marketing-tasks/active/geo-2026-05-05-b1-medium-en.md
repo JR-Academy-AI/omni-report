@@ -1,5 +1,5 @@
 ---
-id: 1746410100005
+id: 0
 title: >-
   [B1 medium-en] MCP for AU AI Engineers: 5 Production Servers + Job-Hunt
   Workflow

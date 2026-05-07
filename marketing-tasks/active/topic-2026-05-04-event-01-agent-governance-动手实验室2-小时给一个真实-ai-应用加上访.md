@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 推荐线下活动
   reportItemHash: 9baf10f74f15
-assignee: TBD-event-by-city
+assignee: huangdg755@gmail.com
 reviewer: null
 status: draft
 priority: p2

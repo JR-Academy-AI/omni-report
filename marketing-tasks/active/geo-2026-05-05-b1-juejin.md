@@ -1,5 +1,5 @@
 ---
-id: 1746410100004
+id: 0
 title: '[B1 juejin] 实战：5 个 MCP Server 串起来做 AI 求职助手'
 category: geo-content
 module: geo-juejin

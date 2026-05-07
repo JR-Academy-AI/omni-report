@@ -30,7 +30,7 @@ sourceMeta:
     - devto-en
   variantsCount: 6
   variantsCardIds: []
-assignee: TBD-mkt-content
+assignee: 18634772744@163.com
 reviewer: TBD-founder
 status: draft
 priority: p0

@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 推荐线上讲座
   reportItemHash: a8886ea6d1e1
-assignee: TBD-adhoc
+assignee: huangdg755@gmail.com
 reviewer: null
 status: draft
 priority: p2

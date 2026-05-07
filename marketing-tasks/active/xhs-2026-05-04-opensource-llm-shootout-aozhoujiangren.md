@@ -10,7 +10,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 外部热点
   reportItemHash: xhs-opensource-llm-aozhoujiangren
-assignee: TBD-redbook-account
+assignee: 1134583264@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p1
