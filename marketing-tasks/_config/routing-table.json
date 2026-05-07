@@ -1,7 +1,7 @@
 {
   "$schema": "./routing-table.schema.json",
   "description": "Module → 默认 assignee email 路由表。后端 RoutingService 启动时读取，每次任务创建时按 module 查表。员工 isActive=false 时 fallback 到 TBD-* 占位。",
-  "lastUpdatedAt": "2026-05-06",
+  "lastUpdatedAt": "2026-05-07",
   "lastUpdatedBy": "lightman",
   "_emailGuide": "所有 email 来自 staff-roster.md 真实清单。用户提供的是个人邮箱（@qq/@163/@gmail/@hotmail），后端 emailToUserId 直接 findOne({ email }) 必须跟 jr-academy User 表登录 email 一致。",
 
@@ -60,11 +60,19 @@
     "taobao-customer-service": "261073251@qq.com",
 
     "cross-team-support": "TBD-crossteam",
-    "ad-hoc-task": "TBD-adhoc"
+    "ad-hoc-task": "TBD-adhoc",
+
+    "comment-reddit": "2083483802@qq.com",
+    "comment-github": "2083483802@qq.com",
+    "comment-zhihu": "2083483802@qq.com",
+    "comment-hashnode": "2083483802@qq.com",
+    "comment-hn": "18634772744@163.com",
+    "comment-devto": "18634772744@163.com",
+    "comment-v2ex": "18634772744@163.com"
   },
 
   "_moduleNotes": {
-    "_principle": "分工原则：原创内容（master draft / 落地页 / GitHub repo）派 MKT 全职；copy 改写发布到第三方平台的搬运行为派实习生（Bella）。",
+    "_principle": "分工原则：原创内容（master draft / 落地页 / GitHub repo）派 MKT 全职；copy 改写发布到第三方平台的搬运行为派实习生（Bella）。Comment Outreach 7 module（comment-*）按平台随机分给 Serena / Bella，软广策略 = 提『匠人学院』+ 引导搜索具体子页面（不带 URL）。",
     "_intern_modules_split": "GEO 发布工作分两位实习生：(1) Serena (2083483802@qq.com) 接文字搬运 11 个 module — CSDN / 知乎 / 掘金 / 搜狐网易百家 / Medium-devto / Reddit-Quora / 公众号 / 公众号日常 / 公众号长文 / CSDN 账号修复 / 学员答主协调；(2) Bella (18634772744@163.com) 接视觉/视频 6 个 module — 小红书 / 视频号 / 跨平台搬运 / Canva 设计 / video-daily / video-live。",
     "TBD-mkt-content": "原创内容写作（master draft / 落地页 / 学员答主协调 / 时事新闻）— admin 拨 master 卡 ready 前必须显式指派给 Aurora（暂停） / Seren（casual）/ Summer / KIKI / Lily 之一。",
     "TBD-engineering": "SEO meta/CWV/sitemap/404 修复 — 工程任务，admin 显式指派。",

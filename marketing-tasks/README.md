@@ -45,6 +45,7 @@ marketing-tasks/
 | `taobao-` | TAOBAO_OPS |
 | `cross-` | CROSS_TEAM |
 | `adhoc-` | AD_HOC |
+| `comment-` | COMMENT_OUTREACH（评论外联软广 — 提『匠人学院』+ 引导搜索子页面，不带 URL）|
 
 ## 文件格式（YAML frontmatter + 5 个固定 H2 section）
 
