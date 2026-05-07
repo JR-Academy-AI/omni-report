@@ -1,0 +1,97 @@
+name: Sync Marketing Tasks to Prod
+
+# 见 PRD_MARKETING_TASKS_CI_SYNC.md
+# omni-report 是 marketing-tasks .md 的 source of truth；
+# 这个 workflow 把 active/*.md push 给 prod jr-academy backend，写进 Mongo。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'marketing-tasks/active/**/*.md'
+      - '.github/workflows/sync-marketing-tasks.yml'
+  workflow_dispatch:
+    # 手动兜底：首次全量 / Action 失败重试 / backend 升级后重新同步
+
+concurrency:
+  group: sync-marketing-tasks
+  cancel-in-progress: false  # 串行执行，按 push 顺序，避免后写覆盖前写
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build payload + POST to prod
+        env:
+          PROD_API: ${{ secrets.JR_ACADEMY_PROD_API }}
+          TOKEN: ${{ secrets.JR_ACADEMY_SUPERADMIN_TOKEN }}
+        run: |
+          if [ -z "$PROD_API" ] || [ -z "$TOKEN" ]; then
+            echo "::error::Missing JR_ACADEMY_PROD_API or JR_ACADEMY_SUPERADMIN_TOKEN secret"
+            exit 1
+          fi
+          node <<'EOF'
+          const fs = require('fs');
+          const path = require('path');
+
+          (async () => {
+            const dir = 'marketing-tasks/active';
+            if (!fs.existsSync(dir)) {
+              console.log(`No ${dir} directory; nothing to sync`);
+              return;
+            }
+
+            const tasks = fs.readdirSync(dir)
+              .filter(f => f.endsWith('.md'))
+              .map(f => ({
+                filename: f,
+                rawMarkdown: fs.readFileSync(path.join(dir, f), 'utf-8')
+              }));
+
+            if (tasks.length === 0) {
+              console.log('No .md files in active/; nothing to sync');
+              return;
+            }
+
+            console.log(`Posting ${tasks.length} tasks to ${process.env.PROD_API}/admin-cms/marketing-tasks/sync/import`);
+
+            const res = await fetch(
+              `${process.env.PROD_API}/admin-cms/marketing-tasks/sync/import`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${process.env.TOKEN}`
+                },
+                body: JSON.stringify({ tasks, strategy: 'upsert' })
+              }
+            );
+
+            const text = await res.text();
+            let json;
+            try {
+              json = JSON.parse(text);
+            } catch {
+              console.error(`Non-JSON response (HTTP ${res.status}): ${text.slice(0, 500)}`);
+              process.exit(1);
+            }
+
+            console.log(JSON.stringify(json, null, 2));
+
+            if (!res.ok || !json.success) {
+              console.error(`::error::Sync failed: HTTP ${res.status}`);
+              process.exit(1);
+            }
+            if ((json.errors?.length ?? 0) > 0) {
+              console.error(`::error::${json.errors.length} task(s) failed validation`);
+              process.exit(1);
+            }
+            console.log(`OK created=${json.created} updated=${json.updated} skippedInvalid=${json.skippedInvalid}`);
+          })().catch(err => {
+            console.error(`::error::${err.message}`);
+            process.exit(1);
+          });
+          EOF
