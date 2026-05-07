@@ -38,6 +38,12 @@ async function main() {
 		return;
 	}
 
+	// --validate: 扫 active/aivis-* 所有卡的 platforms 字段是否在 enum 内
+	if (process.argv.includes('--validate')) {
+		await validatePlatforms();
+		return;
+	}
+
 	const reportPath = await pickReportFile();
 	if (!reportPath) {
 		console.error('No ai-visibility report found.');
@@ -241,6 +247,22 @@ async function collectExistingHashes(dir: string): Promise<Map<string, string>> 
 	return map;
 }
 
+/**
+ * 后端 TaskPlatform enum 合法值（见 jr-academy/src/models/marketingTask.schema.ts）
+ * 跟 frontmatter platforms[] 校验严格——填错会让 syncStringToMongoDB 返回 null。
+ *
+ * 历史教训：第一次手动填卡时把 jr-blog 写成 jr-blog（应是 jiangren-blog），
+ * zhihu 写成 zhihu（应是 zhihu-column），devto 写成 devto（应是 dev-to）→
+ * sync workflow 报 "sync returned null (frontmatter check failed?)"。
+ */
+const VALID_PLATFORMS = [
+	'jiangren-blog', 'jiangren-learn', 'github', 'medium', 'dev-to', 'hashnode',
+	'linkedin', 'reddit', 'twitter', 'csdn', 'zhihu-column', 'zhihu-question',
+	'juejin', 'weixin-gzh', 'xiaohongshu', 'weixin-video', 'douyin', 'bilibili',
+	'hacker-news', 'v2ex', 'sohu', 'netease', 'baijia', 'toutiao', 'jianshu',
+	'cnblogs', '51cto', 'taobao', 'offline-event', 'internal-doc'
+];
+
 function renderTaskMd(row: ActionRow, reportDate: string, reportRel: string): string {
 	const reportItemHash = computeReportItemHash(row);
 
@@ -295,6 +317,8 @@ function renderTaskMd(row: ActionRow, reportDate: string, reportRel: string): st
 		`estimatedHours: null`,
 		`actualHours: null`,
 		`dueDate: null`,
+		// 写稿后人工填 platforms — 必须用以下 enum 合法值，错值会让 sync 返回 null
+		// 完整 enum: ${VALID_PLATFORMS.join(', ')}
 		`tags:`,
 		`  - imported-from-routine`,
 		`  - ai-visibility`,
@@ -427,6 +451,59 @@ async function backfillHashes() {
 	}
 
 	console.log(`\nBackfill done: updated=${updated}, skipped=${skipped}, failed=${failed}`);
+}
+
+/**
+ * Validate: 扫 active/aivis-*.md，检查 platforms 字段每条 slug 是否在 enum 内
+ * 输出违规清单（错值 → 合法值建议），exit 1 if any invalid，方便接 CI lint
+ */
+async function validatePlatforms() {
+	const entries = await fs.readdir(TASKS_DIR);
+	const aivisFiles = entries.filter(f => f.startsWith('aivis-') && f.endsWith('.md'));
+
+	const SUGGESTIONS: Record<string, string> = {
+		'jr-blog': 'jiangren-blog',
+		'zhihu': 'zhihu-column',
+		'devto': 'dev-to',
+		'wechat': 'weixin-gzh',
+		'gzh': 'weixin-gzh',
+		'xhs': 'xiaohongshu',
+		'rednote': 'xiaohongshu'
+	};
+
+	let invalidCount = 0;
+	for (const f of aivisFiles) {
+		const raw = await fs.readFile(path.join(TASKS_DIR, f), 'utf-8');
+		const fmEnd = raw.indexOf('\n---', 4);
+		if (fmEnd < 0) continue;
+		const fm = raw.slice(0, fmEnd);
+
+		const platformsBlock = fm.match(/platforms:\s*\n((?:\s+- [^\n]+\n?)+)/);
+		if (!platformsBlock) continue;
+
+		const slugs = platformsBlock[1]
+			.split('\n')
+			.map(l => l.replace(/^\s+-\s*/, '').trim())
+			.filter(Boolean);
+
+		const invalid = slugs.filter(s => !VALID_PLATFORMS.includes(s));
+		if (invalid.length === 0) continue;
+
+		console.error(`✗ ${f}`);
+		for (const bad of invalid) {
+			const suggest = SUGGESTIONS[bad] || '<不在 enum>';
+			console.error(`  invalid: "${bad}" → 建议: "${suggest}"`);
+		}
+		invalidCount += invalid.length;
+	}
+
+	if (invalidCount === 0) {
+		console.log(`✓ All ${aivisFiles.length} aivis cards have valid platforms.`);
+	} else {
+		console.error(`\n✗ Found ${invalidCount} invalid platform slug(s) across cards.`);
+		console.error(`Valid enum values: ${VALID_PLATFORMS.join(', ')}`);
+		process.exit(1);
+	}
 }
 
 main().catch(err => {

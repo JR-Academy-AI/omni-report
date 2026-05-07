@@ -1,0 +1,80 @@
+name: Routine → Marketing Tasks (cron)
+
+# 见 PRD_AI_VISIBILITY.md § 9 + PRD_MARKETING_TASKS_CI_SYNC.md
+# 周报产出后自动跑 to-tasks 脚本，把推荐行动转成 marketing-tasks/active/ 卡。
+# 卡产生后 sync-marketing-tasks.yml 监听 active/**/*.md push 自动同步到 prod Mongo。
+
+on:
+  schedule:
+    # ai-visibility 周三 09:30 Brisbane (UTC+10) = UTC 周三 23:30
+    - cron: '30 23 * * 2'
+    # competitor 周日 21:00 Brisbane = UTC 周日 11:00
+    - cron: '0 11 * * 0'
+  workflow_dispatch:
+    inputs:
+      routine:
+        description: '跑哪个 routine（默认 all）'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - ai-visibility
+          - competitor
+
+concurrency:
+  group: routine-to-tasks
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Run to-tasks scripts
+        env:
+          ROUTINE: ${{ github.event.inputs.routine || 'all' }}
+        run: |
+          set -e
+          shopt -s nocaseglob
+
+          # 决定跑哪些脚本
+          if [[ "$ROUTINE" == "ai-visibility" || "$ROUTINE" == "all" ]]; then
+            echo "::group::ai-visibility-to-tasks"
+            bun run scripts/ai-visibility-to-tasks.ts || echo "::warning::ai-visibility-to-tasks failed (non-fatal)"
+            echo "::endgroup::"
+          fi
+
+          if [[ "$ROUTINE" == "competitor" || "$ROUTINE" == "all" ]]; then
+            echo "::group::competitor-to-tasks"
+            bun run scripts/competitor-to-tasks.ts || echo "::warning::competitor-to-tasks failed (non-fatal)"
+            echo "::endgroup::"
+          fi
+
+          # growth-playbook 和 marketing-topics 已被用户主动 disabled
+          # （见 scripts/growth-playbook-to-tasks.ts + marketing-topics-to-tasks.ts 顶部注释）
+          # 不在 cron 自动化范围内 — 报告本身仍按其它 routine 产出。
+
+      - name: Commit + push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet marketing-tasks/active/; then
+            echo "No new task cards generated."
+            exit 0
+          fi
+
+          git add marketing-tasks/active/
+          git commit -m "chore(routines): cron-generated task cards from $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
