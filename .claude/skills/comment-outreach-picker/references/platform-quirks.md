@@ -4,17 +4,38 @@
 
 ## 1. Reddit（Serena, EN, 2/天）
 
-### Search query（每天轮换 3 条）
+> ⚠️ **v1.1 修复**：dogfood 发现 `site:reddit.com` Google 搜索拉不到近 7 天热帖。**改用 Reddit 公共 JSON API**（无需 token，直接 WebFetch 就行）。
+
+### 选目标主路径：fetch 各 sub 的 top.json
+
+每天 WebFetch 这些 URL，拿 top weekly 帖子：
+
 ```
-site:reddit.com AI engineer roadmap 2026
-site:reddit.com Claude Code vs Cursor
-site:reddit.com landed AI job junior
-site:reddit.com Anthropic API tutorial
+https://www.reddit.com/r/LangChain/top.json?t=week&limit=25
+https://www.reddit.com/r/learnmachinelearning/top.json?t=week&limit=25
+https://www.reddit.com/r/ClaudeAI/top.json?t=week&limit=25
+https://www.reddit.com/r/cscareerquestions/top.json?t=week&limit=25
+https://www.reddit.com/r/learnprogramming/top.json?t=week&limit=25
+https://www.reddit.com/r/ChatGPTPro/top.json?t=week&limit=25
+```
+
+返回 JSON 含 `data.children[].data.{title, permalink, num_comments, author, created_utc, score}` —— 直接拿到 frontmatter 全部字段（不用再 WebFetch 单帖）。
+
+### 筛选条件
+
+```
+score ≥ 50（社区认可）
+num_comments ≥ 10（有讨论）
+created_utc 在过去 7 天内
+title 含 AI Engineer / Bootcamp / Claude / Cursor / Prompt / RAG / LangChain / career / interview / 求职 / learn 等关键词
+作者 7 天内未被本 routine 评论过（去重 sourceMeta.targetAuthor）
+```
+
+### Search query 备路径（JSON 拉不到时）
+```
+site:reddit.com Claude Code AI engineer
 site:reddit.com LangChain LangGraph comparison
-site:reddit.com prompt engineering tips advanced
-site:reddit.com RAG vs fine-tuning when
-site:reddit.com Australia tech immigration AI
-site:reddit.com Claude prompt caching
+site:reddit.com prompt engineering tips
 ```
 
 ### 优先 sub
@@ -40,13 +61,32 @@ site:reddit.com Claude prompt caching
 
 ## 2. Hacker News（Bella, EN, 1/天）
 
-### Search query
+> ⚠️ **v1.1 修复**：HN Algolia search API 比 Google 索引快得多 + 直接返回 JSON。
+
+### 选目标主路径：HN Algolia API
+
 ```
-site:news.ycombinator.com AI engineer
-site:news.ycombinator.com Claude Code
-site:news.ycombinator.com LangChain
-site:news.ycombinator.com prompt engineering
+https://hn.algolia.com/api/v1/search?query=Claude+Code&tags=story&numericFilters=created_at_i%3E{1_week_ago_unix}
+https://hn.algolia.com/api/v1/search?query=AI+engineer&tags=story&numericFilters=created_at_i%3E{1_week_ago_unix}
+https://hn.algolia.com/api/v1/search?query=LangChain&tags=story&numericFilters=created_at_i%3E{1_week_ago_unix}
+https://hn.algolia.com/api/v1/search_by_date?tags=front_page    # 今日头版
+```
+
+返回 JSON 含 `objectID / title / url / author / points / num_comments / created_at` —— 拿到所有 frontmatter 字段。
+
+### 筛选条件
+
+```
+points ≥ 100
+num_comments ≥ 50
+created_at 在过去 3 天（HN 节奏快）
+title 含 AI / Claude / GPT / LangChain / RAG / agent / engineer
+```
+
+### Search query 备路径
+```
 site:news.ycombinator.com "Show HN" AI
+site:news.ycombinator.com Claude Code
 ```
 
 ### 优先帖类型

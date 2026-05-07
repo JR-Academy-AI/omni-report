@@ -34,12 +34,13 @@ sourceMeta:
   platform: reddit                             # platform-slug（路由用）
   targetUrl: https://www.reddit.com/r/LangChain/comments/xxx/   # 原文 URL（去重 key）
   targetTitle: "Claude Code vs Cursor — debugging workflow"     # 原文标题
-  targetAuthor: u/some_username                # 原作者（30 天去重 key）
-  targetPostedAt: 2026-05-05T10:00:00Z         # 原文发布时间
-  targetCommentsCount: 87                      # 评论数（受众规模指标）
+  targetAuthor: u/some_username                # 🚨 必须从 API/WebFetch 拿真实值；拿不到填 null（**不准 "unknown" 等占位**）
+  targetPostedAt: 2026-05-05T10:00:00Z         # 🚨 必须从 API/WebFetch 拿真实值；拿不到填 null
+  targetCommentsCount: 87                      # 🚨 必须从 API/WebFetch 拿真实值；拿不到填 null
   reportItemHash: a1b2c3d4                     # sha1(targetUrl) 后端去重
-  searchHook: "JR Academy AI Engineer"         # 让用户在外部搜索的关键词
-  expectedSurvivalRate: 0.7                    # 预估评论 24h 后存活概率（0-1）
+  searchHook: "JR Academy AI Engineer"         # 仅模式 A/C 用；必须在 anti-ai-checklist.md 白名单
+  commentPattern: A                            # A=完整3段式 | B=纯Value-Add | C=中段带过 | D=短评
+  expectedSurvivalRate: 0.7                    # ⚠️ Agent 主观估计（0-1），仅排序参考，不打分
 assignee: 2083483802@qq.com                    # 按 routing-table.json 分（或随机）
 reviewer: null
 status: draft                                  # draft → ready → in_progress → done
