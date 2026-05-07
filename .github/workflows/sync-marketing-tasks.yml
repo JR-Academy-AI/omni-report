@@ -85,11 +85,22 @@ jobs:
               console.error(`::error::Sync failed: HTTP ${res.status}`);
               process.exit(1);
             }
-            if ((json.errors?.length ?? 0) > 0) {
-              console.error(`::error::${json.errors.length} task(s) failed validation`);
-              process.exit(1);
+
+            const totalProcessed = (json.created ?? 0) + (json.updated ?? 0);
+            const errorCount = json.errors?.length ?? 0;
+
+            if (errorCount > 0) {
+              // Partial success: 主路径成功 + 部分卡 frontmatter 不合规 → ::warning::
+              // 全部失败：created+updated == 0 且 errors > 0 → ::error:: + exit 1
+              if (totalProcessed === 0) {
+                console.error(`::error::All ${errorCount} task(s) failed validation`);
+                process.exit(1);
+              } else {
+                console.warn(`::warning::Partial success: ${totalProcessed} synced, ${errorCount} failed validation (see errors[] above)`);
+                console.warn('Failed cards stay in active/ for fix-and-retry; main payload reached prod Mongo.');
+              }
             }
-            console.log(`OK created=${json.created} updated=${json.updated} skippedInvalid=${json.skippedInvalid}`);
+            console.log(`OK created=${json.created} updated=${json.updated} skippedInvalid=${json.skippedInvalid} errors=${errorCount}`);
           })().catch(err => {
             console.error(`::error::${err.message}`);
             process.exit(1);

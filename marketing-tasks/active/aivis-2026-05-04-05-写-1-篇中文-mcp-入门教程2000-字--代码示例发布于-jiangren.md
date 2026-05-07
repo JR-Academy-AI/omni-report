@@ -7,7 +7,7 @@ source: routine-ai-visibility
 sourceMeta:
   reportPath: ai-visibility/2026-05-04.md
   reportSection: 推荐行动清单 #5
-  reportItemHash: f0e762333afe
+  reportItemHash: c63797c98951
 assignee: TBD-mkt-content
 reviewer: null
 status: draft

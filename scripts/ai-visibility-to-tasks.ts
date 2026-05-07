@@ -32,6 +32,12 @@ interface ActionRow {
 }
 
 async function main() {
+	// --backfill: 不生成新卡，只重算 active/aivis-* 现有卡的 reportItemHash 字段
+	if (process.argv.includes('--backfill')) {
+		await backfillHashes();
+		return;
+	}
+
 	const reportPath = await pickReportFile();
 	if (!reportPath) {
 		console.error('No ai-visibility report found.');
@@ -190,12 +196,25 @@ function deriveFilename(reportDate: string, row: ActionRow): string {
  */
 /**
  * Hash 不带 reportDate — 同一 actionable 在不同周报里出现也算同一条，避免 dedupe 失效。
- * action 内容相同就视作同一 task。
+ *
+ * normalizeAction: 去掉标点 / 空格 / markdown 标记 / 大小写差异，让两期周报对同一条建议
+ * 的文字微调（如 "创建/完善" vs "创建 / 完善"、加引号、加 emoji）算出同一 hash。
+ *
+ * 历史教训: 第一版用 row.action.trim() 精确比对，05-04 跟 05-06 同根任务因文字微调
+ * 生成 2 张重复卡，10 张里 5 对同根。
  */
+function normalizeAction(action: string): string {
+	return action
+		.replace(/[`*_#\[\]()<>{}『』「」'"""''.,，。;；:：!！?？、\s ]/g, '')
+		.replace(/[—\-\/\\|]/g, '')
+		.toLowerCase();
+}
+
 function computeReportItemHash(row: ActionRow): string {
+	const normalized = normalizeAction(row.action);
 	return crypto
 		.createHash('sha1')
-		.update(`ai-visibility::${row.action.trim()}`)
+		.update(`ai-visibility::${normalized}`)
 		.digest('hex')
 		.slice(0, 12);
 }
@@ -330,6 +349,84 @@ function escapeYamlString(s: string): string {
 		return `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 	}
 	return s;
+}
+
+/**
+ * Backfill: 重算 active/aivis-* 现有卡的 reportItemHash 字段，让旧算法（精确比对）
+ * 切到新算法（normalized）一致。
+ *
+ * 流程：
+ *   1. 扫 active/aivis-*.md
+ *   2. 从 frontmatter 拿到 reportPath + reportSection
+ *   3. 回去读 ai-visibility/{date}.md，按 #N 找回 row.action 原文
+ *   4. 用新算法算 hash，sed 更新 reportItemHash 字段（保持其他内容不动）
+ */
+async function backfillHashes() {
+	const entries = await fs.readdir(TASKS_DIR);
+	const aivisFiles = entries.filter(f => f.startsWith('aivis-') && f.endsWith('.md'));
+
+	console.log(`Backfill: scanning ${aivisFiles.length} aivis-* cards`);
+
+	const reportCache = new Map<string, ActionRow[]>(); // reportPath → rows
+	let updated = 0;
+	let skipped = 0;
+	let failed = 0;
+
+	for (const f of aivisFiles) {
+		const filePath = path.join(TASKS_DIR, f);
+		const raw = await fs.readFile(filePath, 'utf-8');
+
+		const reportPathMatch = raw.match(/reportPath:\s*(\S+)/);
+		const reportSectionMatch = raw.match(/reportSection:\s*推荐行动清单 #(\d+)/);
+		const oldHashMatch = raw.match(/reportItemHash:\s*(\S+)/);
+
+		if (!reportPathMatch || !reportSectionMatch || !oldHashMatch) {
+			console.warn(`  ⊘ ${f} — missing reportPath/reportSection/reportItemHash, skip`);
+			skipped++;
+			continue;
+		}
+
+		const reportRel = reportPathMatch[1].trim();
+		const sectionNum = parseInt(reportSectionMatch[1], 10);
+		const oldHash = oldHashMatch[1].trim();
+
+		// 读 + 缓存对应 report 解析结果
+		if (!reportCache.has(reportRel)) {
+			try {
+				const reportAbs = path.resolve(ROOT, reportRel);
+				const reportRaw = await fs.readFile(reportAbs, 'utf-8');
+				reportCache.set(reportRel, parseActionTable(reportRaw));
+			} catch (err: any) {
+				console.error(`  ✗ ${f} — cannot read report ${reportRel}: ${err.message}`);
+				failed++;
+				continue;
+			}
+		}
+
+		const rows = reportCache.get(reportRel)!;
+		const matchingRow = rows.find(r => r.num === sectionNum);
+		if (!matchingRow) {
+			console.warn(`  ⊘ ${f} — no row #${sectionNum} in ${reportRel}`);
+			skipped++;
+			continue;
+		}
+
+		const newHash = computeReportItemHash(matchingRow);
+		if (newHash === oldHash) {
+			skipped++;
+			continue;
+		}
+
+		const updatedContent = raw.replace(
+			/reportItemHash:\s*\S+/,
+			`reportItemHash: ${newHash}`
+		);
+		await fs.writeFile(filePath, updatedContent, 'utf-8');
+		console.log(`  ✓ ${f} — ${oldHash} → ${newHash}`);
+		updated++;
+	}
+
+	console.log(`\nBackfill done: updated=${updated}, skipped=${skipped}, failed=${failed}`);
 }
 
 main().catch(err => {
