@@ -1,0 +1,56 @@
+name: Weekly Health Report
+
+# 每周一 22:00 UTC = 8am Brisbane 自动跑健康报告
+# 输出 marketing-tasks/_health/YYYY-MM-DD.md，commit + push
+# 同时跑 archive-stale-tasks 归档 14 天没动的 draft 卡
+
+on:
+  schedule:
+    - cron: '0 22 * * 0'  # Sunday 22:00 UTC = Monday 8am Brisbane
+  workflow_dispatch:
+    inputs:
+      archive_days:
+        description: '归档多少天没动的 draft 卡（默认 14）'
+        required: false
+        default: '14'
+
+concurrency:
+  group: weekly-health
+  cancel-in-progress: false
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 30  # 让 git log --since 能往回追 30 天
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run weekly health report
+        run: npx -y tsx scripts/weekly-health-report.ts
+
+      - name: Archive stale tasks
+        run: |
+          DAYS="${{ github.event.inputs.archive_days || '14' }}"
+          npx -y tsx scripts/archive-stale-tasks.ts --days "$DAYS"
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add marketing-tasks/_health marketing-tasks/active marketing-tasks/archive
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            DATE=$(date -u +%Y-%m-%d)
+            git commit -m "chore(weekly-health): ${DATE} 健康报告 + 归档 stale 卡"
+            git push origin main
+          fi
