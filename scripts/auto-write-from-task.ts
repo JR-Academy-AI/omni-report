@@ -1,15 +1,17 @@
 #!/usr/bin/env bun
 /**
- * Auto Writer — 每天从 marketing-tasks/active 挑 1 张待写任务卡，调 Anthropic API
- * 写 6 平台 variant，落盘到 geo-content-factory/drafts/，改任务卡 status: draft → review。
+ * Auto Writer — 每天从 marketing-tasks/active 挑 1 张待写任务卡，调 jr-academy
+ * 内部 /llm endpoint 写 6 平台 variant，落盘到 geo-content-factory/drafts/，
+ * 改任务卡 status: draft → review。
  *
  * 用法：
  *   bun run scripts/auto-write-from-task.ts                   # 默认挑 1 张
  *   bun run scripts/auto-write-from-task.ts --task <filename> # 指定任务卡（去 .md 后缀）
- *   bun run scripts/auto-write-from-task.ts --dry-run         # 不写 Mongo / 不调 API，只显示挑哪张
+ *   bun run scripts/auto-write-from-task.ts --dry-run         # 不写 / 不调 API，只显示挑哪张
  *
  * 依赖：
- *   - ANTHROPIC_API_KEY env（GitHub Actions 走 secret）
+ *   - JR_ACADEMY_PROD_API env（默认 https://api.jiangren.com.au）
+ *   - jr-academy 后端 /llm endpoint（@Public，走 ai-settings 拿 API key，不需要本地 ANTHROPIC_API_KEY）
  *
  * 由 .github/workflows/daily-writer.yml cron 每天 8am Brisbane 触发。
  *
@@ -26,7 +28,6 @@
  *     不在 daily writer 范围
  */
 
-import Anthropic from '@anthropic-ai/sdk';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
@@ -34,6 +35,8 @@ const ROOT = path.resolve(import.meta.dir, '..');
 const ACTIVE_DIR = path.join(ROOT, 'marketing-tasks', 'active');
 const ARCHIVE_DIR = path.join(ROOT, 'marketing-tasks', 'archive');
 const DRAFTS_DIR = path.join(ROOT, 'geo-content-factory', 'drafts');
+
+const PROD_API = process.env.JR_ACADEMY_PROD_API || 'https://api.jiangren.com.au';
 
 interface TaskCard {
 	filename: string;
@@ -119,11 +122,7 @@ async function main() {
 	const taskFlag = process.argv.indexOf('--task');
 	const explicitFilename = taskFlag >= 0 ? process.argv[taskFlag + 1] : null;
 
-	const apiKey = process.env.ANTHROPIC_API_KEY;
-	if (!apiKey && !isDryRun) {
-		console.error('❌ ANTHROPIC_API_KEY env not set');
-		process.exit(1);
-	}
+	console.log(`🔧 LLM endpoint: ${PROD_API}/llm`);
 
 	const task = explicitFilename
 		? await loadTask(explicitFilename)
@@ -147,12 +146,10 @@ async function main() {
 	const draftDir = path.join(DRAFTS_DIR, slug);
 	await fs.mkdir(draftDir, { recursive: true });
 
-	const anthropic = new Anthropic({ apiKey });
-
 	const variants: Record<string, string> = {};
 	for (const platform of PLATFORMS) {
 		console.log(`\n→ Writing ${platform.name} (${platform.tone})...`);
-		const content = await writeVariant(anthropic, task, platform);
+		const content = await writeVariant(task, platform);
 		const fname = platform.name === 'jr-blog' ? 'draft.md' : `${platform.name}.md`;
 		await fs.writeFile(path.join(draftDir, fname), content, 'utf-8');
 		variants[platform.name] = content;
@@ -278,27 +275,37 @@ function parseTaskCard(filename: string, raw: string): TaskCard | null {
 	};
 }
 
-// ───── 写 variant ─────
+// ───── 写 variant（走 jr-academy /llm endpoint，不直接调 Anthropic SDK） ─────
 
-async function writeVariant(client: Anthropic, task: TaskCard, platform: PlatformVariant): Promise<string> {
+async function writeVariant(task: TaskCard, platform: PlatformVariant): Promise<string> {
 	const userPrompt = buildUserPrompt(task, platform);
+	// jr-academy /llm endpoint 单 prompt 接口，把 system + user 合并
+	const fullPrompt = `${SYSTEM_PROMPT}\n\n---\n\n${userPrompt}`;
 
-	const response = await client.messages.create({
-		model: 'claude-sonnet-4-6',
-		max_tokens: 16000,
-		system: [{
-			type: 'text',
-			text: SYSTEM_PROMPT,
-			cache_control: { type: 'ephemeral' }
-		}],
-		messages: [{ role: 'user', content: userPrompt }]
+	const res = await fetch(`${PROD_API}/llm`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			provider: 'claude',
+			model: 'claude-sonnet-4-6',
+			prompt: fullPrompt,
+			maxTokens: 16000,
+			temperature: 0.7
+		})
 	});
 
-	const textBlock = response.content.find(b => b.type === 'text');
-	if (!textBlock || textBlock.type !== 'text') {
-		throw new Error(`Unexpected response shape: ${JSON.stringify(response.content)}`);
+	if (!res.ok) {
+		const errText = await res.text();
+		throw new Error(`/llm endpoint failed (HTTP ${res.status}): ${errText.slice(0, 500)}`);
 	}
-	return textBlock.text;
+
+	const json: any = await res.json();
+	// jr-academy LlmResponseDto 字段：{ provider, model, responseText }
+	const text = json.responseText;
+	if (!text || typeof text !== 'string') {
+		throw new Error(`Unexpected /llm response shape: ${JSON.stringify(json).slice(0, 300)}`);
+	}
+	return text;
 }
 
 function buildUserPrompt(task: TaskCard, platform: PlatformVariant): string {

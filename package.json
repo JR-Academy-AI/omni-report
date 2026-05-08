@@ -1,9 +1,11 @@
 {
   "name": "omni-report",
   "version": "0.1.0",
-  "private": true,
-  "type": "module",
   "description": "JR Academy 站点健康度 / SEO / 数据健康度等运营报告归档仓库",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "private": true,
   "scripts": {
     "geo:pick": "bun run scripts/geo-topic-picker.ts",
     "geo:master": "bun run scripts/geo-card-master-create.ts",
@@ -22,10 +24,5 @@
     "seo-perf:alert": "bun run scripts/seo-performance/alert.ts",
     "seo-perf:verify": "bun run scripts/seo-performance/verify-credentials.ts"
   },
-  "engines": {
-    "bun": ">=1.0.0"
-  },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.95.1"
-  }
+  "type": "module"
 }

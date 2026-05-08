@@ -2,7 +2,8 @@ name: Daily Auto Writer
 
 # 每天 22:00 UTC = 8am Brisbane 自动写 1 篇 6 平台 variant
 # 从 marketing-tasks/active/ 挑下一张 routine 来源的 status=draft 写文章类任务
-# 调 Anthropic API 6 次（每次 1 个 variant，prompt cache 复用 system）
+# 调 jr-academy /llm endpoint 6 次（不直接调 Anthropic SDK，避免本地存 API key —
+# key 走后端 ai-settings 数据库由 LlmService 拿）
 # 落盘 geo-content-factory/drafts/{slug}/，改任务卡 status: draft → review，commit + push
 # Push 触发 sync-marketing-tasks.yml 把更新后的卡同步到 prod admin Kanban
 
@@ -40,21 +41,14 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install deps
-        run: bun install --frozen-lockfile
-
       - name: Run auto-writer
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # /llm endpoint 走后端 ai-settings 拿 API key — 这里只需指 prod API URL
+          JR_ACADEMY_PROD_API: ${{ secrets.JR_ACADEMY_PROD_API }}
           INPUT_TASK: ${{ github.event.inputs.task }}
           INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
           set -e
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::warning::ANTHROPIC_API_KEY secret not set — skipping daily writer"
-            echo "请去 GitHub repo Settings → Secrets and variables → Actions 加 ANTHROPIC_API_KEY"
-            exit 0
-          fi
 
           ARGS=""
           if [ -n "$INPUT_TASK" ]; then
