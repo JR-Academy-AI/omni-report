@@ -10,8 +10,7 @@
  *   bun run scripts/auto-write-from-task.ts --dry-run         # 不写 / 不调 API，只显示挑哪张
  *
  * 依赖：
- *   - JR_ACADEMY_PROD_API env（默认 https://api.jiangren.com.au）
- *   - jr-academy 后端 /llm endpoint（@Public，走 ai-settings 拿 API key，不需要本地 ANTHROPIC_API_KEY）
+ *   - jr-academy 后端 /llm endpoint（@Public，走 ai-settings 拿 API key，不需要任何 env / secret）
  *
  * 由 .github/workflows/daily-writer.yml cron 每天 8am Brisbane 触发。
  *
@@ -36,7 +35,7 @@ const ACTIVE_DIR = path.join(ROOT, 'marketing-tasks', 'active');
 const ARCHIVE_DIR = path.join(ROOT, 'marketing-tasks', 'archive');
 const DRAFTS_DIR = path.join(ROOT, 'geo-content-factory', 'drafts');
 
-const PROD_API = process.env.JR_ACADEMY_PROD_API || 'https://api.jiangren.com.au';
+const PROD_API = 'https://api.jiangren.com.au';
 
 interface TaskCard {
 	filename: string;

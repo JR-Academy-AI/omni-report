@@ -43,8 +43,6 @@ jobs:
 
       - name: Run auto-writer
         env:
-          # /llm endpoint 走后端 ai-settings 拿 API key — 这里只需指 prod API URL
-          JR_ACADEMY_PROD_API: ${{ secrets.JR_ACADEMY_PROD_API }}
           INPUT_TASK: ${{ github.event.inputs.task }}
           INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
