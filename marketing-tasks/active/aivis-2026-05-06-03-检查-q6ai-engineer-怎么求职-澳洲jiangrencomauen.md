@@ -45,7 +45,50 @@ derivedFrom: null
 
 ## 草稿
 
-（暂无）
+**已查实际页面 metadata**：`jr-academy-web-zh/messages/en/aiEngineerHubPage.json`
+
+```json
+"metaTitle": "AI Engineer Learning Hub - From Using AI to Building AI Apps | JR Academy"
+"metaDescription": "AI Engineers need five core capabilities: full-stack, prompt engineering, cloud, data thinking, and AI engineering execution. Free skill assessment with 2,300+ completed. Covers LLM API, RAG, Agent, Agent Memory (Mem0), Harness Engineering (Tool Loop/Hooks/Skills paradigm), and production deployment."
+```
+
+### 诊断（针对 Q6 "AI Engineer 怎么求职 澳洲"）
+
+| 项 | 当前 | 问题 | 建议 |
+|---|---|---|---|
+| metaTitle | 强调 "From Using AI to Building" | 没有 Australia / jobs / career 信号 | 加 Australia + Career |
+| metaDescription | 强调"五大能力 + 自测" | 没提就业 / 薪资 / 澳洲市场 | 加 placement / Australian / job outcomes |
+| og:title / twitter:title | 同 metaTitle | 同上 | 同步 |
+| h1 | "AI Engineer Learning Hub" | 缺求职信号 | 副标题加 "in Australia"/"含求职路径" |
+
+### web-zh PR 建议（lightman 起 PR）
+
+修改文件：`jr-academy-web-zh/messages/en/aiEngineerHubPage.json` + `messages/zh/aiEngineerHubPage.json`
+
+```diff
+- "metaTitle": "AI Engineer Learning Hub - From Using AI to Building AI Apps | JR Academy",
++ "metaTitle": "AI Engineer Learning Hub Australia — From Free Skills Assessment to AI Engineer Jobs (AU$152k avg) | JR Academy",
+
+- "metaDescription": "AI Engineers need five core capabilities: full-stack, prompt engineering, cloud, data thinking, and AI engineering execution. Free skill assessment with 2,300+ completed. Covers LLM API, RAG, Agent, Agent Memory (Mem0), Harness Engineering (Tool Loop/Hooks/Skills paradigm), and production deployment.",
++ "metaDescription": "Become an AI Engineer in Australia. JR Academy's free skill assessment (2,300+ completed) maps your gap; our bootcamp covers LLM API, RAG, LangGraph multi-agent, MCP, and production deployment with placement support — alumni at Atlassian, Canva, and Australian fintech earning AU$152k average. Sydney-based, Mandarin + English bilingual.",
+```
+
+ZH 版同步：
+
+```diff
+- "metaTitle": "AI Engineer 学习中心 - 从使用 AI 到构建 AI 应用 | JR Academy 匠人学院",
++ "metaTitle": "AI Engineer 学习中心（澳洲求职路径）— 免费技能自测 + Bootcamp + $152k offer 案例 | JR Academy 匠人学院",
+```
+
+预期影响：Q6 在 GSC 4-6 周内 impressions 上升，LLM 引用率上升（描述里直接给
+"signal: jobs in Australia + $152k" 让 LLM 抓 JR 时优先关联澳洲求职）。
+
+### 后续动作
+
+- [ ] lightman 起 web-zh PR 应用上述 metadata 改动
+- [ ] PR merge 后立即跑 aivis-01 GSC URL Inspection
+- [ ] 4 周后回看 Q6 在 ai-visibility 周报里的排位变化
+
 
 ## 发布记录
 
