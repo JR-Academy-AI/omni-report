@@ -5,7 +5,7 @@ category: geo-content
 module: geo-zhihu-column
 source: manual-create
 sourceMeta:
-  draftPath: .claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/zhihu.md
+  draftPath: marketing-tasks/_drafts/awesome-ai/zhihu.md
   topicId: B2
   reportItemHash: awesome-ai-zhihu-2026-05-07
   variantStrategy:
@@ -40,7 +40,7 @@ derivedFrom: null
 awesome-ai GitHub repo 推广的知乎 variant。
 
 ⚠️ **特别说明**：
-- 草稿已写完：`.claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/zhihu.md`
+- 草稿已写完：`marketing-tasks/_drafts/awesome-ai/zhihu.md`
 - **本卡 = 协调 + 后续维护**，知乎账号 lightman 自己发（不是运营代发）
 - 运营负责：发布前格式检查 / 发布后评论区监控（高质量评论 24h 内回复）/ 数据回收
 
@@ -57,7 +57,7 @@ awesome-ai GitHub repo 推广的知乎 variant。
 
 ## 草稿
 
-详见 `.claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/zhihu.md`（1500 字 + 第一人称钩子 + 互动结尾）。
+详见 `marketing-tasks/_drafts/awesome-ai/zhihu.md`（1500 字 + 第一人称钩子 + 互动结尾）。
 
 ## 发布记录
 

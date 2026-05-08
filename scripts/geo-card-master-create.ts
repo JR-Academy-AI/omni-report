@@ -274,7 +274,10 @@ function renderMasterMd(topic: PlanTopic, slug: string, plan: PlanFile, today: s
 
 	const dueDate = addDays(today, 7);
 	const title = deriveTitle(topic);
-	const draftPath = `geo-content-factory/drafts/${topic.queryId.toLowerCase()}-${slug}/master.md`;
+	// 路径去重：当 slug 已经等于 queryId（短 ASCII fallback 场景），不要再拼一次造成 q9-q9 双重前缀
+	const qLower = topic.queryId.toLowerCase();
+	const dirSlug = slug === qLower ? qLower : `${qLower}-${slug}`;
+	const draftPath = `geo-content-factory/drafts/${dirSlug}/master.md`;
 
 	// frontmatter（手写 YAML 跟现有 dogfood master 卡风格一致）
 	const fm: string[] = [
@@ -288,7 +291,7 @@ function renderMasterMd(topic: PlanTopic, slug: string, plan: PlanFile, today: s
 		`  reportPath: ${draftPath}`,
 		`  reportSection: ${yamlString(`ai-visibility ${plan.reportName} §JR 完全空白 ${topic.queryId}`)}`,
 		`  reportItemHash: ${reportItemHash}`,
-		`  topicId: ${topic.queryId}-${slug}`,
+		`  topicId: ${slug === qLower ? topic.queryId : `${topic.queryId}-${slug}`}`,
 		`  aiVisibilityQuery: ${topic.queryId}`,
 		`  aiVisibilityReport: ${plan.reportRel}`,
 		`  aiCitedPlatforms:`,

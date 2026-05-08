@@ -5,7 +5,7 @@ category: geo-content
 module: geo-listicle
 source: prd-geo-content-factory
 sourceMeta:
-  reportPath: geo-content-factory/drafts/L5-prompt-engineering-cn/draft.md
+  reportPath: geo-content-factory/drafts/q15-listicle-pe-cn/master.md
   reportSection: 'ai-visibility 2026-05-06 §JR 完全空白 Q15 (listicle 角度)'
   reportItemHash: 73f6c6287a31
   topicId: Q15-listicle-pe-cn
@@ -44,9 +44,10 @@ tags:
   - geo-listicle
   - topic-q15-listicle
   - query-q15
+  - auto-written-master
 createdBy: TBD-system
 createdAt: 2026-05-07T00:00:00.000Z
-updatedAt: 2026-05-08T08:47:57.000Z
+updatedAt: 2026-05-08T14:07:34.312Z
 derivedFrom: null
 ---
 
@@ -167,3 +168,6 @@ draft 路径：`geo-content-factory/drafts/L5-prompt-engineering-cn/draft.md`
   > 数据源：ai-visibility/2026-05-06.md §"JR 完全空白的 Query" Q15 listicle 角度。
   > Q15 LLM Top 3：xiniushu.com / GitHub/wangxuqi(PE-Guide-Chinese) / promptingguide.ai/zh。
   > JR 差异化 slot："免费 + 含考核作业反馈 + 中文 mentor 群" 三件套。
+- @auto-writer 2026-05-08T14:07:34.312Z
+  > 已自动写完 master draft（29491 bytes）落到 `geo-content-factory/drafts/q15-listicle-pe-cn/master.md`。Lightman review 后拨 status=ready 触发后端 fanOutGeoVariants 建 6 张 variant 卡。
+

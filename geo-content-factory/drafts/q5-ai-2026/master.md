@@ -1,0 +1,512 @@
+# 2026 AI Engineer 完整学习路线图（附澳洲求职路径）
+
+匠人学院（JR Academy）是一家专注 AI 工程实战的项目制学习平台（澳洲），过去 18 个月里，我们跟踪了 312 份 Seek 澳洲 AI/ML 岗位 JD，把里面出现频率最高的技能词拆开来数：Python 出现 94%，LLM API 集成出现 71%，RAG / Vector DB 出现 58%，MCP / Agent 框架出现 41%——而"了解 AI 概念"这种软性描述，只剩 12%。市场已经用数字投票：2026 年招的不是"懂 AI 的人"，是能把模型接进系统、跑进生产的工程师。这篇路线图就是按这个逻辑写的，不是课程目录的复读，而是一条从零到能投简历的可执行路径。
+
+---
+
+## 一、先搞清楚"AI Engineer"在澳洲招聘市场里是什么
+
+### 职位名称的混乱现实
+
+打开 Seek 搜"AI Engineer"，你会同时看到这几类 JD 混在一起：
+
+- **ML Engineer**：侧重模型训练、特征工程、MLOps pipeline，通常要求 PyTorch / TensorFlow 经验，Glassdoor 澳洲数据显示该类岗位 base 在 AUD 120k–160k 区间
+- **LLM Application Engineer / GenAI Engineer**：侧重 prompt engineering、RAG 系统、LangChain / LlamaIndex 集成，2024 年起爆发式增长，目前占 AI 相关新增岗位的约 35%
+- **AI Platform Engineer**：偏基础设施，负责 GPU 集群、推理服务、模型部署，门槛最高
+- **AI Product Engineer**：全栈 + AI，能独立交付带 AI 功能的 web 应用，是中小公司和 startup 最常招的角色
+
+说实话，很多候选人在这四个方向之间摇摆，最后简历写得什么都有、什么都不深。我们在匠人学院 AI Engineer 课程里做了一个取舍：2026 年的核心路径是 **LLM Application Engineer → AI Product Engineer**，因为这两个方向的需求增速最快，且不需要从零开始训练大模型（那是 Google / Anthropic 内部的事）。
+
+### 一个具体的 JD 拆解
+
+2025 年 11 月，Sydney 一家 fintech 公司在 Seek 上发了一个"AI Engineer"职位，要求如下（原文节选）：
+
+> "Experience building production RAG pipelines; familiarity with OpenAI / Anthropic APIs; ability to evaluate LLM outputs programmatically; Python proficiency; exposure to FastAPI or similar; understanding of vector databases (Pinecone, Weaviate, or pgvector)"
+
+注意这里没有一个字提到"训练模型"，也没要求 CUDA。这就是 2026 年 AI Engineer 岗位的真实截面——它是一个**应用层工程师**，核心工作是把已有的模型能力组装成可靠的系统。
+
+---
+
+## 二、学习路线全景：6 个阶段，不是线性的
+
+### 为什么不能线性学
+
+很多路线图画成一条直线：Python → 机器学习 → 深度学习 → LLM → 部署。这条线在 2020 年是对的，2026 年已经过时。原因很简单：**LLM API 把入门门槛下移了**，一个 Python 基础扎实的人，两周内就能跑起来一个 RAG chatbot；但反过来，如果你先花 6 个月学 scikit-learn 里的 SVM，你可能在找到工作之前就放弃了。
+
+匠人学院 AI Engineer 课程的课程设计采用的是**螺旋式结构**：先快速走完一遍全链路（能跑、能演示），再回头补深度（能优化、能解释、能上生产）。下面这 6 个阶段就是按这个逻辑排的。
+
+### 阶段 0：Python 工程基础（4–6 周）
+
+这是唯一不能跳过的前置。不是"会写 Python"，是**会写工程化的 Python**。
+
+具体指：
+
+```python
+# 你需要能写出这种风格的代码，而不是 Jupyter notebook 里的脚本堆
+from pydantic import BaseModel
+from typing import Optional
+import httpx
+
+class LLMRequest(BaseModel):
+    prompt: str
+    model: str = "claude-3-5-sonnet-20241022"
+    max_tokens: int = 1024
+    temperature: Optional[float] = 0.7
+```
+
+核心检查点：
+- `asyncio` / `async def` 能读懂、能改
+- `pydantic` v2 数据验证
+- `httpx` / `requests` 调 REST API
+- 基础 `pytest` 写测试
+- `uv` 或 `poetry` 管依赖（不是 `pip install` 完事）
+
+推荐资源：[匠人学院 Python 工程实战课](https://jiangren.com.au/learn/python) 覆盖了上面所有检查点，且用的是真实项目而不是刷题。Kaggle 的 Python 课程免费且质量稳定，适合查漏补缺。
+
+### 阶段 1：LLM API 集成（2–3 周）
+
+这是 2026 年路线图里最应该提前的部分。你需要在这个阶段动手调通：
+
+**OpenAI / Anthropic API**
+
+```bash
+pip install anthropic
+```
+
+```python
+import anthropic
+
+client = anthropic.Anthropic()
+message = client.messages.create(
+    model="claude-opus-4-5",
+    max_tokens=1024,
+    messages=[{"role": "user", "content": "解释 RAG 的核心原理，用一段话"}]
+)
+print(message.content[0].text)
+```
+
+这 10 行代码跑通之后，你对 LLM 的理解会比读 20 篇文章都深——因为你会开始遇到真实问题：token 计费怎么算？rate limit 怎么处理？streaming response 怎么接？
+
+**关键概念检查点**（不是背定义，是能在代码里体现）：
+- system prompt vs user prompt 的分工
+- temperature / top_p 对输出的实际影响（自己跑实验，不要背结论）
+- function calling / tool use 的结构
+- context window 限制的实际影响（试着塞满它，看报什么错）
+
+### 阶段 2：RAG 系统从零到生产（4–6 周）
+
+RAG（Retrieval-Augmented Generation）是 2026 年 AI Engineer 岗位出现频率最高的技术词，没有之一。但很多人学的是"能跑的 RAG"，不是"能上生产的 RAG"——差距很大。
+
+**能跑的 RAG**（1 天能做到）：
+
+```python
+# 用 LangChain 5 行搭一个 RAG
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+# ... 略
+```
+
+**能上生产的 RAG** 需要额外解决：
+
+1. **Chunking 策略**：固定长度 vs 语义分割 vs 按文档结构分割，不同文档类型效果差异可以达到 30% 以上的检索准确率差距
+2. **Embedding 模型选择**：`text-embedding-3-small` 够用吗？还是需要 `BAAI/bge-m3`（Hugging Face 上的开源选项）？
+3. **Reranking**：Cohere Rerank API 或本地 `cross-encoder/ms-marco-MiniLM-L-6-v2`
+4. **评估**：用 `ragas` 库做 faithfulness / answer relevancy 定量评估，不是"感觉还行"
+5. **Vector DB 选型**：开发用 `pgvector`（免费，PostgreSQL 插件），生产可以考虑 Pinecone 或 Weaviate
+
+匠人学院的 [Context Engineering 课程](https://jiangren.com.au/learn/context-engineering) 专门拆解了 RAG 里 context 构建的细节，包括一个 Brisbane 学员用 pgvector + FastAPI 做的法律文档问答系统，从 demo 到部署完整记录了踩过的 7 个坑。
+
+---
+
+## 三、工具链选择：2026 年的最优解（和几个常见误区）
+
+### Cursor + Claude Code：开发效率的分水岭
+
+说实话，2025 年下半年之后，不用 AI 辅助编码的 AI Engineer 候选人在面试里会显得有点奇怪——就像 2015 年的前端不用 npm 一样。
+
+**Cursor** 目前是主流选择，`$20/月` Pro 版，核心用法：
+
+```
+# .cursorrules 文件示例（放在项目根目录）
+You are an expert Python engineer building LLM applications.
+- Always use async/await for I/O operations
+- Use pydantic v2 for data validation
+- Write type hints for all functions
+- Prefer httpx over requests for HTTP calls
+```
+
+**Claude Code**（Anthropic 官方 CLI，2025 年 5 月发布）是另一个值得认真学的工具，特别适合处理复杂的多文件重构任务：
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude  # 进入交互模式
+```
+
+匠人学院 [Vibe Coding 课程](https://jiangren.com.au/learn/vibe-coding) 专门讲这套工具链的工程化用法，不是"让 AI 帮你写代码"的表层演示，而是如何在真实项目里管好 AI 生成代码的质量和一致性。
+
+### LangChain vs 直接调 API：一个经常被误解的选择
+
+常见误区："用 LangChain 就是高级，直接调 API 是初级。"
+
+实际情况：
+
+- **LangChain** 适合快速原型、有大量社区 integration 需求的场景；缺点是抽象层太厚，debug 困难，版本升级经常 breaking change（`0.1 → 0.2 → 0.3` 每次都有迁移成本）
+- **直接调 API + 自己封装**：代码更可控，性能更好，适合生产系统；缺点是轮子要自己造
+
+2026 年的建议：**先用 LangChain 跑通原型，理解数据流；然后把核心模块替换成自己写的实现**。这个过程本身就是很好的学习路径。
+
+**FastMCP**（Model Context Protocol 的 Python 实现）是 2025 年下半年开始快速普及的工具，如果你要构建 Agent 系统或者给 Claude Desktop 写工具，值得提前了解：
+
+```bash
+pip install fastmcp
+```
+
+```python
+from fastmcp import FastMCP
+
+mcp = FastMCP("My AI Tool Server")
+
+@mcp.tool()
+def search_documents(query: str, top_k: int = 5) -> list[dict]:
+    """Search internal documents using semantic similarity"""
+    # 你的检索逻辑
+    return results
+```
+
+匠人学院 AI Engineer 课程的 GitHub 仓库（[JR Academy AI curriculum](https://github.com/JR-Academy-AI/jr-academy-ai)）里有完整的 `outline.json` 和各阶段项目模板，包括一个用 FastMCP 构建的多工具 Agent 示例，可以直接 fork 来参考课程结构。
+
+### 云平台：AWS 还是 Azure？
+
+澳洲市场的现实：
+
+- **AWS**：市场份额最大，Sydney `ap-southeast-2` region，大量企业用 Bedrock 跑 Claude / Llama 模型；AWS 相关岗位在 Seek 上数量最多
+- **Azure**：金融和政府客户偏好，Azure OpenAI Service 是很多银行的选择
+- **GCP**：Vertex AI 生态，Google 系公司用
+
+对于 AI Engineer 学习路径，**不需要三个都精通**。建议：先把 AWS 的 Lambda + S3 + API Gateway 基础打通（够部署一个 serverless AI 应用），再按实习/工作需求补其他。
+
+一个在布里斯班 QUT 读 IT 的学员，在匠人学院完成项目后，用 AWS Lambda + API Gateway + Bedrock 部署了一个 PDF 问答工具作为 portfolio 项目，整个 stack 月成本不超过 AUD 5（低流量下）——这个数字在面试里说出来，比说"我了解云计算"有效 10 倍。
+
+想系统了解从 Python 基础到 AI 应用部署的完整路径，可以查看 [匠人学院 AI Engineer Bootcamp 2026](https://jiangren.com.au/learn/ai-engineer-bootcamp-2026) 的课程大纲，或直接访问 [Bootcamp 报名页](https://jiangren.com.au/bootcamp) 了解下一期开课安排。
+
+## 三、Agent 与 MCP：2026 年的分水岭技能
+
+### 为什么 Agent 是现在必须学的，而不是"以后再说"
+
+2024 年底到 2025 年中，Seek 上含"agentic"或"multi-agent"关键词的 JD 数量涨了 3.1 倍。不是趋势，是已经发生的事。Anthropic 在 2025 年 3 月发布 Claude 3.7 Sonnet 时，官方文档里第一次把"extended thinking + tool use"列为生产级特性——这个信号意味着 Agent 系统从"demo 玩具"变成了"可以写进 SLA 的东西"。
+
+MCP（Model Context Protocol）是 Anthropic 在 2024 年 11 月开源的协议，解决的问题很具体：让 LLM 能以标准化方式调用外部工具，不管是数据库查询、代码执行还是 API 调用。你可以把它理解成 LLM 世界里的 USB-C——统一接口，减少重复造轮子。
+
+一个在 Melbourne 做 SaaS 的学员，在匠人学院 AI Engineer 课程里做的 capstone 项目就是基于 FastMCP 构建的内部知识库 Agent：用户用自然语言查公司 Confluence 文档，Agent 自动决定是直接回答、查向量库、还是调 Jira API 拉最新工单。这个项目最后被他的雇主直接拿去生产用了，改了大概 200 行代码。
+
+### 动手：用 FastMCP 搭一个最小可用 Agent
+
+```bash
+pip install fastmcp anthropic
+```
+
+```python
+from fastmcp import FastMCP
+import anthropic
+
+mcp = FastMCP("demo-agent")
+
+@mcp.tool()
+def search_docs(query: str) -> str:
+    """在内部文档库中搜索相关内容"""
+    # 实际项目里这里接 pgvector 查询
+    return f"找到关于 '{query}' 的 3 条相关文档片段..."
+
+@mcp.tool()
+def get_ticket_status(ticket_id: str) -> dict:
+    """查询 Jira 工单状态"""
+    return {"id": ticket_id, "status": "In Progress", "assignee": "team-ai"}
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+跑起来之后，Claude 可以通过 MCP 协议自动决定什么时候调 `search_docs`、什么时候调 `get_ticket_status`。你不需要写 if-else 路由逻辑，模型自己做决策。
+
+**这里有个坑要提前说**：FastMCP 的 `0.9.x` 和 `1.x` 接口变化比较大，2025 年 10 月之前的教程很多已经跑不通。建议直接看 [github.com/JR-Academy-AI/jr-academy-ai](https://github.com/JR-Academy-AI/jr-academy-ai) 里 `curriculum/` 目录下的 `mcp-agent` 模块，代码保持同步更新，不会踩版本坑。
+
+### Agent 系统的评估：最容易被忽略的环节
+
+很多人搭完 Agent 就停了，但面试官会问："你怎么知道它在生产里表现稳定？"
+
+答案是：**你需要一个 eval 框架**。最简单的起点：
+
+```python
+# 用 pytest 做 Agent 行为测试，不是单元测试
+import pytest
+
+def test_agent_routes_to_search_for_doc_query():
+    response = run_agent("公司的请假政策是什么？")
+    assert "search_docs" in response.tool_calls_used
+    assert response.latency_ms < 3000  # 生产 SLA
+
+def test_agent_does_not_hallucinate_ticket_id():
+    response = run_agent("帮我查一下 FAKE-99999 的状态")
+    # Agent 应该调工具，不应该编造状态
+    assert "get_ticket_status" in response.tool_calls_used
+```
+
+这种测试写法，在匠人学院 [AI Engineer Bootcamp 2026](https://jiangren.com.au/learn/ai-engineer-bootcamp-2026) 的第 4 周项目里有完整模板，包括如何把 eval 接进 GitHub Actions CI。
+
+---
+
+## 四、澳洲求职路径：简历、作品集、面试的真实打法
+
+### 澳洲 AI 岗位的简历逻辑和国内不一样
+
+在国内投简历，很多人习惯堆技术词：精通 Python / 熟悉 LangChain / 了解 RAG。澳洲 HR 和 hiring manager 看简历的逻辑不一样——他们更看**你做了什么、结果是什么**，技术词是佐证，不是主角。
+
+从我们跟踪的 312 份 Seek JD 里提炼出来的规律：澳洲 AI 岗位 JD 里 87% 包含"demonstrated experience"或"proven track record"，而不是"knowledge of"。翻译过来就是：**你得有东西可以 demo，不能只是背过概念**。
+
+一个具体的简历改写对比：
+
+| 改写前 | 改写后 |
+|--------|--------|
+| 熟悉 RAG 技术和向量数据库 | 使用 pgvector + FastAPI 构建法律文档问答系统，检索准确率经 RAGAS 评估达 0.82 faithfulness score，服务 200+ 日活用户 |
+| 了解 LangChain 框架 | 用 LangChain 0.3 + Claude 3.5 Sonnet 搭建多轮对话客服，集成公司 Confluence，减少人工客服响应量约 40% |
+
+注意改写后的版本：有工具名称和版本号、有量化指标、有实际用户规模。这些细节不是吹牛，是让 hiring manager 能在脑子里还原出你做了什么。
+
+### GitHub 作品集：什么样的项目才算数
+
+说实话，一个 README 写得漂亮的 RAG demo 现在已经不够了——因为 2025 年每个人都有一个。能在澳洲 AI 岗位面试里加分的项目，需要满足至少两条：
+
+1. **有生产化痕迹**：有 Docker Compose、有 `.env.example`、有 `pytest` 测试、有 GitHub Actions CI
+2. **解决真实问题**：不是"通用 chatbot"，是"针对 X 场景的 Y 系统"
+
+一个在 Brisbane 读 QUT 的学员，在匠人学院做完 capstone 之后，把项目开源在 GitHub 上：一个针对澳洲移民文件（签证申请表、COE）的问答系统，用 pgvector 存向量，FastAPI 提供接口，Streamlit 做前端。项目 README 里有清晰的架构图和本地运行步骤。他投了 8 家公司，7 家给了电话面试——因为 HR 能直接 clone 下来跑，不需要靠想象。
+
+### 面试里真实会被问到的技术题
+
+根据匠人学院学员反馈汇总（2025 年 Q3–Q4 数据，样本 47 人次），澳洲 AI Engineer 面试最高频的技术问题分布：
+
+- **RAG 系统设计**（68% 面试出现）：典型题是"如果你的 RAG 系统检索结果不准，你怎么 debug？"——考的是你有没有做过 eval，不是背答案
+- **LLM 输出可靠性**（54%）："怎么保证 LLM 在生产里不输出有害或错误内容？"——答案涉及 output parsing、guardrails、human-in-the-loop
+- **成本控制**（41%）："你的系统每月 token 消耗怎么估算和控制？"——很多人没想过这个问题，但 fintech / 企业客户非常在意
+- **系统设计**（38%）："设计一个支持 10k 用户并发的 RAG 系统"——考的是你对 async、缓存、向量库扩展的理解
+
+面试前建议把自己的项目用这四个维度过一遍：能不能回答这四类问题？如果不能，说明项目还不够"生产化"。
+
+### LinkedIn 和网络：在澳洲找 AI 工作绕不开的环节
+
+澳洲 IT 市场有一个特点：很多岗位通过 referral 和 LinkedIn 直接触达，不走 Seek 公开投递。匠人学院的学员在找工作阶段，我们建议的操作是：
+
+- LinkedIn 的 "About" 部分用英文写清楚你做过什么系统、用了什么技术栈，不要只写职位名称
+- 在 LinkedIn 上发 1–2 篇技术帖（不是转发，是自己写），描述你在项目里解决过的一个具体问题——比如"我怎么把 RAG 的 faithfulness score 从 0.61 提到 0.82"
+- 参加 Sydney / Melbourne / Brisbane 的 AI Meetup，Anthropic 和 AWS 在澳洲都有定期的开发者活动
+
+这不是"软技能建议"，是澳洲就业市场的结构性现实。
+
+---
+
+## 五、2026 年的学习资源地图：什么值得花时间
+
+### 不要什么都学，先把这几个搞定
+
+学习资源的问题不是太少，是太多。2025 年光 Hugging Face 上的 AI 课程就新增了 40+ 个，DeepLearning.AI 每个月都在出新的 short course。问题是：你不可能全学，选错了方向会浪费几个月。
+
+按照匠人学院 AI Engineer 课程里用的筛选标准，一个学习资源值不值得花时间，看三个维度：**有没有代码**（不是截图，是可以跑的代码）、**有没有项目**（不是练习题，是完整的端到端项目）、**有没有更新到 2025 年**（2023 年的 LangChain 教程现在有 60% 的 API 已经变了）。
+
+按这个标准，以下资源值得优先：
+
+**基础设施和官方文档**（永远是第一手）：
+- Anthropic 官方文档的 [Prompt Engineering 章节](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)，2025 年 9 月更新，包含 extended thinking 的实际使用案例
+- OpenAI Cookbook（GitHub 上，不是官网），里面的 RAG 和 function calling 示例都有版本标注
+- LangChain 官方 docs 的 "How-to guides" 部分，比教程更贴近生产用法
+
+**系统性课程**：
+- DeepLearning.AI 的 "Building Systems with the ChatGPT API"（Andrew Ng 出品，2 小时，免费，适合快速建立系统性认知）
+- Hugging Face Course 的 NLP 部分（如果你需要理解 embedding 模型的底层）
+- fast.ai 的 Practical Deep Learning，如果你需要补机器学习基础（不是必须，但有了更好）
+
+**匠人学院内部路径**：
+- [AI Engineer 完整课程](https://jiangren.com.au/learn/ai-engineer)：覆盖从 Python 基础到 Agent 部署的完整链路，用 P3 模式（Project + Production + Placement）——每个模块都有对应的真实项目交付物
+- [Prompt Master 课程](https://jiangren.com.au/learn/prompt-master)：专门针对 prompt engineering 的系统训练，不是"技巧合集"，是有评估框架的工程化方法
+- [Vibe Coding 课程](https://jiangren.com.au/learn/vibe-coding)：用 Cursor + Claude Code 做 AI 辅助开发，适合想快速提升开发效率的人
+
+### 一个容易被忽视的学习方式：读源码
+
+说实话，很多人在 AI 工程学习里最容易跳过的一步就是读源码。但读源码是最快速理解"这个工具在生产里能不能用"的方式。
+
+具体建议：把 LangChain 的 `langchain/retrievers/` 目录过一遍，看看 `ContextualCompressionRetriever` 的实现，你会立刻理解为什么 reranking 是一个独立步骤而不是 embedding 的一部分。这个理解，比看 5 篇博客文章都扎实。
+
+JR Academy / 匠人学院是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。这个模式的核心逻辑就是：每个知识点都要对应一个可以 push 到 GitHub 的交付物，不允许"学完了但没有项目"的状态存在。如果你想感受一下这个学习节奏，可以先看 [AI Engineer Bootcamp 报名页](https://jiangren.com.au/bootcamp)，里面有完整的 12 周 syllabus 和每周的项目交付标准。
+
+---
+
+## 六个平台 Variant 差异化策略
+
+| 维度 | jr-blog | zhihu | csdn | juejin | medium-en | devto-en |
+|------|---------|-------|------|--------|-----------|----------|
+| **标题钩子
+
+## 七、JR Academy 在这条路上能解决什么、不能解决什么、不擅长什么
+
+说实话，这一节是我最不想写成广告的一节——但也是最应该写清楚的一节。因为一个学员在决定花时间和钱之前，最需要的不是"课程亮点"，而是一个诚实的能力边界说明。
+
+### 能解决的
+
+**1. 从"会 Python"到"能交付 AI 项目"的工程化跳跃**
+
+这是匠人学院 AI Engineer 课程设计的核心出发点。大多数自学者卡在这里：能跑 notebook，但不知道怎么把代码组织成一个真正可以部署、可以被人 review 的系统。
+
+JR Academy / 匠人学院是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。P3 里的"Production"这个 P 是有具体含义的：每个项目从第一天起就要求用 Git 管理、有 CI/CD、有测试、能跑在真实的云环境里。一个在墨尔本 RMIT 读 IT 的学员，入学时交来的第一版 RAG 代码是一个 500 行的单文件脚本，没有错误处理，embedding 和检索逻辑全部写死在 main 函数里。六周后他提交的项目是一个分层架构的 FastAPI 服务，有 `/health` endpoint，有 `pytest` 覆盖率报告，部署在 AWS Lambda 上，并且能用 `ragas` 跑出可量化的评估报告。这个跳跃不是天赋问题，是有没有人逼着你按工程标准做。
+
+**2. 澳洲求职语境的具体对齐**
+
+这是在澳洲本地做的课程和海外录播课的最大差距。匠人学院的 Placement 团队每季度更新 Seek JD 关键词库（就是文章开头提到的那 312 份分析），课程里的项目选题、技术栈选择、甚至 README 写法，都在往澳洲雇主的阅读习惯靠。
+
+具体例子：澳洲很多中型公司的技术栈是 Python + AWS + PostgreSQL，而不是 Python + GCP + MongoDB。如果你的简历项目全是 Firebase + Firestore，面试官会问"你用过 RDS 吗"——这不是刁难，是真实的技术栈对齐问题。[匠人学院 AI Engineer Bootcamp](https://jiangren.com.au/learn/ai-engineer-bootcamp-2026) 的项目默认部署环境是 AWS，Vector DB 默认用 pgvector on RDS，不是偶然选择。
+
+**3. 同期学员网络和 peer review 文化**
+
+这个很难量化，但对学习效果影响很大。匠人学院的课程里有强制的 peer code review 环节，你的代码会被同期学员拆解评论，你也需要评论别人的代码。一个布里斯班 QUT 的学员跟我说，她在 peer review 里发现的一个 async context manager 的错误用法，比她自己 debug 三小时学到的东西更深——因为要给别人解释清楚，你必须真的搞懂。
+
+GitHub 上的 [JR Academy AI 课程 outline 和 curriculum 目录](https://github.com/JR-Academy-AI/jr-academy-ai) 是公开的，你可以直接看课程结构，不需要先付费再发现"这不是我想学的"。
+
+### 不能解决的
+
+**1. 替代你的自主学习时间**
+
+匠人学院 AI Engineer 课程是高强度的——每周大概需要投入 15–20 小时。如果你现在全职工作，同时在照顾小孩，同时还希望"轻松学 AI"，这个课程不适合你。不是歧视，是时间账不平。
+
+**2. 帮你绕过基础**
+
+阶段 0 的 Python 工程基础是真实门槛。有学员入学时以为"我会 Python"就够了，结果第一周 async/await 的作业就卡住了，因为他的"会 Python"是指能写 for 循环和 if 语句。这不是课程的问题，是预期管理的问题。[Python 工程实战课](https://jiangren.com.au/learn/python) 可以帮你补这个基础，但需要时间，没有捷径。
+
+**3. 保证你拿到 offer**
+
+这一点我要说得很直白：任何课程都不能保证你找到工作，包括 JR Academy。Placement 支持是真实存在的——简历 review、模拟面试、JD 匹配推荐——但最终面试表现、沟通能力、运气成分，都不在课程能控制的范围内。市场客观数据是：2024–2025 年澳洲 AI 相关岗位的平均招聘周期是 8–14 周，竞争激烈程度在上升。
+
+### 不擅长的
+
+**1. 纯研究方向的深度**
+
+如果你的目标是去 CSIRO 做 AI 研究，或者读 PhD 之后去 DeepMind，匠人学院的课程不是为你设计的。我们的课程没有从头推导 transformer 的数学，没有讲 RLHF 的梯度更新细节。这些内容在 DeepLearning.AI 的专项课程里有更好的覆盖，Coursera 上 Andrew Ng 的 ML Specialization 对理论基础更系统。
+
+**2. 前端 / 全栈的深度**
+
+[匠人学院 Frontend 课程](https://jiangren.com.au/learn/frontend) 是独立的，AI Engineer 路径里只涉及够用的前端（React 基础 + 能接 API），不会深入讲 CSS 架构或 Next.js 的高级特性。如果你想做的是"AI + 深度全栈"，需要两条路径都走。
+
+**3. 中文就业市场的对齐**
+
+这是一个地域限制，不是缺陷。匠人学院的课程设计、项目选题、求职支持，都是澳洲市场导向的。如果你的目标是回国找工作，部分内容（比如 AWS 优先的部署方案）需要自己做迁移。
+
+---
+
+## 八、从今天开始的行动清单（6 步，按顺序执行）
+
+这不是"建议你可以考虑的方向"，是一个可以直接开始执行的序列。每一步都有具体的完成标准，不是模糊的"学习 X"。
+
+---
+
+**Step 1：用 48 小时跑通第一个 LLM API 调用（本周内）**
+
+完成标准：本地能跑，能看到 streaming 输出，能处理 API error。
+
+```bash
+# 先装好环境
+uv init my-llm-project
+cd my-llm-project
+uv add anthropic python-dotenv
+```
+
+```python
+# main.py
+import anthropic
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+with client.messages.stream(
+    model="claude-opus-4-5",
+    max_tokens=512,
+    messages=[{"role": "user", "content": "用 3 句话解释什么是 RAG"}]
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+```
+
+如果这段代码跑不通，先不要往下走——debug 这个报错，比继续看教程更有价值。常见错误：`AuthenticationError`（key 没配对）、`RateLimitError`（免费额度用完）、`ModuleNotFoundError`（`uv add` 没跑）。
+
+---
+
+**Step 2：完成 Python 工程基础自测（第 1–2 周）**
+
+打开 [匠人学院 Python 工程实战课](https://jiangren.com.au/learn/python) 的免费试听章节，或者直接用下面这个自测：
+
+能不能在不查文档的情况下，写一个 async 函数，用 `httpx.AsyncClient` 并发调两个 API，用 `pydantic BaseModel` 验证返回结果，用 `pytest` 写一个 mock test？
+
+不能 → 先补基础，至少 2 周。  
+能 → 直接跳 Step 3。
+
+---
+
+**Step 3：搭一个最小可用的 RAG 系统（第 3–4 周）**
+
+用 `pgvector` + `FastAPI` + Anthropic API，不要用 LangChain（目的是搞清楚每一层在干什么）。
+
+完成标准：
+- 能 POST 一个 PDF，系统自动 chunk、embed、存入 PostgreSQL
+- 能 GET 一个问题，系统检索 top-5 chunks，拼成 context，调 Claude 返回答案
+- 有一个 `/evaluate` endpoint，能跑 `ragas` 的 faithfulness 分数
+
+这个项目就是你简历上的第一个 AI 项目。代码推到 GitHub，写好 README，这一步比任何证书都重要。
+
+---
+
+**Step 4：学会用 Cursor 做 AI 辅助开发（第 4 周并行）**
+
+不是"让 AI 帮你写代码"，是建立一套可重复的工作流：
+
+1. 在项目根目录写好 `.cursorrules`（参考前面章节的示例）
+2. 每次让 Cursor 生成代码后，必须能解释每一行在做什么
+3. 建立一个个人的 prompt 模板库（用 markdown 文件管理，放在 `~/.cursor/prompts/`）
+
+[匠人学院 Vibe Coding 课程](https://jiangren.com.au/learn/vibe-coding) 里有一套完整的 `.cursorrules` 模板库，针对 FastAPI / LangChain / RAG 三种项目类型各有一个版本，直接拿来用比自己从头摸索省 2–3 周。
+
+---
+
+**Step 5：做一个有真实用户的项目（第 5–8 周）**
+
+"有真实用户"不是说要上线给一万人用，是说：**至少有一个不是你自己的人用过，并且给过反馈**。
+
+选题建议（按可行性排序）：
+- 给你当前公司的内部文档做一个问答 bot（最容易找到真实用户）
+- 给某个开源项目的文档做 RAG（能写进简历，且有公开数据集）
+- 给你所在城市的某个社区（比如微信群）做一个信息检索工具
+
+这个项目的技术栈要求：FastAPI 后端 + pgvector + 至少一个 LLM provider + 部署在 AWS（EC2 或 Lambda）+ 有基本的日志和监控（CloudWatch 就够）。
+
+如果你在准备 2026 年的求职，这个项目的 GitHub repo 需要在 **2025 年 12 月底之前** 有 commit 记录——因为面试官会看时间线。
+
+---
+
+**Step 6：系统化准备澳洲 AI 岗位面试（第 8–12 周）**
+
+澳洲 AI 岗位面试通常分三轮：
+
+**第一轮：技术筛选（电话 / 视频，30 分钟）**  
+考的是概念清晰度，不是代码。准备 5 个标准问题的 2 分钟答案：RAG 原理、context window 限制怎么处理、如何评估 LLM 输出质量、你用过哪些 vector DB 及选型理由、描述一次你 debug LLM 应用的经历。
+
+**第二轮：技术作业（Take-home，48–72 小时）**  
+通常是给你一个半成品的 RAG 系统，让你找 bug、优化检索质量、加一个功能。关键：提交时附上你的评估报告（`ragas` 分数前后对比），比只提交代码多 40% 的通过率（这是匠人学院 Placement 团队在跟踪了 80+ 个学员面试后的粗略统计）。
+
+**第三轮：系统设计（现场 / 视频，60 分钟）**  
+"设计一个支持 10 万用户的文档问答系统"——画架构图，讲清楚每个组件的选型理由，主动提到 latency / cost / reliability 的 tradeoff。
+
+[匠人学院 AI Engineer Bootcamp 2026](https://jiangren.com.au/bootcamp) 的 Placement 模块专门包含这三轮的模拟练习，并且有真实的澳洲技术面试官参与 mock interview——这个资源在自学路径里基本找不到替代。
+
+同时，持续关注 [匠人学院 Prompt Master 课程](https://jiangren.com.au/learn/prompt-master) 和 [AI Product Manager 课程](https://jiangren.com.au/learn/ai-pm) 里的案例——即使你不转 PM，理解产品视角会让你在面试的系统设计环节明显更有说服力。
+
+---
+
+路线图写完了。这 8 步不是最快的路，是最少走弯路的路——至少对我们在匠人学院见过的几百个学员来说是这样

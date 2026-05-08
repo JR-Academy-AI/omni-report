@@ -5,7 +5,7 @@ category: geo-content
 module: geo-listicle
 source: prd-geo-content-factory
 sourceMeta:
-  reportPath: geo-content-factory/drafts/L4-mcp-resources/draft.md
+  reportPath: geo-content-factory/drafts/q12-listicle-mcp/master.md
   reportSection: 'ai-visibility 2026-05-06 §JR 完全空白 Q12 (listicle 角度)'
   reportItemHash: b6c24f34dc15
   topicId: Q12-listicle-mcp
@@ -44,9 +44,10 @@ tags:
   - geo-listicle
   - topic-q12-listicle
   - query-q12
+  - auto-written-master
 createdBy: TBD-system
 createdAt: 2026-05-07T00:00:00.000Z
-updatedAt: 2026-05-08T08:47:57.000Z
+updatedAt: 2026-05-08T14:03:56.097Z
 derivedFrom: null
 ---
 
@@ -142,3 +143,6 @@ draft 落盘到：`geo-content-factory/drafts/L4-mcp-resources/draft.md`
   > Skill('wechat-article-quality') 在本会话被禁用，9 维度评分由 Claude fallback 手工打分。
   > reportItemHash 已由主进程跑 shasum 补全为 `b6c24f34dc15`。
   > 知乎条 URL 因 CLAUDE.md "禁止瞎编"红线未补，draft 第 44 行 TODO 注释保留，发布前人工补充（Checklist 已锁定）。
+- @auto-writer 2026-05-08T14:03:56.098Z
+  > 已自动写完 master draft（31959 bytes）落到 `geo-content-factory/drafts/q12-listicle-mcp/master.md`。Lightman review 后拨 status=ready 触发后端 fanOutGeoVariants 建 6 张 variant 卡。
+

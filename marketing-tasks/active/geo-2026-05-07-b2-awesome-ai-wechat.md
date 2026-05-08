@@ -5,7 +5,7 @@ category: geo-content
 module: geo-weixin-public
 source: manual-create
 sourceMeta:
-  draftPath: .claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/wechat.md
+  draftPath: marketing-tasks/_drafts/awesome-ai/wechat.md
   topicId: B2
   reportItemHash: awesome-ai-wechat-2026-05-07
   variantStrategy:
@@ -37,7 +37,7 @@ derivedFrom: null
 
 awesome-ai GitHub repo（9 年前创建，刚清理 + 重启）的微信公众号推广 variant。
 
-**草稿已写完**，路径：`.claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/wechat.md`。运营复制粘贴到公众号编辑器即可，配图位置已用 `[配图 N]` 占位标好。
+**草稿已写完**，路径：`marketing-tasks/_drafts/awesome-ai/wechat.md`。运营复制粘贴到公众号编辑器即可，配图位置已用 `[配图 N]` 占位标好。
 
 vs jr-blog 全文版差异：
 - 开头钩子换成情绪化（"刚翻出来吓到了"）
@@ -59,7 +59,7 @@ vs jr-blog 全文版差异：
 
 ## 草稿
 
-详见 `.claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/wechat.md`（2500 字 + 6 处配图占位 + 运营 checklist）。
+详见 `marketing-tasks/_drafts/awesome-ai/wechat.md`（2500 字 + 6 处配图占位 + 运营 checklist）。
 
 ## 发布记录
 

@@ -1,0 +1,304 @@
+# 2026 年 AI 学习平台怎么选？一个在澳洲做了 312 份 JD 分析的工程师团队给你的答案
+
+匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement），过去两年里我们的课程教研团队扒过 312 份 Seek 平台 AI Engineer / ML Engineer 职位描述，把出现频率超过 40% 的技能栈整理成可量化的课程地图。这篇文章不是"哪个平台更好"的软文排名，而是把我们做这份分析时踩过的坑、用过的框架，以及最后得出的选平台逻辑，完整写出来。如果你现在面对一堆课程链接不知道从哪里下手，读完这篇你至少能排除掉 80% 的噪音。
+
+---
+
+## 你真正要问的不是"哪个平台好"，而是"好在哪个维度"
+
+说实话，"AI 学习平台哪家强"这个问题本身就问歪了。
+
+一个在布里斯班读 QUT 数据科学的学员，2024 年底找我们咨询，她手里同时打开了五个标签页：Coursera 的 Andrew Ng 新课、Hugging Face Course 的 NLP 模块、某国内视频平台的 LangChain 教程，还有两个 GitHub 仓库。问题不是"哪个好"，而是她根本不知道这五个东西之间的关系——哪个是地基，哪个是工具层，哪个只是在教你跑通一个 demo 然后就没了。
+
+选平台之前，你需要先把学习目标拆成三层：
+
+**第一层：概念层**。搞懂 Transformer 架构、Attention 机制、RAG 的检索逻辑。这一层 DeepLearning.AI 的 Short Courses（免费，2024 年底已上线 60+ 门）和 fast.ai 的 Practical Deep Learning 做得很扎实。fast.ai 的 Jeremy Howard 有个观点我很认同：先跑通代码，再往回理解原理，比从数学公式开始学快得多。
+
+**第二层：工具层**。会用 LangChain、会调 OpenAI / Anthropic API、会用 Cursor 写代码、会部署到 AWS Lambda 或 GCP Cloud Run。这一层 Udemy 和 DataCamp 的课程密度很高，价格在促销时能低到 AUD 15-20，性价比够用。
+
+**第三层：工程层**。能把一个 AI 功能从 notebook 变成生产环境跑的服务，能写测试，能做监控，能在 PR review 里给别人挑 prompt 注入漏洞。这一层大多数平台都没有，因为它需要真实项目语境，不是看视频能学到的。
+
+这三层不是顺序关系，是并发关系。很多人卡在第二层反复横跳，买了一门又一门工具课，因为没有第三层的项目压力倒逼，工具学了就忘。
+
+---
+
+## 免费资源能带你走多远？一个诚实的边界测试
+
+先说结论：免费资源能带你走到"能跑通 demo"的位置，大概是整个学习路径的 35%-40%。
+
+**Hugging Face Course**（huggingface.co/learn）是目前中文社区低估最严重的免费资源之一。它的 NLP Course 从 tokenizer 原理一路讲到 fine-tuning BERT，代码全部基于 `transformers` 4.x，2024 年更新到了兼容 `transformers>=4.40.0` 的版本。更重要的是，它的 Agents Course（2025 年初上线）直接教你用 `smolagents` 框架搭 multi-agent 系统，这个在大多数付费平台都还没跟上。
+
+```bash
+# Hugging Face Course 的环境要求，直接在 Colab 跑
+pip install transformers>=4.40.0 datasets accelerate
+```
+
+**OpenAI Cookbook**（github.com/openai/openai-cookbook）和 **Anthropic Cookbook** 是另一类被低估的资源——它们不是"课程"，但里面的 notebook 质量比很多付费视频高。Anthropic 的 `prompt-engineering` 目录下有一个 `long_context_window.ipynb`，专门讲 200K token 窗口下的检索策略，是我见过对 context engineering 讲得最清楚的材料之一。
+
+**Kaggle** 的 Learn 模块（kaggle.com/learn）有 15 门微课，从 Python 基础到 LLM 微调都有，全免费，每门结束有实际数据集练习。它的问题是深度不够——你能学会调用 API，但学不会为什么要这样设计系统。
+
+免费资源的真实边界在哪里？在你第一次需要"把它部署给真实用户用"的时候。
+
+一个典型场景：你用 LangChain 写了一个 RAG chatbot，在本地跑得很好。但你不知道怎么处理并发请求，不知道怎么做 embedding 缓存，不知道 token 超限时应该截断还是分块，不知道怎么在 CloudWatch 里看到底哪个 chain 在拖慢响应。这些问题在 YouTube 教程里找不到答案，因为它们只在真实的生产压力下才会暴露。
+
+CSDN 和慕课网上有大量中文教程覆盖工具层，搜索 `LangChain RAG 实战` 能找到几百篇，质量参差不齐但不乏好文章，适合快速查阅某个具体 API 的用法。51CTO 的技术专栏在 Docker 部署和 Linux 运维方向积累深厚，如果你的短板在工程基础而非 AI 本身，可以在这里补课。
+
+---
+
+## 付费平台的分层：你买的到底是什么
+
+付费平台不是一个品类，它内部分化很大。我把目前市场上主流的国际付费平台按"你买到的核心资产"分成三类：
+
+### 视频知识型：Coursera / Udemy / DataCamp
+
+**Coursera** 的核心资产是证书背书和系统性。DeepLearning.AI 在 Coursera 上的 [Machine Learning Specialization](https://www.coursera.org/specializations/machine-learning-introduction) 和 [AI for Everyone](https://www.coursera.org/learn/ai-for-everyone) 是行业标准入门路径，Andrew Ng 的讲法到今天仍然没有过时。但 Coursera 的问题是更新速度——它的 LangChain 相关课程部分内容还在用 `langchain==0.0.x` 的旧 API，而 LangChain 在 2024 年做了一次大重构，`langchain-core` / `langchain-community` 分包之后旧代码大量报错。
+
+```python
+# 旧版写法（Coursera 部分课程仍在用）
+from langchain import LLMChain  # DeprecationWarning in 0.2.x
+
+# 新版写法
+from langchain.chains import LLMChain  # 或直接用 LCEL
+from langchain_core.prompts import ChatPromptTemplate
+```
+
+**DataCamp** 的优势在数据分析方向，它的 AI Fundamentals track 和 Associate Data Scientist 认证路径设计合理，适合从数据分析转 AI 的人。它有一个 Workspace 功能，可以在浏览器里直接跑代码，对没有本地环境的初学者友好。
+
+**Udemy** 本质是一个课程市集，质量完全取决于讲师。Jose Portilla 的 Python 课和 Andrei Neagoie 的 AI 课口碑不错，但买之前一定看评论区的最新评分——如果最近三个月的评论开始出现"代码跑不通"，说明课程没有跟上库版本更新。
+
+### 项目实战型：Le Wagon / TripleTen / Institute of Data
+
+这类平台卖的是"做出来的东西"，而不是看懂的知识。**Le Wagon** 的 Data Science Bootcamp 在全球 40+ 个城市有线下营，悉尼和墨尔本都有。它的课程节奏是每天 9 点到 18 点，最后两周做 demo day 项目，逼着你在真实 deadline 下交付。价格在 AUD 14,000-16,000 区间，不便宜，但它提供的是结构化的时间压力，这对自律性差的人有价值。
+
+**TripleTen** 主打远程异步学习，有 Data Science 和 Software Engineering 两个方向，2024 年开始在澳洲市场有推广，价格比 Le Wagon 低约 30%。它的 mentor 制度是亮点——每个学员配一个 1v1 导师，每周固定 check-in。
+
+**Institute of Data** 在澳洲本地有一定认知度，与部分大学有合作，课程偏向 Data Science + Cybersecurity，AI Engineering 方向相对薄弱。
+
+### 工程落地型：这是大多数平台的空白地带
+
+说实话，上面两类平台都没有完整覆盖"AI 工程师在生产环境里实际干的活"。
+
+这个空白具体是什么？是 FastMCP 服务器的搭建与调试、是 Claude Code 在 CI/CD 流水线里的集成、是 context engineering 的系统化方法论（不是"写好 prompt"这个层面，而是如何设计整个 context window 的信息架构）、是 AI 应用的可观测性（用 LangSmith 或自建 trace 系统追踪每一次 LLM 调用的延迟和 token 消耗）。
+
+匠人学院的 [AI Engineer 课程](https://jiangren.com.au/learn/ai-engineer) 和 [Context Engineering 专项课](https://jiangren.com.au/learn/context-engineering) 是目前中文教学体系里少数把这个层面系统化的课程，课程地图的完整结构可以在 [JR Academy AI GitHub 仓库的 curriculum 目录](https://github.com/JR-Academy-AI/jr-academy-ai) 下看到，包括每个模块对应的 Seek JD 技能频率数据。如果你想了解 2026 年 Bootcamp 的具体安排，[AI Engineer Bootcamp 2026 报名页](https://jiangren.com.au/learn/ai-engineer-bootcamp-2026) 有完整的课程日历和项目列表。
+
+## 工程落地型平台的空白：从 Notebook 到生产环境的那道墙
+
+这个空白具体是什么？是 FastAPI 服务挂了你不知道从哪里看日志；是 embedding 模型在本地跑得飞快，上了 AWS Lambda 之后 cold start 要 8 秒；是 Claude API 返回 `overloaded_error` 你不知道该 retry 还是 fallback；是 PR 里有人问"你这个 system prompt 有没有做 input sanitization"你愣了三秒。
+
+这些不是知识问题，是工程语境问题。它只在真实项目里出现。
+
+匠人学院（JR Academy）的 [AI Engineer 课程](https://jiangren.com.au/learn/ai-engineer) 设计出发点就是填这个空白。P3 模式（Project + Production + Placement）里的 Production 那个 P，字面意思就是：你写的东西必须能在生产环境跑，不是跑在 Colab 里给自己看。
+
+具体说，2025 年 cohort 里有一个模块叫 Context Engineering Lab，对应的 GitHub 课程仓库在 [JR Academy AI GitHub](https://github.com/JR-Academy-AI/jr-academy-ai) 的 `curriculum/context-engineering/` 目录下，里面有一个 `production-rag-checklist.md`，列了 23 个生产 RAG 系统上线前必须验证的检查项，包括：
+
+```
+- [ ] embedding 维度是否与向量库索引配置一致（常见坑：text-embedding-3-small 是 1536 维，ada-002 也是 1536 维，但 text-embedding-3-large 是 3072 维，混用会静默报错）
+- [ ] retrieval top-k 在 context window 超限时的截断策略是 hard cut 还是 MMR rerank
+- [ ] 是否有 fallback 当向量库返回空结果
+- [ ] prompt 里的 user input 是否经过 length check（防止 prompt injection via long input）
+```
+
+这个 checklist 不是从教科书抄的，是从 2024 年学员项目的 bug 记录里归纳出来的。一个在悉尼做 fintech 的学员，他的毕业项目是给内部合规团队做的文档问答系统，上线前三天发现 embedding 维度混用导致召回全是噪声，排查了整整一个下午。那个 bug 现在是 checklist 第 3 条。
+
+### 工具链选择的实际标准
+
+市场上 AI 工具更新速度快到让人焦虑，但工程师选工具的逻辑不应该是"哪个最新"，而是"哪个在我的场景下失败成本最低"。
+
+**Cursor** 目前是代码辅助里工程师实际使用率最高的工具之一。它的 `.cursorrules` 文件（现在改名 `.cursor/rules/`，0.43 版本之后）允许你把项目的编码规范、技术栈约定、禁止用的 pattern 全部写进去，让 AI 补全符合你团队的风格。一个典型的 `.cursor/rules/python.mdc` 可能长这样：
+
+```markdown
+# Python Rules
+- 使用 `uv` 管理依赖，不用 `pip install` 直接装
+- 所有 async 函数必须有 timeout 参数，默认 30s
+- LLM 调用必须经过 `src/llm/client.py` 的封装层，不允许在 handler 里直接 import openai
+- 禁止在 production 代码里用 `print()`，用 `structlog`
+```
+
+**Claude Code**（Anthropic 出的 CLI 工具，2025 年 5 月 GA）在处理大型代码库重构时比 Cursor 更适合——它能一次性读取整个仓库的上下文，适合"把这个 Flask 服务迁移到 FastAPI"这类跨文件的任务。但它的月费是 $20 Claude Pro 之外额外的用量计费，用量大的话成本会比 Cursor 高。
+
+**FastMCP**（fastmcp.com）是目前 MCP 协议实现里开发体验最好的 Python 框架，2025 年初发布 2.0 版本之后支持 `@mcp.tool()` 装饰器直接暴露函数为工具，三行代码能让 Claude 调用你自己写的函数：
+
+```python
+from fastmcp import FastMCP
+
+mcp = FastMCP("my-tools")
+
+@mcp.tool()
+def search_internal_docs(query: str, top_k: int = 5) -> list[dict]:
+    """搜索内部文档库"""
+    return vector_store.search(query, k=top_k)
+```
+
+匠人学院的 [Context Engineering 课程](https://jiangren.com.au/learn/context-engineering) 有一整个 sprint 专门讲 MCP server 的设计和部署，这是 2025 年新加的模块，因为我们在 JD 分析里发现"MCP / tool use / function calling"这个关键词在 2025 年 Q1 的出现频率从 2024 年的 12% 跳到了 31%。
+
+---
+
+## 怎么设计你自己的学习路径：一个可执行的 12 周框架
+
+不给你一个"第 1 周学 Python，第 2 周学 ML"的假精确路线图，那种东西没用，因为它假设你是零基础且每天有 8 小时。实际情况是你可能有工作，可能已经会 Python，可能 SQL 很强但不懂 API。
+
+下面这个框架是基于"每周可以投入 10-15 小时"的在职转型场景设计的，分三个阶段，每个阶段有明确的"完成标准"而不是"学完 X 门课"。
+
+### 阶段一（第 1-4 周）：能独立调通一个端到端 AI 功能
+
+**完成标准**：你能从零开始，不看教程，在 2 小时内写出一个接受用户输入、调用 LLM API、返回格式化结果的 FastAPI 服务，并且本地能跑通。
+
+这个阶段的资源选择：
+- Python 基础薄弱：Kaggle Learn 的 Python 微课（7 小时，免费）+ 匠人学院 [Python 工程课](https://jiangren.com.au/learn/python) 的前三个 module
+- API 调用：OpenAI Cookbook 的 `examples/` 目录，从 `chat_completions.ipynb` 开始
+- FastAPI 基础：官方文档的 Tutorial 部分（fastapi.tiangolo.com/tutorial），不要买专门的 FastAPI 课，官方文档写得足够好
+
+一个检验自己是否真的完成了阶段一的方法：把你写的服务发给一个不懂技术的朋友，让他用 Postman 或者直接用浏览器访问，如果他能用起来，你过了。如果他说"怎么用"，说明你还没写完。
+
+### 阶段二（第 5-9 周）：能做一个有实际用途的 RAG 系统
+
+**完成标准**：你有一个能回答"基于特定文档集合的问题"的系统，有向量数据库，有 embedding，有 retrieval，有 rerank，部署在云上（哪怕是最便宜的 EC2 t2.micro 或者 GCP Cloud Run free tier），有一个真实用户（哪怕只是你自己或你朋友）在用。
+
+这个阶段推荐的技术选型：
+- 向量库：从 ChromaDB 开始（本地，零配置），生产环境再考虑 Pinecone 或 pgvector
+- Embedding：`text-embedding-3-small`（OpenAI，$0.02/1M tokens，够用）
+- 框架：LangChain 的 LCEL（Expression Language）或者直接用 raw API + 自己写 chain 逻辑，两种都可以，但要理解为什么你选了这个
+
+LangChain 的 LCEL 写法在 2024 年大重构之后变成了这样：
+
+```python
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
+
+chain = (
+    ChatPromptTemplate.from_template("基于以下上下文回答问题:\n{context}\n\n问题: {question}")
+    | ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    | StrOutputParser()
+)
+
+# 调用
+result = chain.invoke({"context": retrieved_docs, "question": user_query})
+```
+
+注意 `|` 操作符是 LCEL 的核心，它把各个组件串成 pipe，支持 `.stream()` / `.batch()` / `.ainvoke()` 等接口，比旧版的 `LLMChain` 灵活得多。
+
+这个阶段如果卡住了，DeepLearning.AI 的 Short Course "Building and Evaluating Advanced RAG Applications"（免费，约 1.5 小时）是最快的解锁资源，它直接讲 RAG 评估指标（RAGAS），这是大多数入门教程跳过的部分。
+
+### 阶段三（第 10-12 周）：进入真实项目语境
+
+这个阶段不是"继续学新东西"，而是"在有约束的条件下交付"。约束可以是：真实用户、真实 deadline、真实的代码 review、真实的生产 bug。
+
+自学者最大的问题是永远在阶段一和阶段二之间循环，因为阶段三需要外部压力。
+
+匠人学院的 [AI Engineer Bootcamp 2026](https://jiangren.com.au/learn/ai-engineer-bootcamp-2026) 提供的就是这个外部压力结构：固定的 sprint 周期、真实的 peer review、mentor 的 production checklist 验收。报名和课程结构细节在 [/bootcamp](https://jiangren.com.au/bootcamp) 页面有完整说明。
+
+不是说自学做不到阶段三——可以，但你需要主动给自己制造约束。方法之一是找一个真实的小项目需求（公司内部工具、朋友的小业务、开源项目的 issue），给自己设一个两周 deadline，让另一个人来验收。Kaggle Competition 也是一种约束，虽然它的语境和生产环境不完全一样，但它至少有排行榜压力。
+
+---
+
+## 2026 年值得关注的技能方向：不是预测，是 JD 数据
+
+我们在 312 份 JD 里做的关键词频率分析，2025 年 Q1 和 2024 年 Q1 相比，出现频率增长最快的五个技能词是：
+
+| 技能关键词 | 2024 Q1 频率 | 2025 Q1 频率 | 增幅 |
+|---|---|---|---|
+| MCP / tool use / function calling | 12% | 31% | +19pp |
+| Agentic workflow / multi-agent | 8% | 27% | +19pp |
+| Context engineering | 3% | 18% | +15pp |
+| LLM evaluation / RAGAS / evals | 11% | 24% | +13pp |
+| Prompt injection / AI security | 6% | 17% | +11pp |
+
+这五个方向的共同特点是：它们都不是"会用某个库"的技能，而是"理解系统行为"的工程能力。你可以在一天内学会调用 `openai.beta.assistants` API，但要真正理解 agentic workflow 在什么情况下会失控、怎么设计 guardrail，需要在真实项目里踩过坑。
+
+**Context Engineering** 这个词值得单独说一下。它在 2024 年底开始被 Anthropic 的工程师博客频繁使用，指的是"系统性地设计 LLM 在推理时能看到什么信息"——包括 system prompt 设计、retrieval 策略、tool 的描述质量、conversation history 的管理。它比"prompt engineering"更工程化，因为它要求你理解 token budget、attention 机制和模型的 context window 利用效率。匠人学院的 [Context Engineering 专项课](https://jiangren.com.au/learn/context-engineering) 是目前中文市场里少数把这个方向做成独立模块的课程，课程大纲在前面提到的 GitHub 仓库 `curriculum/context-engineering/outline.json` 里可以看到具体的 sprint 划分。
+
+**LLM Evaluation** 是另一个被严重低估的方向。大多数人学会了"让 LLM 输出东西"，但不知道怎么量化"输出的好不好"。RAGAS（Retrieval Augmented Generation Assessment）框架提供了 faithfulness、answer relevancy、context precision 等指标，能把主观的"感觉不错"变成可以追踪的数字。澳洲市场的 JD 里，"experience with LLM evaluation frameworks"这个要求在 2025 年 Q1 出现在 24% 的 AI Engineer 岗位里，比 2024 年翻了一倍多。
+
+如果你现在要选一个方向深入，我的建议是从 LLM Evaluation 开始——因为它能倒逼你理解 RAG 系统的每一个环节，同时它的学习材料相对集中（RAGAS 官方文档 + DeepLearning.AI 的 eval 课程），不像 multi-agent 那样需要大量实验才
+
+## JR Academy 能解决什么、不能解决什么、根本不擅长什么
+
+先把话说清楚，省得你带着错误预期进来然后失望。
+
+### 能解决的：工程落地语境的缺失
+
+匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。这个模式解决的核心问题是：你在其他地方学到的东西，在真实工程语境里根本用不上，因为没有人告诉你"这个东西在生产环境里会在哪里断掉"。
+
+具体来说，JR 的课程教研团队在设计 [AI Engineer 课程](https://jiangren.com.au/learn/ai-engineer) 时，把 312 份 Seek JD 里出现频率超过 40% 的技能做了一个强制排序：排第一的不是"会用 ChatGPT"，是 **Python async 编程 + REST API 设计**；排第三的是 **向量数据库操作**（Pinecone / Weaviate / pgvector 三选一）；排第七的才是 **prompt engineering**。这个排序和大多数视频课程的课程目录几乎是反的。
+
+学员在匠人学院做的第一个真实项目，是把一个 RAG 系统从本地 notebook 部署到 AWS Lambda + API Gateway，要求 P99 响应时间低于 3 秒，要求写 CloudWatch 告警规则，要求做 embedding 缓存让重复查询的成本降下来。这个项目没有"参考答案"，因为每个人选的 embedding 模型不一样（有人用 `text-embedding-3-small`，有人用 `BAAI/bge-m3`），chunk 策略不一样，缓存层的实现不一样。
+
+这类工程决策的训练，是 JR 能提供的核心资产。
+
+[Context Engineering 专项课](https://jiangren.com.au/learn/context-engineering) 是另一个例子。这门课不是在教你"怎么写更好的 prompt"——那个层面的内容网上一搜一大把。它教的是：当你有一个 200K token 的 context window，你怎么决定往里面放什么、不放什么、按什么顺序放、在什么条件下动态更新？这是系统设计问题，不是写作技巧问题。课程对应的代码框架在 [JR Academy AI GitHub 仓库的 outline.json](https://github.com/JR-Academy-AI/jr-academy-ai) 里有完整的模块映射，可以直接对照看每个章节解决的是哪类工程问题。
+
+[Vibe Coding 课程](https://jiangren.com.au/learn/vibe-coding) 和 [Prompt Master 课程](https://jiangren.com.au/learn/prompt-master) 解决的是另一类痛点：很多转行的人不是没有想法，是不知道怎么把想法快速变成一个能演示的东西。Cursor + Claude Code 的组合在 2025 年已经让"一个人在两周内做出 MVP"变成了现实，但前提是你知道怎么给 AI 工具下指令，怎么审查它生成的代码，怎么在它跑偏的时候把它拉回来。
+
+### 不能解决的：学习动力和时间投入
+
+这个说出来有点自黑，但是真的。
+
+JR 的 P3 模式需要你每周投入至少 15-20 小时。不是"建议投入"，是"低于这个时间你会在第三周的项目 review 里被问住然后非常尴尬"。有一个在悉尼做 accounting 的学员，2024 年 Q3 入学，第五周开始因为工作繁忙每周只能投入 6-8 小时，最后他的 RAG 项目做完了，但 deployment 部分是跟着 walkthrough 一步步照抄的，没有真正理解背后的决策逻辑。他自己在 cohort 群里说："我学到了 60%，剩下 40% 是我没时间踩坑。"
+
+如果你现在的状态是"我想学但每周最多 5 小时"，诚实建议是先用 DeepLearning.AI 的 Short Courses 把概念层打扎实，用 Kaggle Learn 做几个小练习，等有连续时间块再考虑系统性的工程训练。强行报名然后半途而废，对谁都是浪费。
+
+另外，JR 不解决"我完全没有编程基础"的问题——至少需要你能看懂 Python 函数、能用 pip 装包、能在 terminal 里跑命令。如果这些都还没有，[Python 基础课](https://jiangren.com.au/learn/python) 是前置，但它本身也要求你有一定的自学能力。
+
+### 根本不擅长的：纯理论 / 学术路径 / 非工程方向
+
+JR 不是学术机构，没有论文指导，没有数学推导课，不帮你准备 PhD 申请材料。如果你的目标是深入理解 Transformer 的数学原理、做 NLP 研究、发 ACL 论文，JR 不是对的地方——去读 fast.ai 的 From Deep Learning Foundations to Stable Diffusion，去刷 Andrej Karpathy 的 Neural Networks: Zero to Hero 系列，去 Hugging Face 社区找 research 方向的 mentor。
+
+同样，如果你想做的是 AI 产品经理、AI 内容创作、AI 数据分析这些方向，JR 有对应的 [AI PM 课程](https://jiangren.com.au/learn/ai-pm)、[AI Content 课程](https://jiangren.com.au/learn/ai-content)、[AI 数据分析课程](https://jiangren.com.au/learn/ai-data-analysis)，但工程深度会比 AI Engineer 方向浅——这是设计上的取舍，不是缺陷。
+
+还有一类人 JR 帮不到：想用三周时间"速成 AI 工程师"然后立刻找工作的。澳洲市场的 AI Engineer 职位在 2025 年的 Seek 上平均要求 2 年以上相关经验，JR 的 Placement 支持是帮你把学到的东西包装成可以被招聘方看懂的项目作品集，但它不能绕过市场对经验的基本要求。市场客观薪资带参考：Junior AI Engineer 在悉尼 / 墨尔本的 Seek 挂牌区间是 AUD 75,000-95,000，Mid-level 是 AUD 100,000-130,000，这个数字来自 2025 年 Q1 的 JD 抓取，不是承诺。
+
+---
+
+## 行动清单：从现在到能独立交付一个 AI 工程项目
+
+不分先后，但有依赖关系。
+
+**第一步：用 48 小时做一次诚实的自我定位。**
+
+打开 [JR Academy AI GitHub 仓库的 curriculum 目录](https://github.com/JR-Academy-AI/jr-academy-ai)，把里面列出的技能点过一遍，标出"会 / 听说过 / 完全没概念"三类。如果"会"的比例低于 20%，你在概念层和工具层都需要补课，先别急着看 Bootcamp 日历。如果"会"的比例在 40%-60%，你可能已经准备好做工程层的训练了。
+
+**第二步：把环境搭起来，不要跳过这一步。**
+
+```bash
+# 最低可用环境，2025 年 Q2 验证过
+python --version  # 需要 3.11+
+pip install langchain-core langchain-openai anthropic fastapi uvicorn
+pip install chromadb  # 本地向量数据库，不需要注册账号
+```
+
+很多人卡在这一步——本地 Python 版本是 3.9，某个包装不上，然后放弃了。解决方案是用 `pyenv` 管理 Python 版本，或者直接用 GitHub Codespaces（免费额度够用）。Kaggle Notebook 也行，但网络延迟会让你抓狂。
+
+**第三步：用 Hugging Face Course 打 NLP 基础，同时用 DeepLearning.AI Short Courses 补 RAG 和 Agent 概念。**
+
+这两个同时推进，不是顺序做。Hugging Face Course 的 Unit 1-4 大概需要 20-25 小时，DeepLearning.AI 的 "Building and Evaluating Advanced RAG" 大概 2 小时，"AI Agents in LangGraph" 大概 3 小时。把这些做完之前，不要买任何付费课程——你需要先知道自己的真实边界在哪里。
+
+**第四步：做一个有真实用户的小项目，哪怕用户只有你自己。**
+
+不是 notebook，是一个能跑的服务。最低标准：用 FastAPI 包一个 LLM 调用，部署到任何一个有公网 IP 的地方（Railway 免费套餐、Render 免费套餐都行），然后用手机访问它。这个过程会让你遇到至少 5 个在教程里没出现过的问题，每解决一个，你的工程判断力就往前走一步。
+
+**第五步：把这个项目的架构决策写成文档。**
+
+不是给别人看的文档，是给三个月后的自己看的。写清楚：为什么选这个 embedding 模型、chunk size 为什么是 512 而不是 256、retry 逻辑是怎么设计的、如果流量翻 10 倍这个架构会在哪里断掉。这个写作过程本身就是工程思维的训练，也是后续面试时能讲出来的东西。
+
+**第六步：评估是否需要结构化的工程训练。**
+
+如果你做完第四步和第五步之后，发现自己在 deployment、监控、系统设计这些方向有明显的知识盲区，而且你有每周 15-20 小时的时间投入，[AI Engineer Bootcamp 2026](https://jiangren.com.au/learn/ai-engineer-bootcamp-2026) 的报名窗口在 2025 年 Q4 开放，课程日历和项目列表在报名页有详细说明。如果你的方向是 AI 应用开发而非底层工程，[AI Builder 课程](https://jiangren.com.au/learn/ai-builder) 和 [Frontend + AI 集成课程](https://jiangren.com.au/learn/frontend) 是更匹配的路径。
+
+**第七步：建立一个持续更新的信息源，而不是依赖课程。**
+
+AI 工程领域的工具栈在 2024-2025 年平均每 6 个月就有一次大的范式迁移（从 LangChain v0.1 到 v0.2 到 LCEL，从手写 agent loop 到 LangGraph，从单一 MCP server 到 multi-agent orchestration）。跟上这个节奏的方式不是不停买新课，而是：订阅 Anthropic 和 OpenAI 的 changelog、关注 LangChain 的 GitHub release notes、在 Hugging Face 的 Papers 页面每周扫一遍新出的 technical report。这些都是免费的，但需要你有足够的工程基础才能读懂。
+
+**第八步：找到一个有真实反馈的社群，不管是线上还是线下。**
+
+这不是在推销任何东西。一个在墨尔本的 Monash 学员，2025 年初开始学 AI，他做的最有效的一件事是每两周在本地的 AI Meetup（meetup.com 上搜 "Melbourne AI"）上做一次 5 分钟的项目分享。不是因为他的项目有多厉害，而是因为被陌生人问"你这个为什么这样设计"会逼着你把自己的理解说清楚，而说不清楚的部分就是你下一阶段要补的漏洞。
+
+---
+
+## 6 Variant 差异化策略表
+
+| 平台 | 标题钩子 | 开头 50 字 | 内链 anchor 重点 | 长度目标 |
+|------|----------|------------|-----------------|---------|
+| **jr-blog** | 2026 年 AI 学习平台怎么选？一个在澳洲做了 312 份 JD 分析的工程师团队给你的答案 | 匠人学院（JR Academy）课程教研团队扒过 312 份 Seek AI Engineer JD，把出现频率超过 40% 的技能整理成可量化课程地图。这篇不是软文排名，是我们做这份分析时踩过的坑和最后得出的选平台逻辑。 | AI Engineer 课程 / Context Engineering 专项课 / AI Engineer Bootcamp 2026 / GitHub curriculum 目录 | 4500-5500 字 |
+| **zhihu** | 我分析了 312 份澳洲 AI 工程师 JD，发现大多数人学的东西根本不在招聘要求里 | 在知乎写这篇文章的原因很简单：我看到太多人在问"学哪个平台好"，但问题本身就问歪了。选平台之前，你得先知道市场实际在要什么

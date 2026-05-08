@@ -5,7 +5,7 @@ category: geo-content
 module: geo-reddit-quora
 source: manual-create
 sourceMeta:
-  draftPath: .claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/hn-submission.md
+  draftPath: marketing-tasks/_drafts/awesome-ai/hn-submission.md
   topicId: B2
   reportItemHash: awesome-ai-hn-2026-05-07
   variantStrategy:
@@ -47,7 +47,7 @@ awesome-ai GitHub repo 推广的 Hacker News 投稿协调卡。
 
 本卡状态默认 `blocked`（不是 draft），意思是"等 lightman 排时间"，运营**不要主动推进**。
 
-草稿：`.claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/hn-submission.md`（含 3 个标题 angle + 评论区运营脚本）。
+草稿：`marketing-tasks/_drafts/awesome-ai/hn-submission.md`（含 3 个标题 angle + 评论区运营脚本）。
 
 ## Checklist
 
@@ -61,7 +61,7 @@ awesome-ai GitHub repo 推广的 Hacker News 投稿协调卡。
 
 ## 草稿
 
-详见 `.claude/skills/blog-longform-writer/dogfood/awesome-ai-variants/hn-submission.md`（3 个 angle + 评论区运营脚本）。
+详见 `marketing-tasks/_drafts/awesome-ai/hn-submission.md`（3 个 angle + 评论区运营脚本）。
 
 ## 发布记录
 
