@@ -1,0 +1,83 @@
+name: Daily Auto Writer
+
+# 每天 22:00 UTC = 8am Brisbane 自动写 1 篇 6 平台 variant
+# 从 marketing-tasks/active/ 挑下一张 routine 来源的 status=draft 写文章类任务
+# 调 Anthropic API 6 次（每次 1 个 variant，prompt cache 复用 system）
+# 落盘 geo-content-factory/drafts/{slug}/，改任务卡 status: draft → review，commit + push
+# Push 触发 sync-marketing-tasks.yml 把更新后的卡同步到 prod admin Kanban
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 每天 22:00 UTC = 8am Brisbane
+  workflow_dispatch:
+    inputs:
+      task:
+        description: '指定任务卡文件名（去 .md 后缀，留空则自动挑下一张）'
+        required: false
+        type: string
+      dry_run:
+        description: '只挑卡不调 API（验证逻辑用）'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: daily-writer
+  cancel-in-progress: false
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # 6 个 variant 调用 + LLM 写作 ≤ 25 min
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Run auto-writer
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          INPUT_TASK: ${{ github.event.inputs.task }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          set -e
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::warning::ANTHROPIC_API_KEY secret not set — skipping daily writer"
+            echo "请去 GitHub repo Settings → Secrets and variables → Actions 加 ANTHROPIC_API_KEY"
+            exit 0
+          fi
+
+          ARGS=""
+          if [ -n "$INPUT_TASK" ]; then
+            ARGS="$ARGS --task $INPUT_TASK"
+          fi
+          if [ "$INPUT_DRY_RUN" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+
+          echo "Running: bun run scripts/auto-write-from-task.ts $ARGS"
+          bun run scripts/auto-write-from-task.ts $ARGS
+
+      - name: Commit + push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet && [ -z "$(git status --porcelain geo-content-factory/drafts/ marketing-tasks/active/)" ]; then
+            echo "No new content generated."
+            exit 0
+          fi
+
+          git add geo-content-factory/drafts/ marketing-tasks/active/
+          DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+          git commit -m "feat(auto-writer): daily 6-platform variant + 任务卡 status: draft → review (${DATE})"
+          git push

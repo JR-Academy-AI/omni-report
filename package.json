@@ -11,6 +11,7 @@
     "geo:originality": "bun run scripts/geo-originality-check.ts",
     "geo:recheck": "bun run scripts/geo-7d-llm-recheck.ts",
     "seo": "bun run scripts/seo-healthcheck.ts",
+    "seo:daily": "bun run scripts/seo-healthcheck.ts --limit=100",
     "seo-perf": "bun run scripts/seo-performance/run.ts",
     "seo-perf:gsc": "bun run scripts/seo-performance/fetch-gsc.ts",
     "seo-perf:serp": "bun run scripts/seo-performance/fetch-serp.ts",
@@ -23,5 +24,8 @@
   },
   "engines": {
     "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.95.1"
   }
 }
