@@ -16,7 +16,7 @@ sourceMeta:
     openingFirst50: '"我们带过 100+ 学员的观察"经验信号开头'
     internalLinkAnchor: AI Engineer Bootcamp 落地页内链 + 创始人专栏
     targetWordCount: 2500
-assignee: 18634772744@163.com
+assignee: 2838684082@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p1

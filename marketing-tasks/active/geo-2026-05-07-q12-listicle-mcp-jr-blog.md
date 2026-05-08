@@ -16,7 +16,7 @@ sourceMeta:
     openingFirst50: MCP = AI 的 USB-C 接口；这篇把 8 个值得读的中文/英文资源摊开比一遍
     internalLinkAnchor: /learn/ai-engineer 课程入口 + 创始人专栏
     targetWordCount: 2700
-assignee: 18634772744@163.com
+assignee: 2838684082@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p1
@@ -32,7 +32,7 @@ tags:
   - query-q12
 createdBy: TBD-system
 createdAt: 2026-05-07T00:00:00.000Z
-updatedAt: 2026-05-08T06:59:57.000Z
+updatedAt: 2026-05-08T08:47:57.000Z
 derivedFrom: prd-geo-content-factory
 ---
 

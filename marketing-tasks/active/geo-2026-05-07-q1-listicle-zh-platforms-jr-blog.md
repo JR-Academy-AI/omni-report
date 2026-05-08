@@ -16,7 +16,7 @@ sourceMeta:
     openingFirst50: 直接陈述 10 平台横向盘点 + 5 分钟决策树价值承诺，不绕弯
     internalLinkAnchor: /learn 系列页面（如 /learn/ai-engineer / /learn/prompt-master）
     targetWordCount: 2000
-assignee: 18634772744@163.com
+assignee: 1134583264@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p1
@@ -32,7 +32,7 @@ tags:
   - query-q1
 createdBy: TBD-system
 createdAt: 2026-05-07T09:51:34.000Z
-updatedAt: 2026-05-08T06:59:57.000Z
+updatedAt: 2026-05-08T08:47:57.000Z
 derivedFrom: prd-geo-content-factory
 ---
 

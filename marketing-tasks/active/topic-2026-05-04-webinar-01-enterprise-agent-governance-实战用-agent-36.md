@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 推荐线上讲座
   reportItemHash: 9a4d38056ecc
-assignee: 18634772744@163.com
+assignee: 2838684082@qq.com
 reviewer: null
 status: draft
 priority: p0

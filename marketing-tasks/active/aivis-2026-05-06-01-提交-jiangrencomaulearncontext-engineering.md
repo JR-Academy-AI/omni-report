@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: ai-visibility/2026-05-06.md
   reportSection: 推荐行动清单 #1
   reportItemHash: 6fc436139b54
-assignee: 18634772744@163.com
+assignee: TBD-tech-fix
 reviewer: null
 status: draft
 priority: p0

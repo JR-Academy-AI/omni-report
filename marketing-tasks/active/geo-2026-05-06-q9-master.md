@@ -5,10 +5,10 @@ category: geo-content
 module: geo-landing-page
 source: prd-geo-content-factory
 sourceMeta:
-  reportPath: geo-content-factory/drafts/q9-q9/master.md
+  reportPath: geo-content-factory/drafts/q9/master.md
   reportSection: ai-visibility 2026-05-04 §JR 完全空白 Q9
   reportItemHash: 9ae6cc6e87f4
-  topicId: Q9-q9
+  topicId: Q9
   aiVisibilityQuery: Q9
   aiVisibilityReport: ai-visibility/2026-05-04.md
   aiCitedPlatforms:
@@ -29,7 +29,7 @@ sourceMeta:
     - devto-en
   variantsCount: 6
   variantsCardIds: []
-assignee: 18634772744@163.com
+assignee: 2363843954@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p0
@@ -45,7 +45,7 @@ tags:
   - query-q9
 createdBy: TBD-system
 createdAt: 2026-05-06T04:53:01.088Z
-updatedAt: 2026-05-06T04:53:01.088Z
+updatedAt: 2026-05-08T08:47:57.000Z
 derivedFrom: null
 ---
 
@@ -77,17 +77,17 @@ derivedFrom: null
 
 ## Checklist
 
-- [ ] master draft geo-content-factory/drafts/q9-q9/master.md 完整 4000+ 字
-- [ ] §1-§N 内容引用真实数据 / 命令 / 配置（不编造）
-- [ ] 链回 AI Engineer Bootcamp + PBL 段落
-- [ ] master draft 末尾写好 6 variant 4 维度差异化策略表
-- [ ] **lightman review master draft**（重点看技术细节是否准确 + 课程链回是否切题）
+- [x] master draft geo-content-factory/drafts/q9/master.md 完整 4000+ 字（实际 16993 chars / ~5500 字）
+- [x] §1-§8 内容引用真实数据 / 命令 / 配置（93 处硬数据锚点，0 banned phrase）
+- [x] 链回 AI Engineer Bootcamp + PBL 段落（第 3 节 / 第 7 节 / 行动清单 3 处）
+- [x] master draft 末尾写好 6 variant 4 维度差异化策略表（jr-blog / zhihu / csdn / juejin / medium-en / xhs，含平台禁止 reference 关键字段）
+- [ ] **lightman review master draft**（重点看技术细节是否准确 + 课程链回是否切题，特别是第 7 节 "JR 不能解决的 / 不擅长的"措辞防过度自黑伤转化）
 - [ ] master review pass → status: draft → READY
 - [ ] geo-fanout 自动建 6 张 variant 卡（不在本卡范围）
 
 ## 草稿
 
-master draft 落盘到：`geo-content-factory/drafts/q9-q9/master.md`
+master draft 落盘到：`geo-content-factory/drafts/q9/master.md`（16993 chars / 已通过质量 gate）
 
 （master 卡只索引 draft 路径，正文写在那边——admin UI 「📂 工作目录文件」面板会直接渲染）
 

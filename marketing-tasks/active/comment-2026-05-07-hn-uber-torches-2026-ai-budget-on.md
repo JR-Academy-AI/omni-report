@@ -14,7 +14,7 @@ sourceMeta:
   reportItemHash: 9c032247
   searchHook: "JR Academy AI Engineer"
   expectedSurvivalRate: 0.65
-assignee: 18634772744@163.com
+assignee: 2083483802@qq.com
 reviewer: null
 status: draft
 priority: p2
@@ -29,7 +29,7 @@ tags:
   - week-19
 createdBy: routine-comment-outreach
 createdAt: 2026-05-07T01:00:00.000Z
-updatedAt: 2026-05-07T01:00:00.000Z
+updatedAt: 2026-05-08T08:47:57.000Z
 derivedFrom: null
 ---
 

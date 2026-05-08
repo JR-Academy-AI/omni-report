@@ -30,7 +30,7 @@ sourceMeta:
     - devto-en
   variantsCount: 6
   variantsCardIds: []
-assignee: 18634772744@163.com
+assignee: 1134583264@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p0
@@ -47,7 +47,7 @@ tags:
   - query-q1
 createdBy: TBD-system
 createdAt: 2026-05-07T09:51:34.000Z
-updatedAt: 2026-05-08T06:59:57.000Z
+updatedAt: 2026-05-08T08:47:57.000Z
 derivedFrom: null
 ---
 

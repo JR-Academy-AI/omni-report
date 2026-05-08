@@ -16,7 +16,7 @@ sourceMeta:
     openingFirst50: 5 分钟读懂 + 学完能做什么
     internalLinkAnchor: AI Engineer Bootcamp Phase 2 + 求职服务
     targetWordCount: 4000
-assignee: 18634772744@163.com
+assignee: 2838684082@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p1
@@ -32,7 +32,7 @@ tags:
   - query-Q12
 createdBy: TBD-system
 createdAt: 2026-05-05T07:00:00.000Z
-updatedAt: 2026-05-05T07:00:00.000Z
+updatedAt: 2026-05-08T08:47:57.000Z
 derivedFrom: prd-geo-content-factory
 ---
 

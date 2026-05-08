@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: competitor-reports/2026-05-03.md
   reportSection: 对 JR Academy 的建议 #2
   reportItemHash: 50508e48f757
-assignee: 18634772744@163.com
+assignee: 2363843954@qq.com
 reviewer: null
 status: draft
 priority: p1

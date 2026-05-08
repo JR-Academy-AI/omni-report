@@ -16,7 +16,7 @@ sourceMeta:
     openingFirst50: 'JR 视角 — 我们带过 200+ 学员发现的真实坑'
     internalLinkAnchor: /learn/prompt-master + /bootcamp/ai-engineer
     targetWordCount: 2200
-assignee: 18634772744@163.com
+assignee: 1134583264@qq.com
 reviewer: TBD-founder
 status: draft
 priority: p1
@@ -32,7 +32,7 @@ tags:
   - query-q15
 createdBy: TBD-system
 createdAt: 2026-05-07T00:00:00.000Z
-updatedAt: 2026-05-08T06:59:57.000Z
+updatedAt: 2026-05-08T08:47:57.000Z
 derivedFrom: prd-geo-content-factory
 ---
 

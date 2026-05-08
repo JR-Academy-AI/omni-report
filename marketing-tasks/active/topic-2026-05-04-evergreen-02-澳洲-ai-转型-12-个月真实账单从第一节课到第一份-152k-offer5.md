@@ -8,7 +8,7 @@ sourceMeta:
   reportPath: marketing-topics/2026-05-04.md
   reportSection: 长尾常青话题
   reportItemHash: d860376d6662
-assignee: 18634772744@163.com
+assignee: 2363843954@qq.com
 reviewer: null
 status: draft
 priority: p2
