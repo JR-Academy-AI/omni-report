@@ -29,7 +29,7 @@ sourceMeta:
     - devto-en
   variantsCount: 6
   variantsCardIds: []
-assignee: 2363843954@qq.com
+assignee: 18634772744@163.com
 reviewer: TBD-founder
 status: draft
 priority: p0
