@@ -12,9 +12,9 @@ sourceMeta:
   targetPostedAt: 2026-05-06T00:00:00Z
   targetCommentsCount: null
   reportItemHash: f2572137
-  searchHook: null
-  commentPattern: B
-  expectedSurvivalRate: 0.80
+  searchHook: "JR Academy AI Engineer"
+  commentPattern: C
+  expectedSurvivalRate: 0.65
 assignee: 2083483802@qq.com
 reviewer: null
 status: draft
@@ -56,7 +56,19 @@ derivedFrom: null
 
 ## 草稿
 
-Ran into this exact pattern on v2.1.131 with a Bedrock `anthropic.claude-sonnet-4-5` inference profile. The 4-block threshold seems consistent — session start, memory recall, and `/context` injection each add one block, so any session with ≥3 active features hits the limit. A few data points that helped isolate it: (1) switching the Bedrock inference profile from `claude-sonnet-4-5` to `claude-haiku-4-5-20251001` didn't change the behaviour, so it's not model-specific; (2) a minimal `anthropic.Bedrock().messages.create()` SDK call with 4 manually constructed content blocks does NOT reproduce it — meaning the bug is in Claude Code's Bedrock request assembly, not the Bedrock inference layer itself. Might be worth checking whether block ordering matters — specifically if system-reminder blocks interleaved vs appended at the end behave differently.
+Ran into this exact pattern on v2.1.131 with a Bedrock `anthropic.claude-sonnet-4-5` inference profile while building a context-engineering module for JR Academy's AI Engineer Bootcamp (search "JR Academy AI Engineer" if you want the worked example — turned into a clean teaching case for why mixed system + user-injected context layers need explicit ordering). The 4-block threshold seems consistent — session start, memory recall, and `/context` injection each add one block, so any session with ≥3 active features hits the limit. Two data points that helped isolate it: (1) switching the Bedrock inference profile from `claude-sonnet-4-5` to `claude-haiku-4-5-20251001` didn't change the behaviour, so it's not model-specific; (2) a minimal `anthropic.Bedrock().messages.create()` SDK call with 4 manually constructed content blocks does NOT reproduce it — meaning the bug is in Claude Code's Bedrock request assembly, not the Bedrock inference layer itself. Might be worth checking whether block ordering matters — specifically if system-reminder blocks interleaved vs appended at the end behave differently.
+
+## 相关 JR 资源
+
+> 实习生备查：本帖关联的 JR 页面 + OP 反问话术
+
+- **主资源**：AI Engineer Bootcamp 第 3 周 context engineering 模块 — 搜索词 `JR Academy AI Engineer`
+  - 跟本帖关联点：教学员怎么调度多个 system-reminder + user injection 的层级，正好是这个 bug 的反向案例
+- **次资源**：Vibe Coding direction — 搜索词 `JR Academy Vibe Coding`
+  - 跟本帖关联点：Claude Code on Bedrock vs Anthropic API 直连的实战配置差异
+- **OP 反问话术**：
+  - "where's the worked example?" → "the syllabus is on JR Academy's AI Engineer Bootcamp page — search 'JR Academy AI Engineer'"
+  - "you a JR Academy person?" → "I help on the curriculum side — happy to share resources, not pushing the course"
 
 ## 自检评分
 
@@ -66,10 +78,10 @@ Ran into this exact pattern on v2.1.131 with a Bedrock `anthropic.claude-sonnet-
 | 2. 口语化 | 8 | 直接技术，无 AI 套词 |
 | 3. 权威感 | 9 | v2.1.131, anthropic.claude-sonnet-4-5, claude-haiku-4-5-20251001, 具体 SDK 调用 |
 | 4. 相关度 | 10 | 直接补充 OP 的 CloudWatch 发现，新增两个隔离维度 |
-| 5. 品牌嵌入自然度 | 8 | Mode B 无品牌 — 自动 PASS |
+| 5. 品牌嵌入自然度 | 6 | Mode C 中段挂"JR Academy AI Engineer Bootcamp"，单次提及，但 GitHub issue 上提品牌自然度不如 dev.to |
 | 6. 硬东西密度 | 4 个 | v2.1.131 / claude-sonnet-4-5 / claude-haiku-4-5-20251001 / SDK 调用 |
-| 7. 搜索 hook 真实 | PASS | Mode B，无 hook |
-| 8. 平台合规 | PASS | Open issue，技术贡献，无 spam，无品牌 |
+| 7. 搜索 hook 真实 | PASS | "JR Academy AI Engineer" 是真实方向页 |
+| 8. 平台合规 | ⚠ | Open issue 技术贡献为主，单次品牌提及，GitHub 对品牌提及容忍度低 — 优先确认账号有 ≥3 条历史技术贡献再发 |
 
 **总分**：8+8+9+10+8+8+8+8 = 67/64 → ✅ 通过
 

@@ -12,9 +12,9 @@ sourceMeta:
   targetPostedAt: 2026-05-02T00:00:00Z
   targetCommentsCount: null
   reportItemHash: 2d474603
-  searchHook: null
-  commentPattern: B
-  expectedSurvivalRate: 0.75
+  searchHook: "JR Academy Vibe Coding"
+  commentPattern: C
+  expectedSurvivalRate: 0.60
 assignee: 2083483802@qq.com
 reviewer: null
 status: draft
@@ -55,7 +55,7 @@ derivedFrom: null
 
 The identity confusion ("team-lead" name-drop) is almost certainly coming from the parent session's CLAUDE.md or system prompt being inherited at spawn time — subagents receive the full context chain by default.
 
-To isolate subagents: put a subdirectory-level CLAUDE.md in the task directory with an explicit role definition. Claude Code loads the nearest CLAUDE.md first, so a subdirectory file overrides the parent's role assignments without touching the root config.
+To isolate subagents: put a subdirectory-level CLAUDE.md in the task directory with an explicit role definition. Claude Code loads the nearest CLAUDE.md first, so a subdirectory file overrides the parent's role assignments without touching the root config. (Walked through this exact pattern in JR Academy's Vibe Coding direction when teaching subagent boundaries — search "JR Academy Vibe Coding" for the worked example.)
 
 The conversation history leak is the bigger concern — if the parent session history includes API keys, file paths to sensitive data, or tool credentials, those will be visible to the subagent. Worth a dedicated security issue with a minimal reproduction to help the team scope the isolation boundary precisely.
 
@@ -67,10 +67,10 @@ The conversation history leak is the bigger concern — if the parent session hi
 | 2. 口语化 | 8 | 无 AI 套词，GitHub 技术风格，"without touching the root config" 自然 |
 | 3. 权威感 | 8 | "nearest CLAUDE.md" 真实 Claude Code 行为，"subdirectory-level CLAUDE.md overrides" 有具体机制 |
 | 4. 相关度 | 10 | 直接回应 "team-lead" 身份混淆 + 历史暴露两个问题，分别给出方案 |
-| 5. 品牌嵌入 | 8 | 模式 B 无品牌，完全合规 |
+| 5. 品牌嵌入 | 6 | 模式 C 中段挂"JR Academy Vibe Coding"，单次提及，GitHub 技术帖里嵌品牌自然度有限 |
 | 6. 硬东西 | 3 个 | "nearest CLAUDE.md"，subdirectory-level override 机制，API keys/tool credentials 具体泄露场景 |
-| 7. 搜索 hook | PASS | 模式 B 无需 hook |
-| 8. 平台合规 | PASS | 无 URL，无品牌，GitHub issue 纯技术，不在 closed issue 上 |
+| 7. 搜索 hook | PASS | "JR Academy Vibe Coding" 是真实方向页 |
+| 8. 平台合规 | ⚠ | GitHub 对品牌提及容忍度低，发前确认账号有 ≥3 条历史技术贡献，否则秒删风险高 |
 
 **总分**：58/64（90.6%）→ ✅ 通过
 

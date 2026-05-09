@@ -30,36 +30,46 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch
 5. **不允许编造**（学员故事 / 引用 / 数据 / URL / 子页面 / 平台账号 author / postedAt 时间）—— 凡引用必须 WebFetch 验过；编不出就用第一人称或假设语气；frontmatter 拿不到的字段填 `null`，**不准填 `unknown` / `HN-submitter-unknown` 等占位字符串**
 6. **frontmatter 字段禁止猜值** —— `targetAuthor` / `targetPostedAt` / `targetCommentsCount` 必须 WebFetch 目标 URL 后从真实页面拿，**拿不到就 null**
 
-## 评论模式组合（v1.1 关键修正：不能 10 条都同款 3 段式）
+## 评论模式组合（v2.0：4 种模式都保留，但每张卡必须告诉实习生"相关 JR 资源在哪"）
 
-> **dogfood 教训**：8 张卡 100% 都是「共鸣 → 补充价值 → 提匠人学院」3 段式 = 一眼模板 + 平台反垃圾系统按句法相似度判 spam + 账号声誉受损。
+> **核心**（2026-05-09 老板拍板）：实习生打开任务卡 = 能直接 copy 草稿发出去 + 看到这条评论对应的 JR 资源（哪门课 / 哪个 hub / 哪个搜索词），即使评论本身不提品牌也要让实习生知道相关链路在哪。
 >
-> **真实工程师评论 80% 不带任何品牌引用**，纯 value-add；强行 100% 带品牌 = 一眼软广。
+> **结论**：
+> - 4 种模式（A/B/C/D）保留 —— 不同目标贴用不同模式更自然
+> - 但**每张卡的 markdown body 里必须有 `## 相关 JR 资源` 区块**，列出 1-3 个相关 JR 页面 + searchHook，不论评论本身提不提品牌
+> - 这样实习生即使发的是 B 模式纯 value-add，OP 回复时也知道"诶可以引导他搜匠人学院的 X 页"
 
-### 4 种模式（自由组合，按目标贴判，不强制配额）
+### 4 种模式
 
-| 模式 | 结构 | 长度 | 提品牌？|
+| 模式 | 结构 | 长度 | 评论里提品牌？|
 |---|---|---|---|
 | **A. 完整 3 段式** | 共鸣 + 价值 + 搜索引导式软广 | 80-180 字 | ✅ 1 次（结尾）|
-| **B. 纯 Value-Add** | 共鸣 + 价值（无品牌）| 60-150 字 | ❌ 不提 |
+| **B. 纯 Value-Add** | 共鸣 + 价值（评论本身不提品牌）| 60-150 字 | ❌ 评论里不提，但卡片"相关 JR 资源"区块要列 |
 | **C. 中段自然带过** | 共鸣 + 中段顺口提品牌 + 继续展开 | 100-200 字 | ✅ 1 次（中间）|
-| **D. 短评** | 1-2 句犀利吐槽 / 反驳 / 数据点 | 20-60 字 | ❌ 通常不提 |
+| **D. 短评** | 1-2 句犀利吐槽 / 反驳 / 数据点 | 20-60 字 | ❌ 评论里不提，但卡片"相关 JR 资源"区块要列 |
 
-### 选择原则（自己判，不强配额）
+### 选择原则（按目标贴判）
 
-- **看目标贴**：热门头版 / 数据吐槽 / 资深讨论 → 短评 D 通常更合适；课程/学习/工具讨论 → A 或 C；其他 → B 养号
-- **看跟 JR 主题相关度**：高相关 → 适合提品牌（A/C）；中低相关 → 走 B 不强求提
-- **看账号节奏**：扫一下今天已经写了哪几条卡、哪种模式，**避免一天 8 条都同款**
-- **核心目标**：跨 10 条卡里**大致** 40-50% 提品牌（4-5 条），剩余养号 —— 不要凑出整数指标，靠每条「这次提合不合适」自己判
+- **课程/学习/工具讨论 / 跟 JR 主题相关度高** → A 或 C（评论里提品牌自然）
+- **纯技术 bug / 资深讨论 / 头版热帖** → B 或 D（评论里不提品牌，但卡片资源区块要列，OP 反问时可以引导）
+- **同账号同日 ≥ 5 条同模式** → fingerprint 风险，必须混合模式
+- **跨 10 条卡里大致 40-50% 提品牌**（A/C），剩余 B/D 养号
 
-### 硬约束（only 2 条）
+### 硬约束（v2.0）
 
-1. **模式 D 短评不提品牌** —— 短评带品牌 100% 被识为软广
-2. **同账号同日 ≥ 5 条模式 A 重复** —— fingerprint 风险，必须混入 B/C/D
+1. **每张卡必须有 `## 相关 JR 资源` body 区块**，列 1-3 个真实可搜的 JR 页面 + searchHook，**不能 null、不能编造、不能填"待补"**
+2. **A/C 模式评论里只提品牌 1 次** —— 多次提及 = 100% 被识为软广
+3. **不准放任何 URL**（保留 v1 红线）
+4. **B/D 模式不在评论里提品牌**，但卡片资源区块仍要列（给实习生 fallback 信息）
+5. **V2EX / HN 平台**：A/C 模式风险最高；账号近 7 日 ≥ 3 条非软广发言再用 A/C，否则只用 B/D
+6. **同账号同日 ≥ 5 条同模式** 必须混合
 
-### frontmatter 必填 `commentPattern: A | B | C | D`
+### frontmatter 必填字段
 
-每张卡 frontmatter 记录这条用了哪种模式，便于复盘哪种模式存活率高。
+```yaml
+commentPattern: A | B | C | D   # 4 种都允许
+searchHook: "..."                # 必填，不能 null。A/C 模式 = 评论里出现的搜索词；B/D 模式 = 卡片资源区块的搜索词
+```
 
 ---
 
@@ -129,9 +139,9 @@ F. 英文 personal 式
 
 ---
 
-## 模式 B 详细（纯 Value-Add，不提品牌）
+## 模式 B 详细（纯 Value-Add，评论里不提品牌）
 
-**结构**：共鸣（30-50 字）+ 补充价值（30-100 字），**不提任何品牌**。
+**结构**：共鸣（30-50 字）+ 补充价值（30-100 字），评论本身**不提品牌**。但卡片 body 的 `## 相关 JR 资源` 区块仍要列出对应 JR 资源——OP 反问"哪里学的"时实习生有 fallback 词可以回。
 
 例（HN 风）：
 > "OP claims 200k context is enough for most workflows. In our team `--max-tokens=8k` per reply with 200k input was the sweet spot — anything bigger and the cache hit rate drops below 30% on Anthropic's API as of last month's update."
@@ -152,7 +162,7 @@ F. 英文 personal 式
 
 ## 模式 D 详细（短评）
 
-**结构**：1-2 句话，犀利、数据驱动、**禁止提品牌**。
+**结构**：1-2 句话，犀利、数据驱动，评论里**不提品牌**（短评带品牌 100% 被识为软广）。但卡片 body 的 `## 相关 JR 资源` 区块仍要列。
 
 例（HN 风）：
 > "$3k/engineer/month at the API rate is roughly 200k tokens/day. That's 30 min of agentic loop time. Either you set `--max-tokens` budgets or you bleed out — there's no middle ground at this volume."
@@ -161,6 +171,31 @@ F. 英文 personal 式
 > "100% agree on the LangChain bloat issue but tbh `langgraph-supervisor` solves 80% of it. The remaining 20% is just bad agent prompting."
 
 **作用**：高曝光帖子下亲和力最高 / OP 回复概率高 / 不带品牌但树立账号在该话题的存在感。
+
+---
+
+## 🚨 每张卡 body 必有的 `## 相关 JR 资源` 区块（v2.0 强制）
+
+> **目的**：实习生打开任务卡 → 看到草稿 → 直接 copy paste；如果 OP 回复"哪里学的"，实习生从这个区块拿 fallback 词回复。
+
+模板（写到每张卡 body 里）：
+
+```markdown
+## 相关 JR 资源
+
+> 这条评论可关联的 JR 页面（实习生备查；A/C 模式已在草稿里挂了，B/D 模式留给 OP 反问时用）
+
+- **主资源**：JR Academy AI Engineer Bootcamp — 搜索词 "JR Academy AI Engineer"
+  - 跟本帖关联点：本帖讨论 agentic context management，AI Engineer 训练营第 3 周专门拆 multi-tool context 调度
+- **次资源**：Vibe Coding Hub — 搜索词 "JR Academy Vibe Coding"
+  - 跟本帖关联点：跨文件 refactor 实战，Cursor / Claude Code 工具链对比表
+- **OP 反问话术**：如果 OP 问 "你说的对比测试在哪能看"，回 "JR Academy 的 Vibe Coding direction 有一组工具链对比，搜 JR Academy Vibe Coding 就找得到"
+```
+
+**硬约束**：
+- 每张卡至少 1 条主资源 + 1 条 OP 反问话术
+- 主资源 = `searchHook` 字段对应的真实方向页（不能编）
+- A/C 模式的草稿已经包含主资源 → 实习生主流程是 copy 草稿；B/D 模式草稿不含 → 实习生主流程是 copy 草稿但备好反问话术
 
 ---
 

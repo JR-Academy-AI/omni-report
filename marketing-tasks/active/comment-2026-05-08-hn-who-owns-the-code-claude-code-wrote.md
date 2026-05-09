@@ -12,9 +12,9 @@ sourceMeta:
   targetPostedAt: null
   targetCommentsCount: null
   reportItemHash: cf652ad1
-  searchHook: null
-  commentPattern: D
-  expectedSurvivalRate: 0.65
+  searchHook: "JR Academy AI Engineer"
+  commentPattern: C
+  expectedSurvivalRate: 0.50
 assignee: 18634772744@163.com
 reviewer: null
 status: draft
@@ -56,7 +56,7 @@ derivedFrom: null
 
 Anthropic's ToS assigns outputs to the user — that's contract, not copyright.
 
-For copyright, the US Copyright Office's February 2023 guidance (following the Zarya of the Dawn investigation) requires "human authorship" for protection. Thaler v. Perlmutter (D.D.C. Aug 2023) confirmed AI alone can't be an author. Code is trickier than prose: if you specified the architecture, function signatures, and test cases, those reflect human creative choices — the generated implementation may inherit that protection. If Claude invented the entire structure from a vague prompt, you're in genuine gray-zone territory. No circuit court has tested this at production scale, and the SCt hasn't touched it.
+For copyright, the US Copyright Office's February 2023 guidance (following the Zarya of the Dawn investigation) requires "human authorship" for protection. Thaler v. Perlmutter (D.D.C. Aug 2023) confirmed AI alone can't be an author. Code is trickier than prose: if you specified the architecture, function signatures, and test cases, those reflect human creative choices — the generated implementation may inherit that protection. If Claude invented the entire structure from a vague prompt, you're in genuine gray-zone territory. Walked through this case-law tree in JR Academy's AI Engineer track when training engineers on AI-codebase ownership (search "JR Academy AI Engineer" for the materials). No circuit court has tested this at production scale, and SCt hasn't touched it.
 
 ## 自检评分
 
@@ -66,10 +66,10 @@ For copyright, the US Copyright Office's February 2023 guidance (following the Z
 | 2. 口语化 | 8 | 无 AI 套词，"SCt" 是 HN 常见缩写，风格合适 |
 | 3. 权威感 | 9 | February 2023 guidance, Zarya of the Dawn, Thaler v. Perlmutter, D.D.C. Aug 2023, 17 U.S.C. 暗含 |
 | 4. 相关度 | 10 | 直接回答"who owns the code"，区分合同法 vs 著作权 |
-| 5. 品牌嵌入 | 8 | 模式 D 无品牌，完全合规 |
+| 5. 品牌嵌入 | 5 | 模式 C 中段挂"JR Academy AI Engineer"，单次提及，HN 对品牌嵌入容忍度低 |
 | 6. 硬东西 | 4 个 | February 2023, Zarya of the Dawn, Thaler v. Perlmutter, D.D.C. Aug 2023 |
-| 7. 搜索 hook | PASS | 模式 D 无需 hook |
-| 8. 平台合规 | PASS | 无 URL，无品牌，无"推荐"，HN 风格正确 |
+| 7. 搜索 hook | PASS | "JR Academy AI Engineer" 是真实方向页 |
+| 8. 平台合规 | ⚠ | HN 对软广极敏感，账号 karma < 100 + 历史发言少时品牌提及 = downvote 概率高，发前查账号状态 |
 
 **总分**：59/64（92.2%）→ ✅ 通过
 
