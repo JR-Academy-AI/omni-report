@@ -2,16 +2,16 @@
 
 > **目的**：让 omni-report 的「每日工作分配」routine 知道哪些同事可以接 routine 派的活，各自能做什么、不能做什么、节奏如何，从而生成具体可执行的当日 todo。
 >
-> **覆盖范围**：7 人 active 全职 + 4 人实习 + 1 人暂停
+> **覆盖范围**：7 人 active 全职 + 3 人实习 + 1 人暂停
 > - 内容/新媒体 3（Summer / Lily / **KIKI-CD**）— 全职，📍 成都
 > - 市场活动 1 active（**Seren**，casual 周四+周五）— 📍 墨尔本
 > - 运营/销售支持/教务 3（Ada / Neomi / Beta）— 全职，📍 成都
-> - 实习生 4（全部已启用）：
->   - **Bella**（视频号 + 转移资料）— 📍 成都，3 天/周
->   - **Serena**（职责待标注）— 📍 成都，每日（5 天/周，最高工时实习生）
+> - 实习生 3（全部已启用）：
+>   - **Serena**（公众号 owner）— 📍 成都，每日（5 天/周，最高工时实习生）
 >   - **KIKI-BNE**（marketing 实习，本地市场）— 📍 布里斯班，2 天/周
 >   - **Han**（marketing 实习，本地市场）— 📍 墨尔本，2 天/周
 > - 暂停 1（Aurora）— 暂不接 routine 派活
+> - **2026-05-22 实习结束移除**：Bella（成都，视频号 + 转移资料，3d/w）+ Gracie（仅在 Notion，未在本仓库登记）。视频号产线暂无 owner
 >
 > **🚨 重要 disambiguation**：
 > - 原 Notion 名单里的 "KIKI" 指**成都全职新媒体运营**（小红书：UQ课代表/UNSW课代表/墨大课代表/素人号）→ 本文件统一称 **`@KIKI-CD`**
@@ -24,7 +24,7 @@
 > - **routine 输出和站会沟通时必须写全名，不能只写 "Seren..."**
 >
 > **团队所在地与时区**：
-> - **成都全职 6 + 实习 2**（Summer / Lily / KIKI-CD / Ada / Neomi / Beta + Bella 3d/w + Serena 5d/w）— Asia/Shanghai (UTC+8)
+> - **成都全职 6 + 实习 1**（Summer / Lily / KIKI-CD / Ada / Neomi / Beta + Serena 5d/w）— Asia/Shanghai (UTC+8)
 > - **墨尔本 1 全职 + 1 实习**（Seren casual 周四+周五 / Han 实习 2d/w）— Australia/Melbourne (UTC+10/+11)
 > - **布里斯班 1 实习**（KIKI-BNE 2d/w）— Australia/Brisbane (UTC+10，无夏令时)
 > - 协作窗口：成都上午 = 墨尔本上午中段 = 重叠 ~3-5 小时
@@ -37,18 +37,18 @@
 >
 > **权威源**：Notion「员工职位及工作内容统计表」(`docs/COMPANY_TEAM.md` 镜像)。本文件 §1.x 中**「Notion 原文」是权威**，**「特点推断」是我从职责 + 账号矩阵 + 产出物逆推的，可以纠正**。
 >
-> **最后更新**：2026-04-26
+> **最后更新**：2026-05-22（Bella + Gracie 实习结束移除）
 
 ---
 
-## 1. 8 人 Profile
+## 1. 10 人 Profile
 
-> 📍 **位置默认成都**（Summer / Lily / KIKI-CD / Ada / Neomi / Beta + Bella 实习 — 7 人）。Seren / Han 在墨尔本，KIKI-BNE 在布里斯班，Aurora 暂停。
+> 📍 **位置默认成都**（Summer / Lily / KIKI-CD / Ada / Neomi / Beta + Serena 实习 — 7 人）。Seren / Han 在墨尔本，KIKI-BNE 在布里斯班，Aurora 暂停。
 > ⏰ 成都 Asia/Shanghai (UTC+8)、墨尔本 Australia/Melbourne (UTC+10/+11)；协作窗口 ~3-5 小时（成都上午 = 墨尔本上午中段）
 
-### 1.1 内容 / 新媒体（3 全职 + 2 实习 = 5 人，📍 成都）
+### 1.1 内容 / 新媒体（3 全职 + 1 实习 = 4 人，📍 成都）
 
-> 5 人内容矩阵：Summer / Lily / KIKI-CD（小红书各自账号垂类）+ Bella（视频号改编 + 转移资料）+ Serena（**公众号 owner**）。详细 profile 在下面，Bella + Serena 在 §1.4 实习生区。
+> 4 人内容矩阵：Summer / Lily / KIKI-CD（小红书各自账号垂类）+ Serena（**公众号 owner**）。详细 profile 在下面，Serena 在 §1.4 实习生区。视频号产线（原 Bella owner，2026-05-22 实习结束移除）**当前无 owner**。
 
 
 #### @Summer — 新媒体运营（求职 + 实习 + 主品牌线）
@@ -287,43 +287,8 @@
 
 ### 1.4 实习生（3 人，全部已启用）
 
-> Bella 在成都做视频号 + 转移资料；KIKI-BNE 和 Han 都是海外 marketing 实习生，分别支撑布里斯班和墨尔本本地市场活动。
-
-#### @Bella — 实习生（📍 成都，3 天/周，视频号 + 转移资料）✅ 已启用
-
-**已知**
-- 位置：成都（Asia/Shanghai, UTC+8，与全职团队同时区）
-- 工时：3 天/周（哪三天**待标注**，但 3 天已是实习生里最高工时）
-- 职责：
-  1. **视频号内容产出** — 解决了团队"视频号 owner 不明"的缺口
-  2. **转移资料** — 跨平台/跨系统资料搬运、归档、迁移、整理（推断：可能涉及把小红书/公众号老内容批量整理到 Notion / 视频号脚本拆分 / 课程资料从老平台迁到 jr-academy）
-
-**特点推断**
-- 视频号是新增产线 — 内容来源大概率是「新媒体三人组（Summer/Lily/KIKI-CD）的爆款笔记」改编为视频
-- "转移资料"是结构化执行型工作 — 适合 routine 派**批量任务**（如"把过去 30 天 5 个爆款笔记改成视频脚本"）
-- AI 协作适配度：高（视频脚本 / 资料整理都是 AI 强场景，prompt 直接出草稿她做最后剪辑/校对）
-- 与新媒体三人组上下游关系：**Summer/Lily/KIKI-CD 出爆款笔记 → @Bella 改编视频号**
-
-**Routine 适合派的活** ✅
-- 视频号选题（基于本周爆款笔记 / 当日热点 / 节日时令）
-- 视频脚本起草（30-60 秒短视频文案）
-- 资料归档任务（routine 识别"X 老内容应该迁到 Y 系统"时挂 @Bella）
-- 跨平台搬运（小红书爆款 → 视频号）
-- 视频号数据周复盘（如有数据源）
-
-**不适合派** ❌
-- 战略 / 选题方向决策（→ 全职新媒体三人组定）
-- 现场拍摄（视频号是否她拍 vs 团队其他人拍 — **待标注**）
-- 跨部门协调（→ Neomi / Ada）
-- 高优先级 / 紧急任务（实习生不该接 deadline 紧的）
-
-**待标注（用户回复后再补全）**
-- 工作日是哪 3 天
-- 视频号矩阵覆盖范围（是把 Summer 的 4 个号 + Lily 的 3 个号 + KIKI-CD 的 4 个号都做视频化？还是单独运营 1-2 个视频号品牌？）
-- "转移资料" 的具体场景（哪些系统在迁移？）
-- 视频号是否包括抖音 / B 站 / YouTube？
-
----
+> Serena 在成都做公众号长文；KIKI-BNE 和 Han 都是海外 marketing 实习生，分别支撑布里斯班和墨尔本本地市场活动。
+> **2026-05-22 实习结束移除**：Bella（成都，视频号 + 转移资料，3d/w）+ Gracie（仅 Notion 登记，未在本仓库）。视频号产线暂无 owner，待站会决定（重新招实习 / 三人组各自兼一点 / 暂停视频号）。
 
 #### @Serena — 公众号 owner（📍 成都，**每日 5 天/周**）✅ 已启用
 
@@ -338,12 +303,11 @@
 - 公众号选题 + 长文撰写（每周 1-2 篇为基准，季节性热点窗口可加量）
 - 跨平台 SEO 长尾词内容（公众号是主战场，知乎 / B 站文字版可同步分发）
 - 蹭热点深度文（GPT-5.5 / Claude Skills / MCP 等行业事件 → 中文圈深度解读）
-- 给 Bella 提供视频号脚本素材（公众号长文 → 拆 30s 视频脚本要点 → Bella 改编）
 
 **与新媒体三人组的差异**
 - Summer / Lily / KIKI-CD：**小红书**短图文笔记（300-500 字 + 5-7 张图）
-- Bella：**视频号**短视频改编（30s）
 - Serena：**公众号**长文（1500-3000 字）+ 跨平台 SEO 长尾内容
+- 视频号：原 Bella owner，2026-05-22 实习结束移除，当前无 owner
 
 **特点推断**
 - 5d/w 工时密度 = 公众号每周稳定产出 1-2 篇深度文 + 多平台 SEO 内容铺设
@@ -355,11 +319,10 @@
 - 蹭热点深度文（基于 jr-wiki AI 日报 / wushi-caijing 风格 / blog-longform-writer skill）
 - SEO 长尾词内容（基于 ai-visibility 报告"补 SEO 深度文"行动项）
 - 公众号矩阵维护（菜单更新 / 自动回复 / 历史文章归档）
-- 给 Bella 视频号提供脚本素材（每篇长文 → 1 个视频要点）
 
 **不适合派** ❌
 - 一线小红书账号运营（→ Summer / Lily / KIKI-CD 各自垂类）
-- 视频号改编（→ Bella）
+- 视频号改编（原 Bella owner 已离职，当前无 owner）
 - 现场活动 / 财务 / 销售
 
 **待标注（用户回复后再补全）**
@@ -459,7 +422,7 @@
 | 🌱 长尾话题（求职 / 实习） | `@Summer` | - |
 | 🌱 长尾话题（人物 / 生活 / 留学） | `@Lily` | - |
 | 🌱 长尾话题（校园 — UQ/UNSW/Unimelb） | `@KIKI-CD` | - |
-| 🌱 长尾话题（视频号 / 短视频改编） | `@Bella`（基于本周三人组爆款笔记改编） | - |
+| 🌱 长尾话题（视频号 / 短视频改编） | `@TBD-video`（Bella 实习结束 2026-05-22，待站会决定接替方式） | - |
 | 🌱 长尾话题（公众号 / 长文 / SEO） | `@Serena`（公众号 owner，5d/w） | - |
 
 ### 2.2 Competitor Weekly（每周日）
@@ -482,7 +445,7 @@
 | 联名 / 跨界（布里斯班） | `@KIKI-BNE` (实习，2d/w) | `@Ada` |
 | 私域转化（微信群 / 朋友圈话术） | `@Beta` | - |
 | 内容驱动增长（爆款笔记） | 按账号 → `@Summer` / `@Lily` / `@KIKI-CD` | - |
-| 内容驱动增长（视频号 / 短视频） | `@Bella`（按上游笔记改编） | 按账号 → 三人组（提供素材） |
+| 内容驱动增长（视频号 / 短视频） | `@TBD-video`（Bella 实习结束 2026-05-22，无 owner） | 按账号 → 三人组（提供素材） |
 
 ### 2.4 AI Visibility / GEO（每周三）
 
@@ -523,13 +486,12 @@
 - **assignee 合法值清单**：
   - **7 人 active 全职**：`@Summer / @Lily / @KIKI-CD / @Seren / @Ada / @Neomi / @Beta`（`@KIKI` 必须写全 `@KIKI-CD`）
   - Seren 是 casual 周四+周五 — 单周 ≤ 2 个 deadline 任务，跨天聚合
-  - **4 实习生（全部已启用）**：
-    - `@Bella`（成都，视频号 + 转移资料，3d/w）
-    - `@Serena`（成都，**职责待标注**，5d/w 每日）— 长链条任务可派，先少量派活观察
+  - **3 实习生（全部已启用）**：
+    - `@Serena`（成都，公众号 owner，5d/w 每日）— 长链条任务可派
     - `@KIKI-BNE`（布里斯班 marketing 实习，2d/w）— 派支持性任务为主，独立操盘待评估
     - `@Han`（墨尔本 marketing 实习，2d/w）— 协助 Seren，派调研 / 物料 / 复盘整理
-  - **4 TBD 标签**：`@TBD-product / @TBD-content / @TBD-tech / @TBD-mkt`
-  - **禁用**：`@Aurora`（暂停）/ `@Melody`（HR only）/ `@Amelia` / `@Rain` / `@Angela`（一线销售）/ 裸 `@KIKI`（歧义）/ 裸 `@Seren`（除墨尔本 casual 同事外，与成都 `@Serena` 易混淆 — 必须写全名）
+  - **5 TBD 标签**：`@TBD-product / @TBD-content / @TBD-tech / @TBD-mkt / @TBD-video`（2026-05-22 起，Bella 实习结束，视频号产线无 owner）
+  - **禁用**：`@Aurora`（暂停）/ `@Bella`（2026-05-22 实习结束）/ `@Gracie`（2026-05-22 实习结束）/ `@Melody`（HR only）/ `@Amelia` / `@Rain` / `@Angela`（一线销售）/ 裸 `@KIKI`（歧义）/ 裸 `@Seren`（除墨尔本 casual 同事外，与成都 `@Serena` 易混淆 — 必须写全名）
 
 ---
 
@@ -541,9 +503,8 @@
 | SEO 技术修复无 owner（404 / sitemap / meta / 站内结构） | 标 `@TBD-tech`，留档不强修 |
 | 课程产品 / 讲师邀请 / 联名品牌决策无 owner | 标 `@TBD-product`，运营在站会人工讨论后指派 |
 | 悉尼 / 其他城市（除墨尔本 / 布里斯班）线下活动 | 标 `@TBD-mkt`，无对接人 |
-| 视频号矩阵覆盖范围 / 是否含抖音 + B 站 + YouTube | Bella 接视频号，具体覆盖几个号 / 是否兼抖音 / B 站 / YouTube **待用户标** |
-| 3 个海外/视频实习生工作日 | Bella 哪 3 天 / KIKI-BNE 哪 2 天 / Han 哪 2 天 — **待用户标注**（Serena 已确认每日 5 天） |
-| `@Bella` "转移资料"具体场景 | 待用户标注（哪些系统在迁移？） |
+| **视频号产线 owner 缺口** | **2026-05-22 新增**：原 owner Bella 实习结束。待站会决定：重新招实习 / 三人组各自兼一点 / 暂停视频号 |
+| 2 个海外实习生工作日 | KIKI-BNE 哪 2 天 / Han 哪 2 天 — **待用户标注**（Serena 已确认每日 5 天） |
 | **`@Serena` mentor** | 公众号 owner 已确认；mentor 是 Summer / Lily / KIKI-CD 谁带？还是直接 Melody？公众号矩阵覆盖几个号？是否兼知乎 / 头条 / 百家号？ |
 | `@KIKI-BNE` 实习深度 / mentor | 能否独立操盘大型活动？远程 mentor 是谁？ |
 | `@Han` 与 Seren 协作模式 | mentor 是 Seren 还是 Melody / Ada？实习深度？ |
