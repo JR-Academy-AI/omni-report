@@ -12,7 +12,7 @@ sourceMeta:
 assignee: 2083483802@qq.com
 status: draft
 priority: p0
-platforms: [linkedin, wechat-mp]
+platforms: [linkedin, weixin-gzh]
 dueDate: 2026-05-30T00:00:00.000Z
 tags:
   - marketing-topic

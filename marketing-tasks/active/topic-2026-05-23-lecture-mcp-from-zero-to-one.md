@@ -12,7 +12,7 @@ sourceMeta:
 assignee: 2083483802@qq.com
 status: draft
 priority: p0
-platforms: [zoom-webinar]
+platforms: [bilibili]
 dueDate: 2026-05-30T00:00:00.000Z
 tags:
   - marketing-topic

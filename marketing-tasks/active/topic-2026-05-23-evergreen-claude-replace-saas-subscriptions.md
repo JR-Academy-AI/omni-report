@@ -12,7 +12,7 @@ sourceMeta:
 assignee: 2083483802@qq.com
 status: draft
 priority: p2
-platforms: [xiaohongshu, wechat-mp]
+platforms: [xiaohongshu, weixin-gzh]
 dueDate: 2026-06-23T00:00:00.000Z
 tags:
   - marketing-topic

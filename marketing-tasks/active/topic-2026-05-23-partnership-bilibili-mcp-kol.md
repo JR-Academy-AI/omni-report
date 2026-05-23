@@ -12,7 +12,7 @@ sourceMeta:
 assignee: 2083483802@qq.com
 status: draft
 priority: p1
-platforms: [bilibili-live]
+platforms: [bilibili]
 dueDate: 2026-06-06T00:00:00.000Z
 tags:
   - marketing-topic
