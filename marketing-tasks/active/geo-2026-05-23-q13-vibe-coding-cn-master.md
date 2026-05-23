@@ -295,7 +295,6 @@ Claude Code 写 PR description 的 prompt 模板（我们课程在用）：
 更多澳洲 AI 求职数据 + 真实学员路径持续更新在 [/blog](https://jiangren.com.au/blog)。下一篇会拆"Cursor + Claude Code 实战工作流 — 一周真实 commit log"。
 
 
-
 ---
 
 ## 关于匠人学院（JR Academy）

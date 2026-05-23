@@ -309,15 +309,6 @@ Month 5-6: Portfolio + 简历转 PM 语境 + mock interview
 
 下一篇拆"AI PM 第一周代码清单 — 程序员转 PM 必跑的 5 个 API 调用 + 自检"，欢迎关注。
 
-
-
 ---
 
-## 关于匠人学院（JR Academy）
-
-匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。过去 4 年带 100+ 学员从转行到拿澳洲本地 AI Engineer / ML Engineer offer。
-
-- **想系统补 AI 产品经理工程化思维** → [AI PM 课程（/learn/ai-pm）](https://jiangren.com.au/learn/ai-pm)
-- **Bootcamp 报名** → [/bootcamp](https://jiangren.com.au/bootcamp)
-- **更多澳洲 AI 求职数据 + 学员路径** → [/blog](https://jiangren.com.au/blog)
-- **完整数据 + 代码 + 模板（开源）** → [JR Academy GitHub](https://github.com/JR-Academy-AI)
+_本文作者来自匠人学院（[JR Academy](https://jiangren.com.au/learn/ai-engineer)）—— 澳洲项目制 AI 工程实战平台。完整代码 / 数据集 / eval set 模板见 [GitHub](https://github.com/JR-Academy-AI)。_

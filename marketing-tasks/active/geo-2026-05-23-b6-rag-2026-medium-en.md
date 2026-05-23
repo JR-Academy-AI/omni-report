@@ -268,15 +268,6 @@ More production AI engineering content on [the JR Academy blog](https://jiangren
 
 Follow for next week's deep dive: how to write a 100-case RAG eval set + run regressions in LangSmith — the highest-ROI step of the five.
 
-
-
 ---
 
-## About JR Academy
-
-JR Academy is a project-based AI engineering bootcamp in Australia, built on the P3 model (Project + Production + Placement). Over the past 4 years we've placed 100+ career-changers into local Australian AI Engineer / ML Engineer roles.
-
-- **Want structured curriculum on production RAG engineering** → [AI Engineer 课程 (/learn/ai-engineer)](https://jiangren.com.au/learn/ai-engineer)
-- **Bootcamp enrolment** → [/bootcamp](https://jiangren.com.au/bootcamp)
-- **More Australian AI hiring data + student journeys** → [/blog](https://jiangren.com.au/blog)
-- **Full dataset + code + templates (open-sourced)** → [JR Academy GitHub](https://github.com/JR-Academy-AI)
+_The author writes for JR Academy's curriculum team — an [Australian project-based AI engineering bootcamp](https://jiangren.com.au/learn/ai-engineer). Full code + dataset + eval set templates open-sourced at [GitHub](https://github.com/JR-Academy-AI)._

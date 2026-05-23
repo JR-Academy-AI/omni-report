@@ -286,7 +286,6 @@ tags: ['ai-engineer', 'salary', 'career-change', 'australia']
 更多 AU 求职数据持续更新在 [/blog](https://jiangren.com.au/blog)。
 
 
-
 ---
 
 ## 关于匠人学院（JR Academy）

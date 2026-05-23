@@ -289,7 +289,6 @@ AI PM 是新岗位，不是 PM + AI 知识拼盘。市场要的是"真实做过 
 完整 200 条 JD 关键词频率数据 + 学员 portfolio 案例在 [JR Academy GitHub](https://github.com/JR-Academy-AI)。更多澳洲求职数据 + AI PM 学员路径在 [/blog](https://jiangren.com.au/blog)。报名通道 [/bootcamp](https://jiangren.com.au/bootcamp)。
 
 
-
 ---
 
 ## 关于匠人学院（JR Academy）

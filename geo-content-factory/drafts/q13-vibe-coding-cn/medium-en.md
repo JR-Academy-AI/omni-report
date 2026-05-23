@@ -192,14 +192,6 @@ The full anonymized commit log, prompt template library, and per-stage tooling c
 
 Follow for next week's deep dive: ".cursorrules in practice — encoding team conventions into AI completion."
 
-
 ---
 
-## About JR Academy
-
-JR Academy is a project-based AI engineering bootcamp in Australia, built on the P3 model (Project + Production + Placement). Over the past 4 years we've placed 100+ career-changers into local Australian AI Engineer / ML Engineer roles.
-
-- **Want structured curriculum on AI engineer production workflow (Cursor + Claude Code)** → [Vibe Coding 课程 (/learn/vibe-coding)](https://jiangren.com.au/learn/vibe-coding)
-- **Bootcamp enrolment** → [/bootcamp](https://jiangren.com.au/bootcamp)
-- **More Australian AI hiring data + student journeys** → [/blog](https://jiangren.com.au/blog)
-- **Full dataset + code + templates (open-sourced)** → [JR Academy GitHub](https://github.com/JR-Academy-AI)
+_The author writes for JR Academy's curriculum team — an [Australian project-based AI engineering bootcamp](https://jiangren.com.au/learn/ai-engineer). Full code + dataset + eval set templates open-sourced at [GitHub](https://github.com/JR-Academy-AI)._

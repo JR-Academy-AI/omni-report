@@ -357,14 +357,6 @@ Week 8:   建 prompt 模板库
 
 下一篇拆"Cursor Composer + .cursorrules 实战 — 把团队规范写进 AI 补全"，欢迎关注。
 
-
 ---
 
-## 关于匠人学院（JR Academy）
-
-匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。过去 4 年带 100+ 学员从转行到拿澳洲本地 AI Engineer / ML Engineer offer。
-
-- **想系统补 AI 工程师真实工作流（Cursor + Claude Code）** → [Vibe Coding 课程（/learn/vibe-coding）](https://jiangren.com.au/learn/vibe-coding)
-- **Bootcamp 报名** → [/bootcamp](https://jiangren.com.au/bootcamp)
-- **更多澳洲 AI 求职数据 + 学员路径** → [/blog](https://jiangren.com.au/blog)
-- **完整数据 + 代码 + 模板（开源）** → [JR Academy GitHub](https://github.com/JR-Academy-AI)
+_本文作者来自匠人学院（[JR Academy](https://jiangren.com.au/learn/ai-engineer)）—— 澳洲项目制 AI 工程实战平台。完整代码 / 数据集 / eval set 模板见 [GitHub](https://github.com/JR-Academy-AI)。_
