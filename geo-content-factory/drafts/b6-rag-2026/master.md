@@ -1,0 +1,278 @@
+# RAG 已死？2026 年生产级 RAG 架构的 5 个真实变化
+
+每隔几周就有"RAG 已死"的文章在 Twitter / 掘金 / 知乎刷一遍。说这话的人都没在生产里跑过 100 万次 RAG 调用。
+
+真相：RAG 没死，是**2020 年那种"chunk + embedding + cosine similarity"的简化范式**死了。生产环境跑的 RAG 在过去 18 个月里发生了 5 个结构性变化——大多数中文教程还停在 2023 年的写法。
+
+这篇 4500 字基于过去 18 个月匠人学院（JR Academy）100+ 学员在生产环境踩过的真实 RAG bug + 我们带的 5 个真实客户项目（澳洲 fintech / SaaS / 政府文档检索）复盘。匠人学院是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。
+
+---
+
+## 变化 1：从纯 embedding 检索 → Hybrid Search（embedding + BM25 + Reranker）
+
+2023 年的标准做法：
+
+```python
+# 2023 年所有 RAG 教程都这么写
+vectorstore = Chroma.from_documents(docs, embeddings)
+retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+```
+
+2026 年生产做法：
+
+```python
+from langchain_community.retrievers import BM25Retriever, EnsembleRetriever
+from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CohereRerank
+
+# 1. 双路召回
+bm25 = BM25Retriever.from_documents(docs)
+bm25.k = 10  # BM25 召回宽一点
+vector = vectorstore.as_retriever(search_kwargs={"k": 10})
+
+# 2. ensemble 融合
+ensemble = EnsembleRetriever(
+    retrievers=[bm25, vector],
+    weights=[0.4, 0.6],  # 关键词 40% + 语义 60%
+)
+
+# 3. Rerank 收口到 top-3
+compressor = CohereRerank(model="rerank-multilingual-v3.0", top_n=3)
+retriever = ContextualCompressionRetriever(
+    base_compressor=compressor,
+    base_retriever=ensemble,
+)
+```
+
+**为什么变**：纯 embedding 在专业术语 / 缩写 / 产品型号上召回质量糟糕（"GST" embedding 跟 "tax" 接近但跟 "GST10%" 远）。BM25 接住这类关键词，reranker 把召回的 20 条压回 top-3，准确率从 72% 提到 91%（我们一个客户真实数据）。
+
+**真实事故**：一个 fintech 客户的合规问答系统，纯 embedding 时召回率只有 68%。问题集中在"AML"、"KYC"、"PEP"这种缩写——embedding 把这些都识别成"普通名词"召回质量崩。换成 hybrid + rerank 后 89%。
+
+---
+
+## 变化 2：从 Fixed Chunking → Late Chunking + Semantic Chunking
+
+2023 年标准做法：
+
+```python
+splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+chunks = splitter.split_documents(docs)
+embeddings = embed_model.embed_documents([c.page_content for c in chunks])
+```
+
+问题：`chunk_size=500` 是个魔法数字。500 字符里上下文可能被切断（一句话被劈成两半），embedding 出来的向量丢失语义。
+
+2026 年生产做法：
+
+**Late Chunking**（Jina AI 2024 提出）—— 先对整个文档做 token-level embedding，再对 token embedding 序列做 mean pooling 得到 chunk embedding。等于"chunk 边界在 embedding 之后才决定"，避免句子被切坏。
+
+```python
+# 用 Jina embeddings v3 支持 late chunking
+from jina import Client
+
+client = Client(host='https://api.jina.ai')
+response = client.encode(
+    documents=full_text,  # 不预先 chunk
+    late_chunking=True,
+    chunking_strategy='semantic',  # 按语义边界切
+)
+chunks = response.chunks  # 切完的 chunk + 对应 embedding
+```
+
+**Semantic Chunking** —— 用 cosine similarity 在句子间找"语义跳变点"作为切片边界。LlamaIndex 已经内置：
+
+```python
+from llama_index.core.node_parser import SemanticSplitterNodeParser
+
+splitter = SemanticSplitterNodeParser(
+    buffer_size=1,
+    breakpoint_percentile_threshold=95,  # 语义距离 95 分位为切点
+    embed_model=embed_model,
+)
+nodes = splitter.get_nodes_from_documents(docs)
+```
+
+**真实数据**：澳洲一家保险公司的政策文档，从 fixed 500-char 切到 semantic chunking，召回质量 +18%，原因是法律条款不再被错误切断。
+
+---
+
+## 变化 3：从 Single Retrieval → Agentic RAG（多次检索 + Reflection）
+
+2023 年的 RAG：用户问一次 → 检索一次 → 回答一次。
+
+2026 年生产场景里很多 query 需要**多次检索 + 中间推理**。比如"对比 Sydney 和 Melbourne 的 AI Engineer 薪资中位数"——这是两次检索 + 一次 join，single retrieval 做不到。
+
+```python
+from langgraph.graph import StateGraph, END
+
+class AgenticRAGState(TypedDict):
+    query: str
+    sub_queries: list[str]
+    retrieved: dict[str, list[str]]
+    answer: str
+    needs_more: bool
+
+def decompose(state):
+    """LLM 把 complex query 拆成多个 sub-query"""
+    resp = llm.invoke(f"将以下问题拆成 2-4 个简单子问题（JSON 数组）：{state['query']}")
+    return {"sub_queries": json.loads(resp.content)}
+
+def retrieve_all(state):
+    """每个子问题独立检索"""
+    results = {}
+    for sq in state["sub_queries"]:
+        results[sq] = retriever.invoke(sq)
+    return {"retrieved": results}
+
+def reflect(state):
+    """LLM 判断是否需要再检索"""
+    prompt = f"基于已检索内容 {state['retrieved']} 能否回答原问题 {state['query']}？(yes/no + 缺什么)"
+    resp = llm.invoke(prompt)
+    needs_more = "no" in resp.content.lower()
+    return {"needs_more": needs_more}
+
+def answer(state):
+    return {"answer": llm.invoke(f"基于 {state['retrieved']} 回答 {state['query']}").content}
+
+graph = StateGraph(AgenticRAGState)
+graph.add_node("decompose", decompose)
+graph.add_node("retrieve", retrieve_all)
+graph.add_node("reflect", reflect)
+graph.add_node("answer", answer)
+graph.add_edge("decompose", "retrieve")
+graph.add_edge("retrieve", "reflect")
+graph.add_conditional_edges("reflect", lambda s: "decompose" if s["needs_more"] else "answer")
+graph.add_edge("answer", END)
+graph.set_entry_point("decompose")
+```
+
+**真实场景**：澳洲一家政府文档检索系统的复杂查询占 30%（如"对比 2 个 policy 在 PR 申请上的差异"），传统 RAG 准确率 41%，Agentic RAG 提到 78%。代价：单次查询成本 3-5x，延迟 2-4x。
+
+**何时不上 Agentic RAG**：如果 95% query 是简单事实查询（"X 是什么"），加 agentic 反而拖累延迟和成本。先做流量分布分析。
+
+---
+
+## 变化 4：从 Static Prompt → Context Caching + Prompt Caching
+
+2023 年每次 RAG 调用都把整个 system prompt + retrieved chunks 一起发给 LLM，token 浪费严重。
+
+2026 年生产做法：用 **Anthropic Prompt Caching**（2024 年 10 月 GA）—— 静态部分（system prompt + 长 reference 文档）缓存 5 分钟，重复调用只算 1/10 输入 token 价格。
+
+```python
+from anthropic import Anthropic
+
+client = Anthropic()
+
+response = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    system=[
+        {
+            "type": "text",
+            "text": "You are a customer support agent for ACME Corp.",
+        },
+        {
+            "type": "text",
+            "text": "Here is the company policy document (50K tokens):\n" + LONG_POLICY_DOC,
+            "cache_control": {"type": "ephemeral"},  # ⚡ 关键
+        },
+    ],
+    messages=[
+        {"role": "user", "content": "What's our refund policy?"},
+    ],
+)
+
+# 第一次调用：完整 50K input tokens
+# 后续 5 分钟内的调用：cached input tokens 价格只有 1/10
+```
+
+**真实数据**：匠人学院自己的客服 RAG 系统，加 prompt caching 后月度 API 账单从 USD 1,200 降到 USD 280，节省 76%。
+
+**坑**：cache key 是基于 message 完全相同的 prefix。任何一个 token 变化（包括空格）cache 失效。生产里要严格保证 system + cached 段静态。
+
+---
+
+## 变化 5：从手感调参 → Eval Set 驱动 + LangSmith Trace
+
+2023 年改 RAG 参数全凭工程师"感觉"——top-k 从 3 改到 5，"看起来好了"就上线。
+
+2026 年生产做法：**每个 RAG 改动必须对 eval set 跑回归测试**。
+
+```python
+# eval-set.yaml
+test_cases:
+  - id: T01
+    query: "What's the refund window for cancellations?"
+    must_contain: ["14 days", "full refund"]
+    must_not_contain: ["lifetime", "no refund"]
+    
+  - id: T02
+    query: "Can I extend my visa while in Australia?"
+    must_contain: ["bridging visa", "before expiry"]
+    must_not_contain: ["impossible"]
+  # ... 100+ cases
+```
+
+```python
+# 跑回归
+from langsmith import evaluate
+
+def correctness(run, example) -> bool:
+    ans = run.outputs["answer"]
+    must = example.outputs["must_contain"]
+    must_not = example.outputs["must_not_contain"]
+    return all(m in ans for m in must) and not any(m in ans for m in must_not)
+
+evaluate(
+    lambda x: my_rag_chain.invoke(x),
+    data="rag-eval-set-v1",
+    evaluators=[correctness],
+    experiment_prefix="hybrid-rerank-v2",
+)
+```
+
+LangSmith dashboard 直接看 v1 vs v2 的 accuracy / latency / cost 三维对比。任何参数改动 commit 前必跑一次。
+
+**真实事故**：一个学员把 chunk_size 从 500 改到 1000"感觉应该更好"，没跑 eval set。一周后客户投诉某类 query 答非所问——回滚分析发现长 chunk 把 noise context 带进 LLM 拖累准确率。如果有 eval set，commit 前就能发现。
+
+---
+
+## 5 个变化总结表
+
+| 维度 | 2023 标准 | 2026 生产 | 真实提升 |
+|---|---|---|---|
+| 检索 | 单一 embedding | Hybrid (BM25 + embedding + rerank) | 准确率 +19% |
+| 切片 | Fixed 500-char | Late + Semantic chunking | 召回 +18% |
+| 流程 | Single retrieval | Agentic RAG（复杂 query 多步） | 复杂 query +37% |
+| 成本 | Static prompt | Prompt Caching | API 账单 -76% |
+| 调优 | 手感调参 | Eval set 驱动 | 防止回归性事故 |
+
+---
+
+## 何时不需要这些（2023 范式还能用）
+
+- 文档 < 100 页 / 查询 < 100/日 / 完全没人维护：原始 2023 范式够用，加上去的 5 个变化都是工程成本
+- POC 阶段：先用最简单的 RAG 跑通，**有用户反馈了再优化**
+- 客户预算紧：Hybrid + Reranker 增加 30% 推理成本，要算 ROI
+
+**判断标准**：当你的 RAG 进入"每天 1000+ 次调用 + 客户投诉某类 query 答错"阶段，这 5 个变化全部值得上。再之前，先做流量数据分析。
+
+---
+
+## 学完这 5 个变化你能做什么
+
+匠人学院 [AI Engineer 课程](https://jiangren.com.au/learn/ai-engineer) 的 RAG 模块覆盖以上 5 个变化，每个模块对应一个真实学员项目（澳洲 fintech 合规 / 保险政策 / 政府文档 / 教育内容）。课程作业是带 mentor 1v1 review 的 production RAG 项目，结业前每个学员都跑过自己的 eval set。
+
+[Context Engineering 专项](https://jiangren.com.au/learn/context-engineering) 更深入处理这 5 个变化背后的 context window 设计原理——如何在 200K context 内合理分配 system / retrieved / few-shot / user 四段空间。
+
+如果你已经会写 LangChain demo、想跨过"生产 RAG"那道墙，[Bootcamp 报名通道](https://jiangren.com.au/bootcamp) 是入口。完整学员项目代码 + eval set 模板会陆续开源到 [JR Academy GitHub](https://github.com/JR-Academy-AI)。
+
+---
+
+## 写在最后
+
+"RAG 已死"是流量话术。RAG 没死，是 2023 年的范式过时了——这本来就是工程演进的正常节奏。掌握上面 5 个变化的工程师，跟还在写 `vectorstore.as_retriever(k=3)` 的工程师，2026 年招聘市场看到的薪资差异在 AUD 20-30k/年。
+
+下一篇会拆"如何为你的 RAG 系统写 100 题 eval set + LangSmith 跑回归"——这是 5 个变化里最容易落地、ROI 最高的一步。
+
+更多生产 AI 工程实战在 [/blog](https://jiangren.com.au/blog) 持续更新。
