@@ -3,7 +3,10 @@ name: Sync Marketing Tasks to Prod
 # 见 PRD_MARKETING_TASKS_CI_SYNC.md
 # omni-report 是 marketing-tasks .md 的 source of truth；
 # 这个 workflow 把 active/*.md push 给 prod jr-academy backend，写进 Mongo。
-# Last refreshed: 2026-05-23 (trigger run #53 after secret value update)
+#
+# 2026-05-23 fix: 之前全量 POST 100+ 张卡撞到 nginx HTTP 413 Payload Too Large。
+# 改为 (a) push trigger 只同步 git diff 看到的本次改动文件；
+# (b) workflow_dispatch 全量同步但 chunked batch (≤ 20 张/batch)。
 
 on:
   push:
@@ -12,104 +15,179 @@ on:
       - 'marketing-tasks/active/**/*.md'
       - '.github/workflows/sync-marketing-tasks.yml'
   workflow_dispatch:
-    # 手动兜底：首次全量 / Action 失败重试 / backend 升级后重新同步
+    inputs:
+      full_resync:
+        description: '全量同步 active/ 所有 .md（默认只同步本次 push 改动）'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 concurrency:
   group: sync-marketing-tasks
-  cancel-in-progress: false  # 串行执行，按 push 顺序，避免后写覆盖前写
+  cancel-in-progress: false  # 串行，按 push 顺序
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # 需要拿到 HEAD^ 算 diff
 
-      - name: Build payload + POST to prod
+      - name: Determine files to sync
+        id: files
+        run: |
+          set -e
+          # workflow_dispatch + full_resync=true 全量；否则按 git diff
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.full_resync }}" = "true" ]; then
+            echo "mode=FULL" | tee -a "$GITHUB_OUTPUT"
+            ls marketing-tasks/active/*.md 2>/dev/null | sed 's|^marketing-tasks/active/||' > /tmp/files-to-sync.txt
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # workflow_dispatch 不带 full_resync 时 → 也按最新 push 的 diff（HEAD^..HEAD）
+            echo "mode=DIFF (workflow_dispatch)" | tee -a "$GITHUB_OUTPUT"
+            git diff --name-only HEAD^..HEAD -- 'marketing-tasks/active/*.md' 2>/dev/null \
+              | sed 's|^marketing-tasks/active/||' > /tmp/files-to-sync.txt || true
+          else
+            # push trigger: 只同步本次 push 改动的 marketing-tasks/active/*.md
+            echo "mode=DIFF (push)" | tee -a "$GITHUB_OUTPUT"
+            BEFORE="${{ github.event.before }}"
+            AFTER="${{ github.event.after }}"
+            # 0000000... 表示初次 push (新 branch)；fallback 到 HEAD^
+            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ] || [ -z "$BEFORE" ]; then
+              BEFORE="HEAD^"
+            fi
+            git diff --name-only "$BEFORE" "$AFTER" -- 'marketing-tasks/active/*.md' 2>/dev/null \
+              | sed 's|^marketing-tasks/active/||' > /tmp/files-to-sync.txt || true
+          fi
+
+          COUNT=$(wc -l < /tmp/files-to-sync.txt | tr -d ' ')
+          echo "count=$COUNT" | tee -a "$GITHUB_OUTPUT"
+          echo "Files to sync ($COUNT):"
+          cat /tmp/files-to-sync.txt | head -20
+          [ "$COUNT" -gt 20 ] && echo "...(truncated, see /tmp/files-to-sync.txt)" || true
+
+      - name: Build payload + chunked POST to prod
+        if: steps.files.outputs.count != '0'
         env:
-          # repo-level secret，名字早就配着，2 weeks ago 有人重置了值导致连挂 21 次。
+          # repo-level secret，名字早就配着。
           # 维护说明：去 https://github.com/JR-Academy-AI/omni-report/settings/secrets/actions
           # 更新 JR_ACADEMY_SUPERADMIN_TOKEN 值时，请粘一个长效 superAdmin JWT（建议 365d 有效）。
           PROD_API: ${{ secrets.JR_ACADEMY_PROD_API || 'https://api.jiangren.com.au' }}
           TOKEN: ${{ secrets.JR_ACADEMY_SUPERADMIN_TOKEN }}
         run: |
-          # 给调试用：打印 TOKEN 长度（不打 value），帮助一眼看清是 secret 空 vs token 无效
           echo "DEBUG: TOKEN length=${#TOKEN}"
-          echo "DEBUG: PROD_API=$PROD_API"
           if [ -z "$TOKEN" ]; then
-            echo "::error::JR_ACADEMY_SUPERADMIN_TOKEN secret is empty — go to repo Settings → Secrets and update it"
+            echo "::error::JR_ACADEMY_SUPERADMIN_TOKEN secret is empty"
             exit 1
           fi
+
           node <<'EOF'
           const fs = require('fs');
           const path = require('path');
 
+          const BATCH_SIZE = 15; // 每批 15 张卡，平均 ~12K bytes/张 → 180KB/batch，远低于 nginx 1MB
+          const DIR = 'marketing-tasks/active';
+
           (async () => {
-            const dir = 'marketing-tasks/active';
-            if (!fs.existsSync(dir)) {
-              console.log(`No ${dir} directory; nothing to sync`);
+            const files = fs.readFileSync('/tmp/files-to-sync.txt', 'utf-8')
+              .split('\n')
+              .map(s => s.trim())
+              .filter(Boolean);
+
+            if (files.length === 0) {
+              console.log('No files to sync');
               return;
             }
 
-            const tasks = fs.readdirSync(dir)
-              .filter(f => f.endsWith('.md'))
+            const allTasks = files
+              .filter(f => fs.existsSync(path.join(DIR, f)))  // 跳过已删除的（active/ 不再有）
               .map(f => ({
                 filename: f,
-                rawMarkdown: fs.readFileSync(path.join(dir, f), 'utf-8')
+                rawMarkdown: fs.readFileSync(path.join(DIR, f), 'utf-8'),
               }));
 
-            if (tasks.length === 0) {
-              console.log('No .md files in active/; nothing to sync');
-              return;
-            }
+            console.log(`Total files to sync: ${allTasks.length}`);
+            console.log(`Batch size: ${BATCH_SIZE}`);
+            console.log(`Batches: ${Math.ceil(allTasks.length / BATCH_SIZE)}`);
 
-            console.log(`Posting ${tasks.length} tasks to ${process.env.PROD_API}/admin-cms/marketing-tasks/sync/import`);
+            let totalCreated = 0, totalUpdated = 0, totalSkipped = 0, totalErrors = 0;
+            const allErrorMessages = [];
 
-            const res = await fetch(
-              `${process.env.PROD_API}/admin-cms/marketing-tasks/sync/import`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${process.env.TOKEN}`
+            for (let i = 0; i < allTasks.length; i += BATCH_SIZE) {
+              const batch = allTasks.slice(i, i + BATCH_SIZE);
+              const batchNum = Math.floor(i / BATCH_SIZE) + 1;
+              const totalBatches = Math.ceil(allTasks.length / BATCH_SIZE);
+
+              console.log(`\n[Batch ${batchNum}/${totalBatches}] Posting ${batch.length} tasks...`);
+
+              const res = await fetch(
+                `${process.env.PROD_API}/admin-cms/marketing-tasks/sync/import`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.TOKEN}`,
+                  },
+                  body: JSON.stringify({ tasks: batch, strategy: 'upsert' }),
                 },
-                body: JSON.stringify({ tasks, strategy: 'upsert' })
-              }
-            );
+              );
 
-            const text = await res.text();
-            let json;
-            try {
-              json = JSON.parse(text);
-            } catch {
-              console.error(`Non-JSON response (HTTP ${res.status}): ${text.slice(0, 500)}`);
-              process.exit(1);
-            }
-
-            console.log(JSON.stringify(json, null, 2));
-
-            if (!res.ok || !json.success) {
-              console.error(`::error::Sync failed: HTTP ${res.status}`);
-              process.exit(1);
-            }
-
-            const totalProcessed = (json.created ?? 0) + (json.updated ?? 0);
-            const errorCount = json.errors?.length ?? 0;
-
-            if (errorCount > 0) {
-              // Partial success: 主路径成功 + 部分卡 frontmatter 不合规 → ::warning::
-              // 全部失败：created+updated == 0 且 errors > 0 → ::error:: + exit 1
-              if (totalProcessed === 0) {
-                console.error(`::error::All ${errorCount} task(s) failed validation`);
+              const text = await res.text();
+              let json;
+              try {
+                json = JSON.parse(text);
+              } catch {
+                console.error(`::error::Batch ${batchNum} non-JSON response (HTTP ${res.status}): ${text.slice(0, 300)}`);
                 process.exit(1);
-              } else {
-                console.warn(`::warning::Partial success: ${totalProcessed} synced, ${errorCount} failed validation (see errors[] above)`);
-                console.warn('Failed cards stay in active/ for fix-and-retry; main payload reached prod Mongo.');
               }
+
+              if (!res.ok || !json.success) {
+                console.error(`::error::Batch ${batchNum} failed: HTTP ${res.status}`);
+                console.error(JSON.stringify(json, null, 2).slice(0, 500));
+                process.exit(1);
+              }
+
+              totalCreated += json.created ?? 0;
+              totalUpdated += json.updated ?? 0;
+              totalSkipped += json.skippedInvalid ?? 0;
+              const errCount = json.errors?.length ?? 0;
+              totalErrors += errCount;
+              if (errCount > 0) {
+                allErrorMessages.push(...(json.errors ?? []).map(e => `[${batchNum}] ${JSON.stringify(e).slice(0, 200)}`));
+              }
+
+              console.log(`  → created=${json.created} updated=${json.updated} skipped=${json.skippedInvalid} errors=${errCount}`);
+
+              // 给 prod 100ms 喘息，避免 burst rate limit
+              await new Promise(r => setTimeout(r, 100));
             }
-            console.log(`OK created=${json.created} updated=${json.updated} skippedInvalid=${json.skippedInvalid} errors=${errorCount}`);
+
+            console.log(`\n=== Total ===`);
+            console.log(`created=${totalCreated} updated=${totalUpdated} skipped=${totalSkipped} errors=${totalErrors}`);
+
+            if (totalErrors > 0) {
+              console.warn(`::warning::Some cards failed validation (${totalErrors}). First 5:`);
+              allErrorMessages.slice(0, 5).forEach(m => console.warn('  ' + m));
+            }
+
+            if (totalCreated + totalUpdated === 0 && totalErrors > 0) {
+              console.error(`::error::All ${totalErrors} task(s) failed validation`);
+              process.exit(1);
+            }
+
+            console.log(`✓ Sync complete`);
           })().catch(err => {
             console.error(`::error::${err.message}`);
+            console.error(err.stack);
             process.exit(1);
           });
           EOF
+
+      - name: No-op summary (no files changed)
+        if: steps.files.outputs.count == '0'
+        run: |
+          echo "No marketing-tasks/active/*.md changed in this push — nothing to sync"
