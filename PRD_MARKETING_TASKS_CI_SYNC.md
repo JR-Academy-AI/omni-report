@@ -458,20 +458,19 @@ if (errorCount > 0) {
 - ❌ archive 闭环（卡片 review→done 后归档机制）—— 需要后端加 `archived` 字段 + sync 处理 archive 路径，单独 PR
 - ❌ 34 张其他 sessions 的旧卡 frontmatter 不合规—— 跟本 PRD 解耦，各 session owner 自己修
 
-### 8.6 secret 改用 org 公用名（2026-05-23）
+### 8.6 secret 值被改空，连挂 21 次（2026-05-23 修复）
 
-**症状**：workflow 自 run #27（2026-05-10 01:43）起连续 21 次 failure，每次 step 3 只跑 1 秒就退出。最近一次 run #46/47 step 3 duration 1s，对比 #26（最后成功）3s。
+**症状**：workflow 自 run #27（2026-05-10 01:43）起连续 21 次 failure，每次 step 3 只跑 0-1 秒就退出（成功时 3s）。bash guard `[ -z "$TOKEN" ]` 立即触发。
 
-**根因**：原 yaml 用了**定制** secret 名 `JR_ACADEMY_PROD_API` / `JR_ACADEMY_SUPERADMIN_TOKEN`。1 秒退出 = bash guard `[ -z "$TOKEN" ]` 立即触发，说明 secret 值是空的。推测早期某次手动配过一个 7-day JWT，2026-05-10 前后过期没人续。jr-wiki / training-rag 一直用的是 org 公用 `ADMIN_TOKEN` / `API_URL`，跟着 org 滚动续期所以稳定。
+**根因**：repo 级别 secret `JR_ACADEMY_SUPERADMIN_TOKEN` 和 `JR_ACADEMY_PROD_API` 的**名字一直在**，但 2026-05-09 ↔ 2026-05-10 之间有人重置了值（GitHub Secrets UI 显示 Last updated = "2 weeks ago"，跟 failure 时间线精确吻合）。值变成空字符串后，workflow 取到 `$TOKEN=""`，guard 立即 exit 1。
 
-**修复**：workflow 改用公用名（同 jr-wiki `scraped-jobs-sync.yml` § L33-35）：
+**最初诊断走偏**：先以为是定制 secret 名跟 org 公用名 mismatch，把 yaml 改成 `secrets.ADMIN_TOKEN` / `secrets.API_URL`（jr-wiki 用的那套）→ 反而切到不存在的 secret 上，更失败。Lightman 截图 repo Secrets 列表后才确认名字一直是对的。
 
-```yaml
-PROD_API: ${{ secrets.API_URL || 'https://api.jiangren.com.au' }}
-TOKEN: ${{ secrets.ADMIN_TOKEN }}
-```
-
-`API_URL` 还带 fallback，即便 org 没配 URL 这一项，workflow 也用 default。
+**实际修复**：
+1. yaml 名字回滚为 `JR_ACADEMY_SUPERADMIN_TOKEN` / `JR_ACADEMY_PROD_API`
+2. `PROD_API` 加 `|| 'https://api.jiangren.com.au'` fallback（即便 secret 空也能跑）
+3. step 3 加 `echo "DEBUG: TOKEN length=${#TOKEN}"` 帮助下次一眼区分「secret 空」vs「token 无效」
+4. **用户重新设置** `JR_ACADEMY_SUPERADMIN_TOKEN` 值为一个长效 superAdmin JWT（建议 365d 有效，避免 7-day JWT 续期漏）
 
 **补救**：连挂 14 天积压 158 张本地 active/ vs 124 张 prod。2026-05-23 用本地 SDM token 手动 batch push 一次，结果 created=92 / updated=58 / errors=8（全是 commit `f443273` 那批 05-20 comment 卡缺 `id` + `title` frontmatter，跟本 fix 无关）。
 

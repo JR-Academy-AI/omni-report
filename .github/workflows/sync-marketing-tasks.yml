@@ -26,14 +26,17 @@ jobs:
 
       - name: Build payload + POST to prod
         env:
-          # 公司 org 公用 secret（与 jr-wiki / training-rag 同名）。
-          # 之前用 JR_ACADEMY_PROD_API / JR_ACADEMY_SUPERADMIN_TOKEN 是定制名，2026-05-10 起
-          # 那个 JWT 过期没人续，连挂 21 次。改用公用 ADMIN_TOKEN 后跟着 org 滚动续期。
-          PROD_API: ${{ secrets.API_URL || 'https://api.jiangren.com.au' }}
-          TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          # repo-level secret，名字早就配着，2 weeks ago 有人重置了值导致连挂 21 次。
+          # 维护说明：去 https://github.com/JR-Academy-AI/omni-report/settings/secrets/actions
+          # 更新 JR_ACADEMY_SUPERADMIN_TOKEN 值时，请粘一个长效 superAdmin JWT（建议 365d 有效）。
+          PROD_API: ${{ secrets.JR_ACADEMY_PROD_API || 'https://api.jiangren.com.au' }}
+          TOKEN: ${{ secrets.JR_ACADEMY_SUPERADMIN_TOKEN }}
         run: |
+          # 给调试用：打印 TOKEN 长度（不打 value），帮助一眼看清是 secret 空 vs token 无效
+          echo "DEBUG: TOKEN length=${#TOKEN}"
+          echo "DEBUG: PROD_API=$PROD_API"
           if [ -z "$TOKEN" ]; then
-            echo "::error::Missing ADMIN_TOKEN secret (org-level)"
+            echo "::error::JR_ACADEMY_SUPERADMIN_TOKEN secret is empty — go to repo Settings → Secrets and update it"
             exit 1
           fi
           node <<'EOF'
