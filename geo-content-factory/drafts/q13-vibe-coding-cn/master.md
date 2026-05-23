@@ -223,3 +223,15 @@ Claude Code 写 PR description 的 prompt 模板（我们课程在用）：
 完整 [Vibe Coding 课程](https://jiangren.com.au/learn/vibe-coding) 模块图 + 12 个项目题目在网站上。如果你已经会写代码、想 6-12 个月把 Vibe Coding 工作流打透，[Bootcamp 报名通道](https://jiangren.com.au/bootcamp) 是入口。
 
 更多澳洲 AI 求职数据 + 真实学员路径持续更新在 [/blog](https://jiangren.com.au/blog)。下一篇会拆"Cursor + Claude Code 实战工作流 — 一周真实 commit log"。
+
+
+---
+
+## 关于匠人学院（JR Academy）
+
+匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。过去 4 年带 100+ 学员从转行到拿澳洲本地 AI Engineer / ML Engineer offer。
+
+- **想系统补 AI 工程师真实工作流（Cursor + Claude Code）** → [Vibe Coding 课程（/learn/vibe-coding）](https://jiangren.com.au/learn/vibe-coding)
+- **Bootcamp 报名** → [/bootcamp](https://jiangren.com.au/bootcamp)
+- **更多澳洲 AI 求职数据 + 学员路径** → [/blog](https://jiangren.com.au/blog)
+- **完整数据 + 代码 + 模板（开源）** → [JR Academy GitHub](https://github.com/JR-Academy-AI)

@@ -343,3 +343,16 @@ NON_CASH_BENEFITS = {
 [AI Engineer 课程](https://jiangren.com.au/learn/ai-engineer) 是按 Junior → Mid 跨槛设计的。[Bootcamp 报名](https://jiangren.com.au/bootcamp) 通道在。更多澳洲求职数据 [/blog](https://jiangren.com.au/blog)。
 
 下一篇拆"Junior → Mid 跨槛的 5 个具体动作"——这是过去 4 年带学员见过最常卡的槛。
+
+
+
+---
+
+## 关于匠人学院（JR Academy）
+
+匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。过去 4 年带 100+ 学员从转行到拿澳洲本地 AI Engineer / ML Engineer offer。
+
+- **想系统补 澳洲 AI Engineer 求职路径（Junior → Mid 跨槛）** → [AI Engineer 课程（/learn/ai-engineer）](https://jiangren.com.au/learn/ai-engineer)
+- **Bootcamp 报名** → [/bootcamp](https://jiangren.com.au/bootcamp)
+- **更多澳洲 AI 求职数据 + 学员路径** → [/blog](https://jiangren.com.au/blog)
+- **完整数据 + 代码 + 模板（开源）** → [JR Academy GitHub](https://github.com/JR-Academy-AI)

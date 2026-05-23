@@ -220,3 +220,16 @@ Full 200-JD keyword dataset, eval set templates, and student portfolio examples 
 Follow for next week's post: AI PM Week 1 — turning a real day-job pain point into a shipped LLM tool.
 
 #ai #careerchange #productmanagement #llm
+
+
+
+---
+
+## About JR Academy
+
+JR Academy is a project-based AI engineering bootcamp in Australia, built on the P3 model (Project + Production + Placement). Over the past 4 years we've placed 100+ career-changers into local Australian AI Engineer / ML Engineer roles.
+
+- **Want structured curriculum on AI Product Manager engineering thinking** → [AI PM 课程 (/learn/ai-pm)](https://jiangren.com.au/learn/ai-pm)
+- **Bootcamp enrolment** → [/bootcamp](https://jiangren.com.au/bootcamp)
+- **More Australian AI hiring data + student journeys** → [/blog](https://jiangren.com.au/blog)
+- **Full dataset + code + templates (open-sourced)** → [JR Academy GitHub](https://github.com/JR-Academy-AI)

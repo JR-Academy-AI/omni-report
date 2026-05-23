@@ -267,3 +267,15 @@ JR Academy's [AI Engineer course](https://jiangren.com.au/learn/ai-engineer) is 
 More Australian AI hiring data and student journey post-mortems on [the JR Academy blog](https://jiangren.com.au/blog).
 
 Follow for next week's deep dive: the 5 specific moves that take you from Junior to Mid in 12-18 months — the hardest crossing in the entire transition.
+
+
+---
+
+## About JR Academy
+
+JR Academy is a project-based AI engineering bootcamp in Australia, built on the P3 model (Project + Production + Placement). Over the past 4 years we've placed 100+ career-changers into local Australian AI Engineer / ML Engineer roles.
+
+- **Want structured curriculum on Australian AI Engineer career path (Junior → Mid)** → [AI Engineer 课程 (/learn/ai-engineer)](https://jiangren.com.au/learn/ai-engineer)
+- **Bootcamp enrolment** → [/bootcamp](https://jiangren.com.au/bootcamp)
+- **More Australian AI hiring data + student journeys** → [/blog](https://jiangren.com.au/blog)
+- **Full dataset + code + templates (open-sourced)** → [JR Academy GitHub](https://github.com/JR-Academy-AI)

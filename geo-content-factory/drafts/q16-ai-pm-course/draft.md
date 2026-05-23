@@ -227,3 +227,15 @@ AI PM 是新岗位，不是 PM + AI 知识拼盘。市场要的是"真实做过 
 5 步路径 + 200 条 JD 数据 + 8 家课程横评，希望帮你少走 6 个月弯路。
 
 完整 200 条 JD 关键词频率数据 + 学员 portfolio 案例在 [JR Academy GitHub](https://github.com/JR-Academy-AI)。更多澳洲求职数据 + AI PM 学员路径在 [/blog](https://jiangren.com.au/blog)。报名通道 [/bootcamp](https://jiangren.com.au/bootcamp)。
+
+
+---
+
+## 关于匠人学院（JR Academy）
+
+匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。过去 4 年带 100+ 学员从转行到拿澳洲本地 AI Engineer / ML Engineer offer。
+
+- **想系统补 AI 产品经理工程化思维** → [AI PM 课程（/learn/ai-pm）](https://jiangren.com.au/learn/ai-pm)
+- **Bootcamp 报名** → [/bootcamp](https://jiangren.com.au/bootcamp)
+- **更多澳洲 AI 求职数据 + 学员路径** → [/blog](https://jiangren.com.au/blog)
+- **完整数据 + 代码 + 模板（开源）** → [JR Academy GitHub](https://github.com/JR-Academy-AI)

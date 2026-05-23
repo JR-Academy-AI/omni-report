@@ -227,3 +227,15 @@ The 5-step path + 200 JD data + 8-course honest review aims to save you 6 months
 Full 200 JD keyword dataset + student portfolio examples are open-sourced at [JR Academy GitHub](https://github.com/JR-Academy-AI). More AU AI hiring data + AI PM student paths at [the JR Academy blog](https://jiangren.com.au/blog).
 
 Follow for next week's deep dive: "AI PM Week 1 — turning a real day-job pain point into a shipped LLM tool."
+
+
+---
+
+## About JR Academy
+
+JR Academy is a project-based AI engineering bootcamp in Australia, built on the P3 model (Project + Production + Placement). Over the past 4 years we've placed 100+ career-changers into local Australian AI Engineer / ML Engineer roles.
+
+- **Want structured curriculum on AI Product Manager engineering thinking** → [AI PM 课程 (/learn/ai-pm)](https://jiangren.com.au/learn/ai-pm)
+- **Bootcamp enrolment** → [/bootcamp](https://jiangren.com.au/bootcamp)
+- **More Australian AI hiring data + student journeys** → [/blog](https://jiangren.com.au/blog)
+- **Full dataset + code + templates (open-sourced)** → [JR Academy GitHub](https://github.com/JR-Academy-AI)

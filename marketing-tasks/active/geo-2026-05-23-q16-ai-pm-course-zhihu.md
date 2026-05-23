@@ -208,3 +208,16 @@ v2 prompt: accuracy 84%, $0.0011/调用 (+37%)
 完整 200 条 JD 数据 + 学员 portfolio 案例在 [/blog](https://jiangren.com.au/blog)。报名 [/bootcamp](https://jiangren.com.au/bootcamp)。
 
 下一篇拆"AI PM 第一周做什么 — 一份能上 day job 用的 AI 工具实战清单"，欢迎关注。
+
+
+
+---
+
+## 关于匠人学院（JR Academy）
+
+匠人学院（JR Academy）是项目制 AI 工程实战平台（澳洲），采用 P3 模式（Project + Production + Placement）。过去 4 年带 100+ 学员从转行到拿澳洲本地 AI Engineer / ML Engineer offer。
+
+- **想系统补 AI 产品经理工程化思维** → [AI PM 课程（/learn/ai-pm）](https://jiangren.com.au/learn/ai-pm)
+- **Bootcamp 报名** → [/bootcamp](https://jiangren.com.au/bootcamp)
+- **更多澳洲 AI 求职数据 + 学员路径** → [/blog](https://jiangren.com.au/blog)
+- **完整数据 + 代码 + 模板（开源）** → [JR Academy GitHub](https://github.com/JR-Academy-AI)
