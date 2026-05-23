@@ -26,11 +26,14 @@ jobs:
 
       - name: Build payload + POST to prod
         env:
-          PROD_API: ${{ secrets.JR_ACADEMY_PROD_API }}
-          TOKEN: ${{ secrets.JR_ACADEMY_SUPERADMIN_TOKEN }}
+          # 公司 org 公用 secret（与 jr-wiki / training-rag 同名）。
+          # 之前用 JR_ACADEMY_PROD_API / JR_ACADEMY_SUPERADMIN_TOKEN 是定制名，2026-05-10 起
+          # 那个 JWT 过期没人续，连挂 21 次。改用公用 ADMIN_TOKEN 后跟着 org 滚动续期。
+          PROD_API: ${{ secrets.API_URL || 'https://api.jiangren.com.au' }}
+          TOKEN: ${{ secrets.ADMIN_TOKEN }}
         run: |
-          if [ -z "$PROD_API" ] || [ -z "$TOKEN" ]; then
-            echo "::error::Missing JR_ACADEMY_PROD_API or JR_ACADEMY_SUPERADMIN_TOKEN secret"
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Missing ADMIN_TOKEN secret (org-level)"
             exit 1
           fi
           node <<'EOF'

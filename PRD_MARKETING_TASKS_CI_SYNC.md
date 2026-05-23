@@ -457,3 +457,22 @@ if (errorCount > 0) {
 
 - ❌ archive 闭环（卡片 review→done 后归档机制）—— 需要后端加 `archived` 字段 + sync 处理 archive 路径，单独 PR
 - ❌ 34 张其他 sessions 的旧卡 frontmatter 不合规—— 跟本 PRD 解耦，各 session owner 自己修
+
+### 8.6 secret 改用 org 公用名（2026-05-23）
+
+**症状**：workflow 自 run #27（2026-05-10 01:43）起连续 21 次 failure，每次 step 3 只跑 1 秒就退出。最近一次 run #46/47 step 3 duration 1s，对比 #26（最后成功）3s。
+
+**根因**：原 yaml 用了**定制** secret 名 `JR_ACADEMY_PROD_API` / `JR_ACADEMY_SUPERADMIN_TOKEN`。1 秒退出 = bash guard `[ -z "$TOKEN" ]` 立即触发，说明 secret 值是空的。推测早期某次手动配过一个 7-day JWT，2026-05-10 前后过期没人续。jr-wiki / training-rag 一直用的是 org 公用 `ADMIN_TOKEN` / `API_URL`，跟着 org 滚动续期所以稳定。
+
+**修复**：workflow 改用公用名（同 jr-wiki `scraped-jobs-sync.yml` § L33-35）：
+
+```yaml
+PROD_API: ${{ secrets.API_URL || 'https://api.jiangren.com.au' }}
+TOKEN: ${{ secrets.ADMIN_TOKEN }}
+```
+
+`API_URL` 还带 fallback，即便 org 没配 URL 这一项，workflow 也用 default。
+
+**补救**：连挂 14 天积压 158 张本地 active/ vs 124 张 prod。2026-05-23 用本地 SDM token 手动 batch push 一次，结果 created=92 / updated=58 / errors=8（全是 commit `f443273` 那批 05-20 comment 卡缺 `id` + `title` frontmatter，跟本 fix 无关）。
+
+**未来防呆**：建议给本 workflow + omni-report 其他 routine workflow 配**失败邮件通知**（GH Actions UI Settings → Notifications），避免下次再悄悄连挂两周。
