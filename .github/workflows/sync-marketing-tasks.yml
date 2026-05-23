@@ -3,6 +3,7 @@ name: Sync Marketing Tasks to Prod
 # 见 PRD_MARKETING_TASKS_CI_SYNC.md
 # omni-report 是 marketing-tasks .md 的 source of truth；
 # 这个 workflow 把 active/*.md push 给 prod jr-academy backend，写进 Mongo。
+# Last refreshed: 2026-05-23 (trigger run #53 after secret value update)
 
 on:
   push:
