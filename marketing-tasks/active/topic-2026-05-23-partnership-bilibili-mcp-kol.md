@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[联名 2] B 站 AI KOL 互换直播嘉宾：JR MCP 实战 × Agent橘子/卡尔的AI沃茨"
-category: marketing-topic
-module: topic-partnership
+category: content-topic
+module: partnership-negotiate
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

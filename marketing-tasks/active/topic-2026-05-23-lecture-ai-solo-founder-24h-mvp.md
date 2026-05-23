@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[讲座 5] AI Solo Founder 2026：从想法到 MVP 24 小时实战（B 站直播）"
-category: marketing-topic
-module: topic-lecture
+category: content-topic
+module: video-live
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

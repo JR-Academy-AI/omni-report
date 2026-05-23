@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[UGC 2] Career Bootcamp 学员 60s 竖版短视频：我的 AI 求职准备今天走到哪了"
-category: marketing-topic
-module: topic-ugc
+category: content-topic
+module: video-daily
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

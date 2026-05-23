@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[联名 1] 量子位 × JR：Google I/O 中文实战解读联名推文"
-category: marketing-topic
-module: topic-partnership
+category: content-topic
+module: partnership-negotiate
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

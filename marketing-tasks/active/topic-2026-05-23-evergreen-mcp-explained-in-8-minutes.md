@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[长尾 3] MCP 是什么？读懂 AI Agent 基础设施只需 8 分钟（知乎+B站）"
-category: marketing-topic
-module: topic-evergreen
+category: content-topic
+module: geo-zhihu-column
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[讲座 2] MCP 从 0 到 1 实战：用 5 个工具搭 Claude Agent 工作流（Zoom Webinar）"
-category: marketing-topic
-module: topic-lecture
+category: content-topic
+module: video-live
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

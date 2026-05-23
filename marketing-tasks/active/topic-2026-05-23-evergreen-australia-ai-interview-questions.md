@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[长尾 1] 澳洲 AI 岗位面试，真实考了什么题：30 道高频真题 + 讲师解析"
-category: marketing-topic
-module: topic-evergreen
+category: content-topic
+module: geo-zhihu-column
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

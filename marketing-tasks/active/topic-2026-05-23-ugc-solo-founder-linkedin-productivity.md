@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[UGC 3] AI Solo Founder 在职学员 LinkedIn 周报：AI 工具帮我省了 X 小时"
-category: marketing-topic
-module: topic-ugc
+category: content-topic
+module: weixin-daily
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

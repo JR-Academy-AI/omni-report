@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[联名 3] 小红书 AI 内容孵化项目：JR 学员 UGC 入驻流量扶持"
-category: marketing-topic
-module: topic-partnership
+category: content-topic
+module: partnership-negotiate
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

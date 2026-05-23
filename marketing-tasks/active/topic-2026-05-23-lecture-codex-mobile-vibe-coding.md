@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[讲座 3] Vibe Coding 升级：Codex 手机版 + GPT-5.5 实操新工作流（B 站直播）"
-category: marketing-topic
-module: topic-lecture
+category: content-topic
+module: video-live
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

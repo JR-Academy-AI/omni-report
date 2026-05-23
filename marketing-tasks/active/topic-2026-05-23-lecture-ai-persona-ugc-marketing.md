@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[讲座 4] AI 人格时代的内容运营：把学员 UGC 变成高转化素材（Zoom Webinar）"
-category: marketing-topic
-module: topic-lecture
+category: content-topic
+module: video-live
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[讲座 1] Gemini Spark vs Claude vs ChatGPT：2026 AI 工具三方实测（B 站直播）"
-category: marketing-topic
-module: topic-lecture
+category: content-topic
+module: video-live
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

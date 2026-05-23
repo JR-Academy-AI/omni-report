@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[UGC 1] Google I/O 热点征集：6 位 AI Essentials 学员小红书晒 Gemini/Claude 试用截图"
-category: marketing-topic
-module: topic-ugc
+category: content-topic
+module: redbook-hot-topic
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md

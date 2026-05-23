@@ -1,8 +1,8 @@
 ---
 id: 0
 title: "[长尾 2] 我用 Claude 替掉了 5 个 SaaS 订阅，每月省 $180 澳元（小红书+公众号）"
-category: marketing-topic
-module: topic-evergreen
+category: content-topic
+module: weixin-longform
 source: routine-marketing-topics
 sourceMeta:
   reportPath: marketing-topics/2026-05-23.md
