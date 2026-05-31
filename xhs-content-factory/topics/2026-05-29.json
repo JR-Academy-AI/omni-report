@@ -1,0 +1,228 @@
+{
+  "date": "2026-05-29",
+  "theme": "零基础用 AI 做产品（Cursor + AI Coding）",
+  "mode": "directed-theme",
+  "account_scope": [
+    { "input_slug": "summer-main", "account": "澳洲匠人学院", "account_slug": "aozhoujiangren", "owner": "Summer" },
+    { "input_slug": "lily-coding-girl", "account": "JR 匠人学院", "account_slug": "jr-brand", "owner": "Lily" },
+    { "input_slug": "kiki-uni", "account": "UQ 课代表", "account_slug": "uq-kedaibiao", "owner": "KIKI" }
+  ],
+  "hotpool_sources": [
+    "https://www.shareuhack.com/en/posts/vibe-coding-guide-2026",
+    "https://www.neuralstackly.com/blog/vibe-coding-ai-apps-2026",
+    "https://www.showapi.com/news/article/6907ab134ddd79d13514d45e",
+    "https://zhuanlan.zhihu.com/p/1999804779141030200",
+    "https://blog.csdn.net/csdnnews/article/details/150537244",
+    "https://zhuanlan.zhihu.com/p/1976972402622740005",
+    "https://www.v2ex.com/t/1200462",
+    "https://www.woshipm.com/share/6132011.html",
+    "https://www.cnblogs.com/jinjiangongzuoshi/p/18903503",
+    "https://github.com/datawhalechina/easy-vibe",
+    "https://www.cnblogs.com/yupi/p/19481317"
+  ],
+  "competitor_note": "WebSearch 为美区通用网页搜索，非小红书站内；competitor_count 精确数待员工 App 内核实。整体判断：纯 Cursor 入门教程赛道高度饱和（知乎/B站/慕课/GitHub 海量），白地在『诚实翻车反差 / 非程序员第一人称故事 / 澳洲求职作品集 / 留学生场景』。",
+  "candidates": [
+    {
+      "id": "001",
+      "type": "cross-account",
+      "score": { "hotness": 9, "business_fit": 9, "total": 18 },
+      "title": "AI 写代码翻车实录：能跑，但我一个 bug 都改不了",
+      "hook": "第一次用 Cursor 半小时做出小程序爽到飞起，第二天它崩了我傻眼",
+      "angle": "反 hype 诚实流 — 先承认翻车（知识幻觉/改不动 AI 代码）→ 给零基础避坑 checklist → 引到系统学习",
+      "suitable_accounts": [
+        { "account": "JR 匠人学院", "account_slug": "jr-brand", "direction": "干货避坑版：3 个新手最容易栽的坑 + 解法" },
+        { "account": "澳洲匠人学院", "account_slug": "aozhoujiangren", "direction": "学院视角：会用 AI ≠ 会做产品，落到课程" }
+      ],
+      "images": [
+        "报错满屏截图 +『它崩了我傻眼』文字钩子",
+        "翻车 3 连：改不动 / 越改越乱 / 不知道哪错了",
+        "避坑 checklist（收藏向）"
+      ],
+      "risk": "不点名贬低任何工具/课程；不承诺『学完就会』；翻车细节必须真实贴真报错",
+      "related_hotspot": "18 CTO「生产噩梦」CSDN / 知乎『第一批受害者』",
+      "viral_potential": {
+        "hit_score": 7.9,
+        "dimension_scores": { "resonance": 7.5, "emotion": 9, "info_gap": 8, "save_value": 7, "title_hook": 8 },
+        "why_hit": [
+          "维度: 情绪 — 反差+共鸣，全网吹『半小时做产品』，说真话稀缺",
+          "维度: 信息差 — 90% 内容是教程/晒成果，『翻车后怎么办』几乎没人系统讲",
+          "维度: 标题钩子 — 反常识(能跑却改不了)+痛点+第一人称"
+        ],
+        "why_flop": [
+          "处理不好会变劝退/唱衰，必须落到『正确姿势是…』",
+          "翻车细节编造会被评论区拆穿（CLAUDE.md 红线）"
+        ],
+        "competitor_count": "教程/晒成果饱和；诚实翻车反差切角白地多（站内精确数待核实）",
+        "competitor_diff": "主流是教程与成功晒图，本选题切『真实翻车 + 避坑』反差",
+        "predicted_tier": "1w-5w"
+      }
+    },
+    {
+      "id": "002",
+      "type": "cross-account",
+      "score": { "hotness": 9, "business_fit": 9, "total": 18 },
+      "title": "用 AI 做产品的人里，63% 根本不会写代码",
+      "hook": "这事被 MIT 评成 2026 十大突破，但没人告诉你门槛到底降到哪了",
+      "angle": "权威+反常识数据 → 拆非程序员能做到什么/做不到什么 → 零基础起步路径",
+      "suitable_accounts": [
+        { "account": "JR 匠人学院", "account_slug": "jr-brand", "direction": "趋势解读版：63% 数据 + 普通人能做的 3 类产品" },
+        { "account": "澳洲匠人学院", "account_slug": "aozhoujiangren", "direction": "求职视角：这波浪潮对找工作意味着什么" }
+      ],
+      "images": [
+        "『63% 不会写代码』大字数据卡",
+        "MIT 2026 十大突破截图（标来源）",
+        "非程序员能做的产品清单（小工具/网站/小程序）"
+      ],
+      "risk": "MIT/63% 数据必须标真实来源；不预测『程序员失业』等绝对化",
+      "related_hotspot": "MIT Tech Review 2026 十大突破 / 非技术采用 +520%",
+      "viral_potential": {
+        "hit_score": 7.8,
+        "dimension_scores": { "resonance": 8, "emotion": 8, "info_gap": 9, "save_value": 6, "title_hook": 8 },
+        "why_hit": [
+          "维度: 信息差 — 63%/MIT 排名多数人没听过，硬数据自带可信度",
+          "维度: 情绪 — 反常识 + 轻微 FOMO",
+          "维度: 标题钩子 — 数字+反常识，覆盖『AI 做产品/不会代码』搜索词"
+        ],
+        "why_flop": [
+          "偏科普收藏一般，需配起步路径提收藏率",
+          "数据帖易被同质化转载，首图需冲击力"
+        ],
+        "competitor_count": "数据科普类中等；带『MIT 2026』权威锚点的少（站内数待核实）",
+        "competitor_diff": "用 MIT 权威 + 63% 硬数据做锚点，区别于泛泛趋势文",
+        "predicted_tier": "1w-5w"
+      }
+    },
+    {
+      "id": "003",
+      "type": "cross-account",
+      "score": { "hotness": 8, "business_fit": 9, "total": 17 },
+      "title": "不是程序员，我用 Cursor 做出了第一个真能用的小工具",
+      "hook": "没学过编程、没报班，靠一句句『跟 AI 说人话』把脑子里的想法做了出来",
+      "angle": "第一人称素人成长故事 → 真实过程（卡点+怎么问 AI）→ 起步清单",
+      "suitable_accounts": [
+        { "account": "JR 匠人学院", "account_slug": "jr-brand", "direction": "故事 + 工作流模板版" },
+        { "account": "澳洲匠人学院", "account_slug": "aozhoujiangren", "direction": "零基础也能开始 鼓励向 + 课程衔接" }
+      ],
+      "images": [
+        "成品截图（真实可用的小工具界面）",
+        "『我跟 AI 的对话』片段（人话 prompt 示范）",
+        "起步 3 步清单"
+      ],
+      "risk": "不晒收入/不提变现/不用『副业』；只讲做出东西的成就感；成品要真能用",
+      "related_hotspot": "产品经理 Cursor 独立开发小程序 / 7 天上线网站",
+      "viral_potential": {
+        "hit_score": 7.2,
+        "dimension_scores": { "resonance": 8, "emotion": 8, "info_gap": 6, "save_value": 7, "title_hook": 7 },
+        "why_hit": [
+          "维度: 共鸣 — 『我也不会代码』覆盖最大人群",
+          "维度: 情绪 — 成就感+共鸣，正能量易点赞"
+        ],
+        "why_flop": [
+          "维度: 信息差 — 这类『我做出来了』故事已不少，靠真实细节差异化",
+          "成品不够真能用会被质疑摆拍"
+        ],
+        "competitor_count": "素人成长故事偏饱和（站内数待核实）",
+        "competitor_diff": "真实成品 + 人话 prompt 示范，区别于纯结果晒图",
+        "predicted_tier": "3k-1w"
+      }
+    },
+    {
+      "id": "004",
+      "type": "cross-account",
+      "score": { "hotness": 7, "business_fit": 9, "total": 16 },
+      "title": "零基础玩 Cursor 第一天，先记住这 5 句话",
+      "hook": "不用懂代码，但这 5 个『跟 AI 说话的方式』决定你做得出做不出",
+      "angle": "纯干货收藏型 — 5 条新手 prompt/工作流心法 + 反面示范",
+      "suitable_accounts": [
+        { "account": "JR 匠人学院", "account_slug": "jr-brand", "direction": "干货模板版（主推）" }
+      ],
+      "images": [
+        "5 句话清单卡（收藏向首图）",
+        "正确 vs 错误提问对比",
+        "一个最小可跑 demo 截图"
+      ],
+      "risk": "工具操作随版本变，标注『以当前版本为准』；含模板易判软广，需真 demo 兜底",
+      "related_hotspot": "Cursor Composer/Agent 工作流横评",
+      "viral_potential": {
+        "hit_score": 6.8,
+        "dimension_scores": { "resonance": 7, "emotion": 6, "info_gap": 6, "save_value": 9, "title_hook": 6 },
+        "why_hit": [
+          "维度: 收藏价值 — 清单/模板型收藏率高，算法长尾友好"
+        ],
+        "why_flop": [
+          "维度: 情绪/信息差 — 干货堆砌情绪弱、赛道饱和",
+          "软广嫌疑，必须真 demo 兜底"
+        ],
+        "competitor_count": "教程/prompt 清单极饱和（53AI 等大量），需强首图差异化（站内数待核实）",
+        "competitor_diff": "5 句心法 + 反面示范，比通用提示词列表更聚焦新手第一天",
+        "predicted_tier": "3k-1w"
+      }
+    },
+    {
+      "id": "005",
+      "type": "campus-uq",
+      "score": { "hotness": 7, "business_fit": 8, "total": 15 },
+      "title": "UQ 非 CS 专业，我用 AI 做了个自己的小项目",
+      "hook": "不是为了交作业，是想给简历加一个『我真做过东西』的项目",
+      "angle": "校园视角 — 课余/个人 side project（非评分作业）+ 作品集思路",
+      "suitable_accounts": [
+        { "account": "UQ 课代表", "account_slug": "uq-kedaibiao", "direction": "UQ 学生第一人称" }
+      ],
+      "images": [
+        "UQ 校园 + 电脑场景图",
+        "个人项目成品截图",
+        "『课外做项目』起步清单"
+      ],
+      "risk": "🚨 必须明确『个人 side project/课外练习，不碰被评分的 assignment』——用 AI 代写打分作业=academic misconduct，平台+学校双红线，文案必须撇清",
+      "related_hotspot": "留学生 Cursor 工具 / 作品集需求",
+      "viral_potential": {
+        "hit_score": 6.4,
+        "dimension_scores": { "resonance": 6, "emotion": 6, "info_gap": 7, "save_value": 7, "title_hook": 6 },
+        "why_hit": [
+          "维度: 信息差 — 『留学生+Cursor+作品集』小红书白地多（搜出来多为代写广告）",
+          "校园号故意降共鸣换垂直精准，6-7 已是好分"
+        ],
+        "why_flop": [
+          "学术诚信红线没撇清会翻车",
+          "共鸣面窄，靠 UQ 标签精准推荐而非泛流量"
+        ],
+        "competitor_count": "『留学生 Cursor 作品集』正经内容稀缺，站内多为代写广告（待核实）",
+        "competitor_diff": "正向『课外个人项目+作品集』，与代写黑产切割",
+        "predicted_tier": "3k-1w"
+      }
+    },
+    {
+      "id": "006",
+      "type": "cross-account",
+      "score": { "hotness": 7, "business_fit": 9, "total": 16 },
+      "title": "在澳洲找 IT 工作没本地经验？我先用 AI 做了 3 个项目",
+      "hook": "没人给机会就自己造作品，把『没经验』变成『这是我做的东西』",
+      "angle": "求职焦虑（无本地经验）→ AI 辅助快速做 3 个练手项目 → 作品集思路",
+      "suitable_accounts": [
+        { "account": "澳洲匠人学院", "account_slug": "aozhoujiangren", "direction": "求职 + 课程衔接（主推）" }
+      ],
+      "images": [
+        "『没有本地经验』vs『我有 3 个项目』对比首图",
+        "3 个项目成品拼图",
+        "作品集 README 模板"
+      ],
+      "risk": "🚨 不承诺 offer/不承诺入职/不说『副业』（CLAUDE.md 红线）；只讲作品与技能；期末季求职选题流量打折注意时机",
+      "related_hotspot": "澳洲华人求职『无本地经验』痛点 + vibe coding 趋势",
+      "viral_potential": {
+        "hit_score": 7.0,
+        "dimension_scores": { "resonance": 7, "emotion": 7, "info_gap": 7, "save_value": 7, "title_hook": 7 },
+        "why_hit": [
+          "维度: 共鸣 — 『没本地经验』是澳洲华人求职第一痛点",
+          "维度: 情绪 — 焦虑+反击叙事（自己造作品）"
+        ],
+        "why_flop": [
+          "极易踩承诺 offer/收入红线，必须只讲作品/技能",
+          "求职选题在期末季流量打折"
+        ],
+        "competitor_count": "澳洲求职内容多，『AI 做作品集补无经验』切角较新（站内数待核实）",
+        "competitor_diff": "把 vibe coding 趋势绑到澳洲求职无本地经验痛点",
+        "predicted_tier": "3k-1w"
+      }
+    }
+  ]
+}
