@@ -1,0 +1,25 @@
+{
+  "topic_id": "001",
+  "topic_slug": "9-lei-weijinci-duizhaobiao",
+  "account": "澳洲匠人学院",
+  "account_slug": "aozhoujiangren",
+  "owner": "Summer",
+  "owner_email": "summer@jiangren.com.au",
+  "date": "2026-06-11",
+  "selected_angle": null,
+  "status": "drafted",
+  "pipeline": {
+    "topic_at": "2026-06-11T00:00:00+10:00",
+    "draft_at": "2026-06-11T00:00:00+10:00",
+    "final_at": null,
+    "review_at": null,
+    "poster_at": null,
+    "score_at": null,
+    "task_card_at": null
+  },
+  "files": {
+    "topic": "01-topic.json",
+    "draft": "02-draft.md"
+  },
+  "notes": "skill marketplace 转化率专项（ad-hoc，非每日 topic-picker 产出）— 软推 /ai-skills/xhs-review，工具入口走主页简介不站外引流。员工选切角后走正常 03-final → review → score 链路。"
+}
